@@ -169,12 +169,10 @@
         .btn-submit:hover i { transform:translate(5px,-5px) rotate(-10deg); }
         .btn-submit:disabled { opacity:0.7; cursor:not-allowed; transform:none; }
         #adminPanel { display:none; margin-top:30px; padding:20px; background:#ffffff; border:2px dashed #3b82f6; border-radius:20px; }
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
         .admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px; }
         .admin-header h3 { color:#1e3a8a; font-family:'Inter',sans-serif; }
         .admin-actions { display:flex; gap:8px; }
         .btn-admin { padding:6px 12px; border:none; border-radius:8px; cursor:pointer; font-size:12px; font-family:'Inter',sans-serif; font-weight:600; }
-        .btn-hapus { background:#ff4757; color:white; }
         .btn-refresh { background:#3b82f6; color:white; }
         .feedback-card { background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:10px; border-left:4px solid #3b82f6; font-size:0.85rem; font-family:'Inter',sans-serif; }
         .badge { font-size:0.7rem; background:#1e3a8a; color:white; padding:2px 8px; border-radius:5px; margin-left:5px; text-transform:uppercase; }
@@ -518,20 +516,16 @@ var swiper = new Swiper(".mySwiper", {
     pagination:{el:".swiper-pagination", clickable:true},
     breakpoints:{640:{slidesPerView:3}, 1024:{slidesPerView:5}},
 });
-
 function toggleMenu() { document.querySelector('nav ul').classList.toggle('active'); }
 function toggleDropdown(el) { if(window.innerWidth<=900) el.classList.toggle('open'); }
-
 window.addEventListener('scroll', () => {
     document.querySelector('header').classList.toggle('solid', window.scrollY > 50);
 });
-
 const sections = document.querySelectorAll('.section');
 const obs = new IntersectionObserver(e => {
     e.forEach(x => x.isIntersecting && x.target.classList.add('show'));
 }, {threshold:.1});
 sections.forEach(s => obs.observe(s));
-
 document.querySelectorAll("nav ul li a").forEach(link => {
     link.addEventListener("click", () => {
         document.querySelectorAll("nav ul li a").forEach(l => l.classList.remove("active"));
@@ -539,7 +533,6 @@ document.querySelectorAll("nav ul li a").forEach(link => {
         if(window.innerWidth <= 900) toggleMenu();
     });
 });
-
 document.addEventListener('DOMContentLoaded', function() {
     const revealElements = document.querySelectorAll(".reveal-tata-tertib");
     const observer = new IntersectionObserver((entries, obs) => {
@@ -551,8 +544,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ===================== SCRIPT KONTAK - GOOGLE SHEETS =====================
-// Data tersimpan di Google Sheets dan bisa dilihat dari device/admin manapun
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsz_B4CiLlDk6Cy9fgTxDXYSGOvNQi8ItXXpA3J3SozsUMMcgjh58G6vHkTpYoiLtu/exec";
+// URL terbaru - data masuk langsung ke Google Sheets dan bisa dilihat semua admin
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmAD96dk5jzn7iZcyjLlbj3UTbjwxt5sLOdBTffHvVyuNpPZ3vSP_CfdGC8lQ3Bp8u/exec";
 const secretPass = "admin123"; // GANTI PASSWORD DI SINI
 
 let clickCount = 0, clickTimer = null;
@@ -575,29 +568,24 @@ feedbackForm.onsubmit = async function(e) {
     e.preventDefault();
     submitBtn.disabled = true;
     btnText.textContent = 'Mengirim...';
-
     const payload = {
         name: document.getElementById('nameInput').value,
         status: document.querySelector('input[name="status"]:checked').value,
         msg: document.getElementById('msgInput').value,
         time: new Date().toLocaleString('id-ID', {dateStyle:'full', timeStyle:'short'})
     };
-
     try {
-        // mode no-cors wajib untuk Google Apps Script
         await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(payload)
         });
-        showNotif('✅ Terima kasih! Saran Anda telah berhasil disimpan ke database.', 'success');
+        showNotif('✅ Terima kasih! Saran Anda telah berhasil disimpan.', 'success');
         feedbackForm.reset();
-        if(adminPanel.style.display === 'block') {
-            setTimeout(loadData, 2000);
-        }
+        if(adminPanel.style.display === 'block') setTimeout(loadData, 2000);
     } catch(err) {
-        showNotif('❌ Gagal mengirim. Periksa koneksi internet Anda.', 'error');
+        showNotif('❌ Gagal mengirim. Periksa koneksi internet.', 'error');
     } finally {
         submitBtn.disabled = false;
         btnText.textContent = 'Kirim Sekarang';
@@ -608,10 +596,9 @@ feedbackForm.onsubmit = async function(e) {
 async function loadData() {
     dataContainer.innerHTML = '<p class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Memuat data dari Google Sheets...</p>';
     try {
-        const res = await fetch(APPS_SCRIPT_URL + '?action=get');
+        const res = await fetch(APPS_SCRIPT_URL);
         const data = await res.json();
         document.getElementById('totalCount').textContent = data.length;
-
         if(data.length === 0) {
             dataContainer.innerHTML = '<p class="loading-msg">Belum ada masukan yang masuk.</p>';
             return;
