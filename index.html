@@ -344,7 +344,7 @@
             transform: translateY(0);
         }
 
-        /* --- CSS KONTAK (dari file kedua) --- */
+        /* --- CSS KONTAK --- */
         #kontak {
             background-color: #f8fafc;
             padding: 80px 20px;
@@ -434,7 +434,7 @@
             background: #ffffff; transform: translateY(-2px);
         }
 
-        .radio-group { display: flex; gap: 15px; margin-top: 5px; }
+        .radio-group { display: flex; gap: 15px; margin-top: 5px; flex-wrap: wrap; }
         .radio-option {
             display: flex; align-items: center; gap: 8px;
             cursor: pointer; font-size: 0.9rem; color: #1e293b;
@@ -449,11 +449,11 @@
             width: 100%; padding: 18px;
             background: #1e3a8a; color: white;
             border: none; border-radius: 15px;
-            font-weight: 700; cursor: pointer;
+            font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif;
             display: flex; align-items: center; justify-content: center; gap: 12px;
             transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             position: relative; overflow: hidden;
-            margin-top: 10px; font-family: 'Inter', sans-serif;
+            margin-top: 10px; font-size: 1rem;
         }
 
         .btn-submit:hover {
@@ -465,14 +465,7 @@
         .btn-submit:active { transform: scale(0.95); }
         .btn-submit i { transition: all 0.5s ease; }
         .btn-submit:hover i { transform: translate(5px, -5px) rotate(-10deg); }
-
-        .btn-success i { animation: planeOut 1s forwards; }
-        @keyframes planeOut {
-            0% { transform: translate(0,0); opacity: 1; }
-            50% { transform: translate(50px, -50px); opacity: 0; }
-            51% { transform: translate(-50px, 50px); opacity: 0; }
-            100% { transform: translate(0,0); opacity: 1; }
-        }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
         #adminPanel {
             display: none;
@@ -484,7 +477,21 @@
             animation: fadeIn 0.5s ease;
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+
+        .admin-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 15px; flex-wrap: wrap; gap: 10px;
+        }
+        .admin-header h3 { color: #1e3a8a; font-family: 'Inter', sans-serif; }
+
+        .admin-actions { display: flex; gap: 8px; }
+        .btn-admin {
+            padding: 6px 12px; border: none; border-radius: 8px; 
+            cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; font-weight: 600;
+        }
+        .btn-hapus { background: #ff4757; color: white; }
+        .btn-refresh { background: #3b82f6; color: white; }
+
         .feedback-card {
             background: #f8fafc; padding: 15px; border-radius: 12px; 
             margin-bottom: 10px; border-left: 4px solid #3b82f6;
@@ -495,6 +502,20 @@
             color: white; padding: 2px 8px; border-radius: 5px;
             margin-left: 5px; text-transform: uppercase;
         }
+
+        .loading-msg {
+            color: #64748b; font-size: 0.85rem; font-style: italic;
+            padding: 10px 0; font-family: 'Inter', sans-serif;
+        }
+
+        /* NOTIF BANNER */
+        .notif {
+            display: none; padding: 12px 18px; border-radius: 12px;
+            margin-bottom: 20px; font-size: 0.88rem; font-weight: 600;
+            animation: fadeIn 0.3s ease; font-family: 'Inter', sans-serif;
+        }
+        .notif.success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .notif.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
         /* --- RESPONSIVE --- */
         @media(max-width:900px){
@@ -516,6 +537,7 @@
             .org-column::before { display: none; }
             .main-card { grid-template-columns: 1fr; }
             .map-wrapper { height: 300px; }
+            .form-area { padding: 30px 25px; }
         }
 
         @keyframes typing{to{width:100%}}
@@ -540,6 +562,7 @@
                     <a href="#Perpustakawan">Perpustakawan</a>
                     <a href="#tata-tertib-rules">Tata Tertib</a> 
                     <a href="#Visi & Misi">Visi & Misi</a>
+                </div>
             </li>
             <li><a href="#koleksi">Koleksi</a></li>
             <li><a href="#layanan">Layanan</a></li>
@@ -844,6 +867,8 @@
                 <h2>Saran & Masukan</h2>
                 <p class="subtitle">Bantu kami meningkatkan layanan terbaik untuk Anda.</p>
 
+                <div id="notifBox" class="notif"></div>
+
                 <form id="feedbackForm">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
@@ -865,16 +890,25 @@
                     </div>
 
                     <button type="submit" class="btn-submit" id="submitBtn">
-                        <span>Kirim Sekarang</span> <i class="fas fa-paper-plane"></i>
+                        <span id="btnText">Kirim Sekarang</span>
+                        <i class="fas fa-paper-plane" id="btnIcon"></i>
                     </button>
                 </form>
 
+                <!-- ADMIN PANEL -->
                 <div id="adminPanel">
                     <div class="admin-header">
-                        <h3><i class="fas fa-user-shield"></i> Database Masukan</h3>
-                        <button onclick="clearData()" style="padding:5px 10px; background:#ff4757; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px;">Hapus Semua</button>
+                        <h3><i class="fas fa-user-shield"></i> Database Masukan <span id="totalCount" class="badge">0</span></h3>
+                        <div class="admin-actions">
+                            <button class="btn-admin btn-refresh" onclick="loadData()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <button class="btn-admin btn-hapus" onclick="clearData()">
+                                <i class="fas fa-trash"></i> Hapus Semua
+                            </button>
+                        </div>
                     </div>
-                    <div id="dataContainer"></div>
+                    <div id="dataContainer"><p class="loading-msg">Memuat data...</p></div>
                 </div>
             </main>
         </div>
@@ -885,7 +919,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
-// Slider Partner
+// ===================== SCRIPT UMUM =====================
 var swiper = new Swiper(".mySwiper", {
     slidesPerView: 2, spaceBetween: 30, loop: true,
     autoplay: { delay: 2000, disableOnInteraction: false },
@@ -935,80 +969,153 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// ===================== SCRIPT KONTAK =====================
-let clicks = 0;
-const secretPass = "admin123"; // SILAKAN GANTI PASSWORD ANDA DI SINI
-const form = document.getElementById('feedbackForm');
-const btn = document.getElementById('submitBtn');
+// ===================== SCRIPT KONTAK (SHARED STORAGE) =====================
+const secretPass = "admin123"; // GANTI PASSWORD DI SINI
+const STORAGE_KEY = "smkn1_lib_feedback";
+
+let clickCount = 0;
+let clickTimer = null;
+
+const feedbackForm = document.getElementById('feedbackForm');
+const submitBtn = document.getElementById('submitBtn');
+const btnText = document.getElementById('btnText');
 const adminPanel = document.getElementById('adminPanel');
 const dataContainer = document.getElementById('dataContainer');
+const notifBox = document.getElementById('notifBox');
 
-// RITUAL RAHASIA: KLIK LOGO 5X + PASSWORD
-document.getElementById('adminTrigger').onclick = function() {
-    clicks++;
-    if (clicks === 5) {
-        let inputPass = prompt("Masukkan Password Admin:");
-        if (inputPass === secretPass) {
-            adminPanel.style.display = 'block';
-            renderData();
-            alert('Akses Diterima! Panel admin terbuka.');
-        } else if (inputPass !== null) {
-            alert('Akses Ditolak! Password salah.');
-        }
-        clicks = 0;
-    }
-    setTimeout(() => { clicks = 0; }, 3000); 
-};
-
-form.onsubmit = function(e) {
-    e.preventDefault();
-    const span = btn.querySelector('span');
-    const statusValue = document.querySelector('input[name="status"]:checked').value;
-    
-    const newData = {
-        name: document.getElementById('nameInput').value,
-        status: statusValue,
-        msg: document.getElementById('msgInput').value,
-        time: new Date().toLocaleString('id-ID')
-    };
-    
-    const storage = JSON.parse(localStorage.getItem('lib_feedback')) || [];
-    storage.push(newData);
-    localStorage.setItem('lib_feedback', JSON.stringify(storage));
-
-    btn.classList.add('btn-success');
-    span.innerText = 'Mengirim...';
-    btn.style.pointerEvents = 'none';
-
-    setTimeout(() => {
-        alert('Terima kasih! Saran Anda telah kami terima.');
-        this.reset();
-        btn.classList.remove('btn-success');
-        span.innerText = 'Kirim Sekarang';
-        btn.style.pointerEvents = 'auto';
-        if(adminPanel.style.display === 'block') renderData();
-    }, 2000);
-};
-
-function renderData() {
-    const storage = JSON.parse(localStorage.getItem('lib_feedback')) || [];
-    dataContainer.innerHTML = storage.length === 0 ? '<p style="color:gray; font-size:13px;">Belum ada masukan.</p>' : '';
-    storage.reverse().forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'feedback-card';
-        div.innerHTML = `<strong>${item.name}</strong> <span class="badge">${item.status}</span><br>${item.msg}<br><small style="color:#64748b; font-size:10px;">${item.time}</small>`;
-        dataContainer.appendChild(div);
-    });
+// NOTIFIKASI
+function showNotif(msg, type = 'success') {
+    notifBox.textContent = msg;
+    notifBox.className = 'notif ' + type;
+    notifBox.style.display = 'block';
+    setTimeout(() => { notifBox.style.display = 'none'; }, 4000);
 }
 
-function clearData() {
-    if(confirm('Hapus semua database di perangkat ini?')) {
-        localStorage.removeItem('lib_feedback');
-        renderData();
+// SHARED STORAGE - bisa diakses dari device manapun
+async function getAllFeedback() {
+    try {
+        const result = await window.storage.get(STORAGE_KEY, true);
+        if (result && result.value) {
+            return JSON.parse(result.value);
+        }
+        return [];
+    } catch (e) {
+        return [];
     }
+}
+
+async function saveFeedback(dataArray) {
+    const result = await window.storage.set(STORAGE_KEY, JSON.stringify(dataArray), true);
+    if (!result) throw new Error("Gagal menyimpan ke storage.");
+}
+
+// KIRIM FORM
+feedbackForm.onsubmit = async function(e) {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    btnText.textContent = 'Mengirim...';
+
+    const newEntry = {
+        id: Date.now(),
+        name: document.getElementById('nameInput').value,
+        status: document.querySelector('input[name="status"]:checked').value,
+        msg: document.getElementById('msgInput').value,
+        time: new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })
+    };
+
+    try {
+        const existing = await getAllFeedback();
+        existing.push(newEntry);
+        await saveFeedback(existing);
+
+        showNotif('✅ Terima kasih! Saran Anda telah berhasil disimpan.', 'success');
+        feedbackForm.reset();
+
+        if (adminPanel.style.display === 'block') {
+            loadData();
+        }
+    } catch (err) {
+        console.error(err);
+        showNotif('❌ Gagal menyimpan. Coba lagi beberapa saat.', 'error');
+    } finally {
+        submitBtn.disabled = false;
+        btnText.textContent = 'Kirim Sekarang';
+    }
+};
+
+// TAMPILKAN DATA DI ADMIN PANEL
+async function loadData() {
+    dataContainer.innerHTML = '<p class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Memuat data dari server...</p>';
+    try {
+        const data = await getAllFeedback();
+        document.getElementById('totalCount').textContent = data.length;
+
+        if (data.length === 0) {
+            dataContainer.innerHTML = '<p class="loading-msg">Belum ada masukan yang masuk.</p>';
+            return;
+        }
+
+        dataContainer.innerHTML = '';
+        [...data].reverse().forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'feedback-card';
+            div.innerHTML = `
+                <strong>${escapeHtml(item.name)}</strong> 
+                <span class="badge">${escapeHtml(item.status)}</span>
+                <br><br>
+                <span style="color:#334155;">${escapeHtml(item.msg)}</span>
+                <br><br>
+                <small style="color:#64748b;">
+                    <i class="fas fa-clock"></i> ${item.time}
+                </small>
+            `;
+            dataContainer.appendChild(div);
+        });
+    } catch (err) {
+        dataContainer.innerHTML = `<p class="loading-msg" style="color:#dc2626;">Gagal memuat data: ${err.message}</p>`;
+    }
+}
+
+// HAPUS SEMUA DATA
+async function clearData() {
+    if (!confirm('Yakin ingin menghapus SEMUA masukan? Tindakan ini tidak bisa dibatalkan.')) return;
+    try {
+        await window.storage.delete(STORAGE_KEY, true);
+        showNotif('🗑️ Semua data berhasil dihapus.', 'success');
+        loadData();
+    } catch (e) {
+        showNotif('❌ Gagal menghapus data.', 'error');
+    }
+}
+
+// ADMIN LOGIN (KLIK LOGO 5X)
+document.getElementById('adminTrigger').onclick = function() {
+    clickCount++;
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => { clickCount = 0; }, 3000);
+
+    if (clickCount >= 5) {
+        clickCount = 0;
+        clearTimeout(clickTimer);
+        const inputPass = prompt("🔐 Masukkan Password Admin:");
+        if (inputPass === null) return;
+        if (inputPass === secretPass) {
+            adminPanel.style.display = 'block';
+            adminPanel.scrollIntoView({ behavior: 'smooth' });
+            loadData();
+        } else {
+            alert('❌ Akses Ditolak! Password salah.');
+        }
+    }
+};
+
+// ESCAPE HTML (cegah XSS)
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML;
 }
 // ===================== END SCRIPT KONTAK =====================
 </script>
 </body>
 </html>
-
