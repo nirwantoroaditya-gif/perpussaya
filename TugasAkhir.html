@@ -11,9 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* Tanda Ini Untuk Mengingat 
-           RESET & BASE
-        ================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         html { scroll-behavior: smooth; }
         body {
@@ -24,9 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* ================================================
-           HEADER & NAVIGASI
-        ================================================ */
         header {
             position: fixed; top: 0; left: 0;
             width: 100%; padding: 18px 80px;
@@ -50,7 +44,7 @@
         }
         nav ul li a::after {
             content: ''; position: absolute; left: 0; bottom: 0;
-            width: 0; height: 2px; background: #ffc107; transition: .3s;
+            width: 0; height: 2px; background: #ffffff; transition: .3s;
         }
         nav ul li a:hover::after { width: 100%; }
         nav ul li a.active::after { width: 100%; background: #fff; }
@@ -65,9 +59,6 @@
         .dropdown a { display: block; padding: 12px 18px; color: #333; text-decoration: none; }
         .dropdown a:hover { background: #f4f4f4; }
 
-        /* ================================================
-           HERO SECTION
-        ================================================ */
         .hero {
             padding: 160px 80px 80px;
             display: flex; justify-content: space-between; align-items: center;
@@ -81,15 +72,26 @@
         }
         .student-img { width: 420px; }
 
-        /* ================================================
-           ANIMASI SECTION
-        ================================================ */
+        .ticker-wrap { overflow: hidden; width: 100%; margin-top: 22px; }
+        .ticker-track {
+            display: flex; white-space: nowrap;
+            animation: tickerScroll 28s linear infinite;
+        }
+        .ticker-track span {
+            font-size: 15px; color: rgba(255,255,255,0.85);
+            padding-right: 80px; letter-spacing: 0.5px;
+        }
+        .ticker-track span::before {
+            content: '✦'; color: #ffc107; margin-right: 14px; font-size: 12px;
+        }
+        @keyframes tickerScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         .section { opacity: 0; transform: translateY(60px); transition: 1s; }
         .section.show { opacity: 1; transform: none; }
 
-        /* ================================================
-           PENDAHULUAN
-        ================================================ */
         .pendahuluan { background: #fff; padding: 100px 80px; }
         .pendahuluan-wrapper { display: grid; grid-template-columns: 1.2fr .8fr; gap: 60px; }
         .pendahuluan-text p { line-height: 1.9; margin-bottom: 15px; color: #444; }
@@ -99,9 +101,6 @@
         .media-box img { width: 100%; height: 100%; object-fit: cover; transition: .4s; }
         .media-box:hover img { transform: scale(1.08); }
 
-        /* ================================================
-           PARTNER SLIDER
-        ================================================ */
         .partner-section {
             background: #fdfdfd; padding: 80px 20px;
             text-align: center; border-top: 1px solid #eee;
@@ -118,9 +117,6 @@
         .swiper-slide:hover img { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
         .swiper-pagination-bullet-active { background: #4A90E2 !important; }
 
-        /* ================================================
-           STRUKTUR ORGANISASI
-        ================================================ */
         #struktur-organisasi { scroll-margin-top: 100px; }
         .struktur-section { background: white; padding: 100px 20px; text-align: center; }
         .org-container { max-width: 1000px; margin: 0 auto; position: relative; }
@@ -157,9 +153,6 @@
         .staff-photo-simple { width: 35px; height: 35px; border-radius: 50%; background: #ddd; margin-right: 10px; overflow: hidden; }
         .staff-photo-simple img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ================================================
-           PETUGAS (WAVE CARD)
-        ================================================ */
         .petugas-grid-section { background: #fff; padding: 80px 20px; text-align: center; }
         .staff-wrapper {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -196,9 +189,6 @@
         .ig:hover { background: #E4405F !important; }
         .mail:hover { background: #EA4335 !important; }
 
-        /* ================================================
-           TATA TERTIB
-        ================================================ */
         :root {
             --primary-blue: #2c5282;
             --accent-teal: #38b2ac;
@@ -270,9 +260,6 @@
         .reveal-tata-tertib { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .reveal-tata-tertib.active { opacity: 1; transform: translateY(0); }
 
-        /* ================================================
-           KONTAK
-        ================================================ */
         #kontak {
             background-color: #f8fafc; padding: 80px 20px;
             display: flex; justify-content: center; font-family: 'Inter', sans-serif;
@@ -322,9 +309,6 @@
         .radio-option input { cursor: pointer; accent-color: #1e3a8a; }
         .radio-option:hover { background: #eff6ff; }
 
-        /* ================================================
-           TOMBOL KIRIM + ANIMASI PESAWAT
-        ================================================ */
         .btn-submit {
             width: 100%; padding: 18px; background: #1e3a8a; color: white;
             border: none; border-radius: 15px; font-weight: 700; cursor: pointer;
@@ -336,26 +320,15 @@
         .btn-submit:active { transform: scale(0.95); }
         .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
-        /* Hover icon pesawat di tombol */
         .btn-submit i { transition: all 0.5s ease; }
         .btn-submit:hover i { transform: translate(5px, -5px) rotate(-45deg); }
 
-        /* Animasi pesawat berputar saat loading */
         .btn-submit.loading i {
             animation: flyPlane 2s ease-in-out infinite;
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
             display: inline-block;
         }
 
-        /* Pesawat terbang melintasi layar saat kirim */
-        @keyframes flyAcross {
-            0%   { opacity: 1; transform: translate(0, 0) rotate(-45deg) scale(1); }
-            50%  { opacity: 1; transform: translate(300px, -300px) rotate(-45deg) scale(1.4); }
-            80%  { opacity: 0.5; transform: translate(700px, -500px) rotate(-45deg) scale(1); }
-            100% { opacity: 0; transform: translate(1000px, -700px) rotate(-45deg) scale(0.3); }
-        }
-
-        /* Animasi pesawat di tombol saat loading */
         @keyframes flyPlane {
             0%   { transform: translate(0px, 0px) rotate(-45deg) scale(1); opacity: 1; }
             20%  { transform: translate(8px, -8px) rotate(-45deg) scale(1.2); opacity: 1; }
@@ -366,7 +339,6 @@
             100% { transform: translate(0px, 0px) rotate(-45deg) scale(1); opacity: 1; }
         }
 
-        /* Animasi pesawat premium terbang saat submit */
         @keyframes flyPremium {
             0%   { transform: translate(0, 0) rotate(-45deg) scale(1); opacity: 1; }
             10%  { transform: translate(20px, -20px) rotate(-45deg) scale(1.3); opacity: 1; }
@@ -375,16 +347,12 @@
             100% { transform: translate(800px, -600px) rotate(-45deg) scale(0.5); opacity: 0; }
         }
 
-        /* Animasi asap pesawat */
         @keyframes smokeFade {
             0%   { transform: translate(0, 0) scale(1); opacity: 0.8; }
             50%  { transform: translate(-20px, -30px) scale(1.5); opacity: 0.4; }
             100% { transform: translate(-40px, -60px) scale(2); opacity: 0; }
         }
 
-        /* ================================================
-           ADMIN PANEL
-        ================================================ */
         #adminPanel {
             display: none; margin-top: 30px; padding: 20px;
             background: #ffffff; border: 2px dashed #3b82f6; border-radius: 20px;
@@ -399,58 +367,33 @@
         .badge { font-size: 0.7rem; background: #1e3a8a; color: white; padding: 2px 8px; border-radius: 5px; margin-left: 5px; text-transform: uppercase; }
         .loading-msg { color: #64748b; font-size: 0.85rem; font-style: italic; padding: 10px 0; font-family: 'Inter', sans-serif; }
 
-        /* ================================================
-           NOTIFIKASI
-        ================================================ */
         .notif { display: none; padding: 12px 18px; border-radius: 12px; margin-bottom: 20px; font-size: 0.88rem; font-weight: 600; font-family: 'Inter', sans-serif; }
         .notif.success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
         .notif.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
-        /* ================================================
-           KEYFRAMES UMUM
-        ================================================ */
         @keyframes typing { to { width: 100%; } }
         @keyframes blink { 50% { border-color: transparent; } }
         @keyframes moveWave { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ================================================
-           FOOTER
-        ================================================ */
         footer {
             background: #0f172a;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Cellipse cx='400' cy='200' rx='380' ry='180' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3Cellipse cx='400' cy='200' rx='300' ry='140' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3Cellipse cx='400' cy='200' rx='220' ry='100' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3Cpath d='M20 200 Q200 100 400 200 Q600 300 780 200' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3Cpath d='M20 150 Q200 80 400 150 Q600 220 780 150' fill='none' stroke='rgba(255,255,255,0.02)' stroke-width='1'/%3E%3C/svg%3E");
-            background-size: cover;
-            background-position: center;
-            color: #cbd5e1;
-            font-family: 'Inter', sans-serif;
-            padding: 70px 80px 0;
-            position: relative;
+            color: #cbd5e1; font-family: 'Inter', sans-serif;
+            padding: 70px 80px 0; position: relative;
         }
 
         .footer-top {
-            display: grid;
-            grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-            gap: 50px;
-            padding-bottom: 50px;
+            display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+            gap: 50px; padding-bottom: 50px;
             border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
-        /* Kolom brand */
-        .footer-brand .footer-logo {
-            display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
-        }
+        .footer-brand .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
         .footer-brand .footer-logo img { width: 55px; height: 55px; object-fit: contain; }
-        .footer-brand .footer-logo-text strong {
-            display: block; color: #ffffff; font-size: 16px; font-weight: 700; letter-spacing: 1px;
-        }
-        .footer-brand .footer-logo-text span {
-            color: #3b82f6; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
-        }
+        .footer-brand .footer-logo-text strong { display: block; color: #ffffff; font-size: 16px; font-weight: 700; letter-spacing: 1px; }
+        .footer-brand .footer-logo-text span { color: #3b82f6; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
         .footer-brand p { font-size: 0.88rem; line-height: 1.8; color: #94a3b8; margin-bottom: 25px; }
 
-        /* Sosial media */
         .footer-socials { display: flex; gap: 10px; flex-wrap: wrap; }
         .footer-socials a {
             width: 38px; height: 38px; border-radius: 10px;
@@ -460,68 +403,33 @@
             transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1);
         }
         .footer-socials a:hover { transform: translateY(-4px); border-color: transparent; }
-        .footer-socials a.twitter:hover  { background: #1DA1F2; color: #fff; box-shadow: 0 8px 20px rgba(29,161,242,0.4); }
-        .footer-socials a.facebook:hover { background: #1877F2; color: #fff; box-shadow: 0 8px 20px rgba(24,119,242,0.4); }
-        .footer-socials a.instagram:hover {
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            color: #fff; box-shadow: 0 8px 20px rgba(220,39,67,0.4);
-        }
-        .footer-socials a.youtube:hover  { background: #FF0000; color: #fff; box-shadow: 0 8px 20px rgba(255,0,0,0.4); }
-        .footer-socials a.tiktok:hover   { background: #010101; color: #fff; box-shadow: 0 8px 20px rgba(105,201,208,0.4); outline: 2px solid #69C9D0; }
+        .footer-socials a.twitter:hover  { background: #1DA1F2; color: #fff; }
+        .footer-socials a.facebook:hover { background: #1877F2; color: #fff; }
+        .footer-socials a.instagram:hover { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; }
+        .footer-socials a.youtube:hover  { background: #FF0000; color: #fff; }
+        .footer-socials a.tiktok:hover   { background: #010101; color: #fff; }
 
-        /* Kolom tautan */
         .footer-col h4 {
             color: #ffffff; font-size: 13px; font-weight: 700;
             letter-spacing: 2px; text-transform: uppercase;
             margin-bottom: 22px; position: relative; padding-bottom: 12px;
         }
-        .footer-col h4::after {
-            content: ''; position: absolute; left: 0; bottom: 0;
-            width: 30px; height: 2px; background: #3b82f6; border-radius: 2px;
-        }
+        .footer-col h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 30px; height: 2px; background: #3b82f6; border-radius: 2px; }
         .footer-col ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-        .footer-col ul li a {
-            color: #94a3b8; text-decoration: none; font-size: 0.88rem;
-            display: flex; align-items: center; gap: 8px;
-            transition: all 0.3s ease; padding: 4px 0;
-        }
-        .footer-col ul li a::before {
-            content: '›'; color: #3b82f6; font-size: 16px; font-weight: bold;
-            transition: transform 0.3s ease;
-        }
+        .footer-col ul li a { color: #94a3b8; text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; padding: 4px 0; }
+        .footer-col ul li a::before { content: '›'; color: #3b82f6; font-size: 16px; font-weight: bold; transition: transform 0.3s ease; }
         .footer-col ul li a:hover { color: #ffffff; transform: translateX(5px); }
-        .footer-col ul li a:hover::before { transform: translateX(3px); }
 
-        /* Kolom hubungi kami */
-        .footer-contact h4 {
-            color: #ffffff; font-size: 13px; font-weight: 700;
-            letter-spacing: 2px; text-transform: uppercase;
-            margin-bottom: 22px; position: relative; padding-bottom: 12px;
-        }
-        .footer-contact h4::after {
-            content: ''; position: absolute; left: 0; bottom: 0;
-            width: 30px; height: 2px; background: #3b82f6; border-radius: 2px;
-        }
-        .footer-contact-item {
-            display: flex; align-items: flex-start; gap: 12px;
-            margin-bottom: 16px; font-size: 0.88rem; color: #94a3b8;
-        }
-        .footer-contact-item i {
-            color: #3b82f6; margin-top: 3px; width: 16px;
-            flex-shrink: 0; font-size: 14px;
-        }
+        .footer-contact h4 { color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px; position: relative; padding-bottom: 12px; }
+        .footer-contact h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 30px; height: 2px; background: #3b82f6; border-radius: 2px; }
+        .footer-contact-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; font-size: 0.88rem; color: #94a3b8; }
+        .footer-contact-item i { color: #3b82f6; margin-top: 3px; width: 16px; flex-shrink: 0; font-size: 14px; }
         .footer-contact-item strong { color: #e2e8f0; }
 
-        /* Footer bottom */
-        .footer-bottom {
-            padding: 22px 0;
-            display: flex; justify-content: center; align-items: center;
-            text-align: center;
-        }
+        .footer-bottom { padding: 22px 0; display: flex; justify-content: center; align-items: center; text-align: center; }
         .footer-bottom p { font-size: 0.82rem; color: #475569; }
         .footer-bottom span { color: #3b82f6; font-weight: 600; }
 
-        /* Scroll to top button */
         .scroll-top {
             position: fixed; bottom: 30px; right: 30px;
             width: 45px; height: 45px; background: #1e3a8a;
@@ -533,21 +441,12 @@
             opacity: 0; visibility: hidden;
         }
         .scroll-top.show { opacity: 1; visibility: visible; }
-        .scroll-top:hover { background: #3b82f6; transform: translateY(-4px); box-shadow: 0 10px 25px rgba(59,130,246,0.5); }
+        .scroll-top:hover { background: #3b82f6; transform: translateY(-4px); }
 
         @media(max-width: 900px) {
             footer { padding: 50px 25px 0; }
             .footer-top { grid-template-columns: 1fr 1fr; gap: 35px; }
             .footer-brand { grid-column: 1 / -1; }
-        }
-        @media(max-width: 550px) {
-            .footer-top { grid-template-columns: 1fr; }
-        }
-
-        /* ================================================
-           RESPONSIVE
-        ================================================ */
-        @media(max-width: 900px) {
             header { padding: 15px 22px; }
             .menu-toggle { display: block; }
             nav ul {
@@ -569,13 +468,13 @@
             .map-wrapper { height: 300px; }
             .form-area { padding: 30px 25px; }
         }
+        @media(max-width: 550px) {
+            .footer-top { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-<!-- ================================================
-     HEADER
-================================================ -->
 <header>
     <div class="logo">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcofkPgciaQNYImQ_qazRA48osKpjESS6HsQ&s">
@@ -591,32 +490,33 @@
                     <a href="#struktur-organisasi">Struktur Organisasi</a>
                     <a href="#Perpustakawan">Perpustakawan</a>
                     <a href="#tata-tertib-rules">Tata Tertib</a>
-                    <a href="#Visi & Misi">Visi & Misi</a>
+                    <a href="#Visi & Misi">Visi &amp; Misi</a>
                 </div>
             </li>
-           <li><a href="/perpussaya/koleksi.html">Koleksi</a></li>
+            <li><a href="#koleksi">Koleksi</a></li>
             <li><a href="#layanan">Layanan</a></li>
             <li><a href="#kontak">Kontak</a></li>
-            <li><a href="#peminjaman">Peminjaman</a></li>
+            <!-- ✅ LINK KE PEMINJAMAN — sesuaikan path jika perlu -->
+            <li><a href="Peminjaman.html">Peminjaman</a></li>
         </ul>
     </nav>
 </header>
 
-<!-- ================================================
-     HERO
-================================================ -->
 <section class="hero section show" id="beranda">
     <div class="hero-text">
         <small>Perpustakaan Sekolah</small>
         <h1>Perpustakaan<br>SMKN 1 Ketapang</h1>
         <p class="typing">Semua bisa karena membaca</p>
+        <div class="ticker-wrap">
+            <div class="ticker-track">
+                <span>Semua bisa karena membaca — Membaca adalah jendela dunia — Ilmu adalah cahaya kehidupan — Buku adalah sahabat terbaik — Perpustakaan, tempat mimpi dimulai</span>
+                <span>Semua bisa karena membaca — Membaca adalah jendela dunia — Ilmu adalah cahaya kehidupan — Buku adalah sahabat terbaik — Perpustakaan, tempat mimpi dimulai</span>
+            </div>
+        </div>
     </div>
     <img class="student-img" src="kpl.png">
 </section>
 
-<!-- ================================================
-     PENDAHULUAN
-================================================ -->
 <section class="pendahuluan section">
     <div class="pendahuluan-wrapper">
         <div class="pendahuluan-text">
@@ -624,6 +524,9 @@
             <p>Perpustakaan SMKN 1 KETAPANG merupakan salah satu tempat yang memfasilitasi sumber pembelajaran dalam mendukung pencapaian hasil belajar siswa yang berkualitas. Keberadaan perpustakaan sekolah sangat dibutuhkan para pendidik, tenaga kependidikan serta peserta didik untuk memperluas dan memperdalam pengetahuan untuk menunjang proses belajar mengajar di sekolah.</p>
             <p>Perpustakaan SMKN 1 Ketapang hadir sebagai jantung literasi dan pusat sumber belajar digital maupun cetak bagi seluruh warga sekolah. Kami berkomitmen menyediakan akses informasi yang luas guna mendukung terciptanya lulusan yang kompeten dan berkualitas.</p>
             <p>Di tengah era transformasi digital, Perpustakaan SMKN 1 Ketapang bertransformasi menjadi pusat inovasi dan kolaborasi pembelajaran. Keberadaan kami adalah wujud nyata dukungan sekolah dalam mencetak generasi literat yang siap menghadapi tantangan industri masa depan.</p>
+            <p>Perpustakaan SMKN 1 Ketapang memiliki koleksi buku yang terus berkembang, mencakup buku pelajaran, buku referensi, majalah, surat kabar, hingga bahan bacaan pengayaan. Setiap koleksi dipilih dengan cermat untuk mendukung kurikulum dan memperluas wawasan seluruh warga sekolah.</p>
+            <p>Dengan sistem pelayanan yang ramah dan terorganisir, kami memastikan setiap pengunjung mendapatkan pengalaman yang menyenangkan. Petugas perpustakaan siap membantu dalam pencarian buku, peminjaman, hingga bimbingan literasi agar kegiatan belajar semakin efektif.</p>
+            <p>Kami mengundang seluruh siswa, guru, dan staf untuk menjadikan perpustakaan sebagai ruang belajar utama. Jadikan perpustakaan bukan sekadar tempat meminjam buku, tetapi sebagai rumah kedua untuk tumbuh, berpikir, dan berkarya bersama.</p>
         </div>
         <div class="pendahuluan-media">
             <div class="media-box"><img src="foto pendahuluan 1.jpeg"></div>
@@ -635,9 +538,6 @@
     </div>
 </section>
 
-<!-- ================================================
-     PARTNER
-================================================ -->
 <section class="partner-section section">
     <div class="partner-subtitle">PARTNER KAMI</div>
     <h2 class="partner-title">Terimakasih Atas Dukungannya</h2>
@@ -654,9 +554,6 @@
     </div>
 </section>
 
-<!-- ================================================
-     STRUKTUR ORGANISASI
-================================================ -->
 <section class="struktur-section section" id="struktur-organisasi">
     <div class="partner-subtitle">ORGANISASI</div>
     <h2 class="partner-title" style="margin-bottom:50px;">Struktur Organisasi Perpustakaan</h2>
@@ -697,9 +594,6 @@
     </div>
 </section>
 
-<!-- ================================================
-     PETUGAS
-================================================ -->
 <section class="petugas-grid-section" id="Perpustakawan">
     <div class="partner-subtitle">Perpustakawan</div>
     <h2 class="partner-title" style="margin-bottom:50px;">Para Petugas Kami</h2>
@@ -724,7 +618,7 @@
                     <a href="https://wa.me/6289531654541" class="wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     <a href="https://www.facebook.com/share/1DFZNCEYtJ/" class="fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/clows.ee?igsh=MWNpZzdwZjF0bHJ5dg==" class="ig"><i class="fab fa-instagram"></i></a>
-                    <a href="/cdn-cgi/l/email-protection#d7aeb6b6e6e3e4eee7e497b0bab6bebbf9b4b8ba" class="mail"><i class="fas fa-envelope"></i></a>
+                    <a href="mailto:perpus@smkn1ketapang.id" class="mail"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
         </div>
@@ -747,7 +641,7 @@
                     <a href="https://wa.me/6289531654541" class="wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     <a href="https://www.facebook.com/share/1DFZNCEYtJ/" class="fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/clows.ee?igsh=MWNpZzdwZjF0bHJ5dg==" class="ig"><i class="fab fa-instagram"></i></a>
-                    <a href="/cdn-cgi/l/email-protection#fc859d9dcdc8cfc5cccfbc9b919d9590d29f9391" class="mail"><i class="fas fa-envelope"></i></a>
+                    <a href="mailto:perpus@smkn1ketapang.id" class="mail"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
         </div>
@@ -770,16 +664,13 @@
                     <a href="https://wa.me/6289531654541" class="wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     <a href="https://www.facebook.com/share/1DFZNCEYtJ/" class="fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/clows.ee?igsh=MWNpZzdwZjF0bHJ5dg==" class="ig"><i class="fab fa-instagram"></i></a>
-                    <a href="/cdn-cgi/l/email-protection#fa839b9bcbcec9c3cac9ba9d979b9396d4999597" class="mail"><i class="fas fa-envelope"></i></a>
+                    <a href="mailto:perpus@smkn1ketapang.id" class="mail"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ================================================
-     TATA TERTIB
-================================================ -->
 <section id="tata-tertib-rules">
     <div class="container">
         <div class="section-header-tata-tertib">
@@ -835,7 +726,7 @@
             </div>
             <div class="rule-card-tata-tertib reveal-tata-tertib">
                 <div class="icon-container-tata-tertib" style="background-color:#f6ad55; box-shadow:0 5px 15px rgba(246,173,85,0.3);"><i class="fas fa-exclamation-triangle"></i></div>
-                <h3>Sanksi & Denda</h3>
+                <h3>Sanksi &amp; Denda</h3>
                 <ul class="detail-list-tata-tertib">
                     <li class="warning"><i class="fas fa-exclamation-triangle"></i><span>Keterlambatan pengembalian dikenakan denda Rp 500,-/hari.</span></li>
                     <li class="warning"><i class="fas fa-exclamation-triangle"></i><span>Buku rusak/hilang wajib diganti dengan judul yang sama.</span></li>
@@ -846,9 +737,6 @@
     </div>
 </section>
 
-<!-- ================================================
-     KONTAK
-================================================ -->
 <section id="kontak">
     <div class="kontak-container">
         <div class="main-card">
@@ -867,7 +755,7 @@
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
-                        <p style="font-size:0.85rem; font-family:'Inter',sans-serif;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e2928790929791a2918f898cd38987968392838c85cc8b86">[email&#160;protected]</a></p>
+                        <p style="font-size:0.85rem; font-family:'Inter',sans-serif;">perpus@smkn1ketapang.id</p>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-clock"></i>
@@ -878,13 +766,10 @@
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.3512345!2d109.9557813!3d-1.8488835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e041f07ec5738db%3A0x16f45658e1ad6308!2sSMK%20Negeri%201%20Ketapang!5e0!3m2!1sid!2sid!4v1708600000000!5m2!1sid!2sid" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </aside>
-
             <main class="form-area">
-                <h2>Saran & Masukan</h2>
+                <h2>Saran &amp; Masukan</h2>
                 <p class="subtitle">Bantu kami meningkatkan layanan terbaik untuk Anda.</p>
-
                 <div id="notifBox" class="notif"></div>
-
                 <form id="feedbackForm">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
@@ -899,7 +784,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Pesan & Saran</label>
+                        <label>Pesan &amp; Saran</label>
                         <textarea id="msgInput" class="input-field" rows="6" placeholder="Apa yang bisa kami tingkatkan?" required></textarea>
                     </div>
                     <button type="submit" class="btn-submit" id="submitBtn">
@@ -907,7 +792,6 @@
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </form>
-
                 <div id="adminPanel">
                     <div class="admin-header">
                         <h3><i class="fas fa-user-shield"></i> Database Masukan <span id="totalCount" class="badge">0</span></h3>
@@ -922,13 +806,8 @@
     </div>
 </section>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><!-- ================================================
-     FOOTER
-================================================ -->
 <footer>
     <div class="footer-top">
-
-        <!-- Brand & Sosial Media -->
         <div class="footer-brand">
             <div class="footer-logo">
                 <img src="logo smkn bulat.jpg" alt="Logo SMKN 1 Ketapang">
@@ -946,8 +825,6 @@
                 <a href="https://www.tiktok.com/@sans_5651?_r=1&_t=ZS-9490YffIV9A" class="tiktok"   title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
-
-        <!-- Tautan Berguna -->
         <div class="footer-col">
             <h4>Tautan Berguna</h4>
             <ul>
@@ -958,20 +835,17 @@
                 <li><a href="#kontak">Kontak Kami</a></li>
             </ul>
         </div>
-
-        <!-- Tautan Lainnya -->
         <div class="footer-col">
             <h4>Tautan Lainnya</h4>
             <ul>
                 <li><a href="https://smkn1ketapang.sch.id" target="_blank">Website Sekolah</a></li>
                 <li><a href="#koleksi">Koleksi Buku</a></li>
                 <li><a href="#layanan">Layanan Perpustakaan</a></li>
-                <li><a href="#peminjaman">Peminjaman Buku</a></li>
+                <!-- ✅ LINK FOOTER KE PEMINJAMAN -->
+                <li><a href="Peminjaman.html">Peminjaman Buku</a></li>
                 <li><a href="#kontak">Kotak Saran</a></li>
             </ul>
         </div>
-
-        <!-- Hubungi Kami -->
         <div class="footer-contact">
             <h4>Hubungi Kami</h4>
             <div class="footer-contact-item">
@@ -991,16 +865,12 @@
                 <span><strong>Jam Buka:</strong> Senin–Sabtu<br>07.00 – 15.30 WIB</span>
             </div>
         </div>
-
     </div>
-
-    <!-- Footer Bottom -->
     <div class="footer-bottom">
-        <p>Copyright © 2026 <span>Perpustakaan SMKN 1 Ketapang</span>. All Rights Reserved.</p>
+        <p>Copyright &copy; 2026 <span>Perpustakaan SMKN 1 Ketapang</span>. All Rights Reserved.</p>
     </div>
 </footer>
 
-<!-- Scroll to Top Button -->
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">
     <i class="fas fa-arrow-up"></i>
 </button>
@@ -1008,74 +878,80 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
 
-    /* ================================================
-       SCRIPT UMUM
-    ================================================ */
-
-    // Swiper slider partner
     var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 2,
-        spaceBetween: 30,
-        loop: true,
+        slidesPerView: 2, spaceBetween: 30, loop: true,
         autoplay: { delay: 2000, disableOnInteraction: false },
         pagination: { el: ".swiper-pagination", clickable: true },
         breakpoints: { 640: { slidesPerView: 3 }, 1024: { slidesPerView: 5 } },
     });
 
-    // Toggle menu mobile
     function toggleMenu() {
         document.querySelector('nav ul').classList.toggle('active');
     }
 
-    // Toggle dropdown mobile
     function toggleDropdown(el) {
         if (window.innerWidth <= 900) el.classList.toggle('open');
     }
 
-    // Header solid saat scroll
     window.addEventListener('scroll', () => {
         document.querySelector('header').classList.toggle('solid', window.scrollY > 50);
     });
 
-    // Animasi section saat scroll
     const sections = document.querySelectorAll('.section');
     const obs = new IntersectionObserver(e => {
         e.forEach(x => x.isIntersecting && x.target.classList.add('show'));
     }, { threshold: .1 });
     sections.forEach(s => obs.observe(s));
 
-    // Active link navigasi
-    document.querySelectorAll("nav ul li a").forEach(link => {
-        link.addEventListener("click", () => {
-            document.querySelectorAll("nav ul li a").forEach(l => l.classList.remove("active"));
-            link.classList.add("active");
+    const navLinks = document.querySelectorAll('nav ul li > a[href^="#"]');
+
+    const spySections = [
+        { id: 'beranda',             href: '#beranda' },
+        { id: 'struktur-organisasi', href: '#struktur-organisasi' },
+        { id: 'Perpustakawan',       href: '#Perpustakawan' },
+        { id: 'tata-tertib-rules',   href: '#tata-tertib-rules' },
+        { id: 'kontak',              href: '#kontak' },
+    ];
+
+    function setActiveNav(href) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const target = document.querySelector(`nav ul li > a[href="${href}"]`);
+        if (target) target.classList.add('active');
+    }
+
+    const spyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const matched = spySections.find(s => s.id === entry.target.id);
+                if (matched) setActiveNav(matched.href);
+            }
+        });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' });
+
+    spySections.forEach(s => {
+        const el = document.getElementById(s.id);
+        if (el) spyObserver.observe(el);
+    });
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
             if (window.innerWidth <= 900) toggleMenu();
         });
     });
 
-    // Animasi reveal tata tertib
     document.addEventListener('DOMContentLoaded', function () {
         const revealElements = document.querySelectorAll(".reveal-tata-tertib");
         const observer = new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("active");
-                    obs.unobserve(entry.target);
-                }
+                if (entry.isIntersecting) { entry.target.classList.add("active"); obs.unobserve(entry.target); }
             });
         }, { threshold: 0.2 });
         revealElements.forEach(el => observer.observe(el));
     });
 
-
-    /* ================================================
-       SCRIPT KONTAK - GOOGLE SHEETS
-    ================================================ */
-
-    // URL Google Apps Script (terhubung ke Google Sheets)
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmAD96dk5jzn7iZcyjLlbj3UTbjwxt5sLOdBTffHvVyuNpPZ3vSP_CfdGC8lQ3Bp8u/exec";
-
-    // Password admin (ganti sesuai keinginan)
     const secretPass = "admin123";
 
     let clickCount = 0, clickTimer = null;
@@ -1087,7 +963,6 @@
     const dataContainer = document.getElementById('dataContainer');
     const notifBox      = document.getElementById('notifBox');
 
-    // Tampilkan notifikasi
     function showNotif(msg, type = 'success') {
         notifBox.textContent = msg;
         notifBox.className = 'notif ' + type;
@@ -1095,134 +970,78 @@
         setTimeout(() => { notifBox.style.display = 'none'; }, 4000);
     }
 
-    // Animasi pesawat premium terbang saat submit
     function launchPlane() {
         const btnRect = submitBtn.getBoundingClientRect();
-
-        // Buat jejak asap
         for (let i = 0; i < 8; i++) {
             setTimeout(() => {
                 const smoke = document.createElement('div');
-                smoke.style.cssText = `
-                    position: fixed;
-                    left: ${btnRect.left + 20 + (i * 5)}px;
-                    top: ${btnRect.top}px;
-                    width: ${10 - i}px;
-                    height: ${10 - i}px;
-                    background: rgba(59, 130, 246, 0.5);
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 9998;
-                    animation: smokeFade 1s ease-out forwards;
-                `;
+                smoke.style.cssText = `position:fixed;left:${btnRect.left+20+(i*5)}px;top:${btnRect.top}px;width:${10-i}px;height:${10-i}px;background:rgba(59,130,246,0.5);border-radius:50%;pointer-events:none;z-index:9998;animation:smokeFade 1s ease-out forwards;`;
                 document.body.appendChild(smoke);
                 setTimeout(() => smoke.remove(), 1000);
             }, i * 80);
         }
-
-        // Buat pesawat utama
         const plane = document.createElement('div');
-        plane.style.cssText = `
-            position: fixed;
-            left: ${btnRect.left}px;
-            top: ${btnRect.top}px;
-            font-size: 28px;
-            z-index: 9999;
-            pointer-events: none;
-            animation: flyPremium 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        `;
-        plane.innerHTML = '<i class="fas fa-paper-plane" style="color:#3b82f6; font-size:28px; filter:drop-shadow(0 0 10px rgba(59,130,246,0.9));"></i>';
+        plane.style.cssText = `position:fixed;left:${btnRect.left}px;top:${btnRect.top}px;font-size:28px;z-index:9999;pointer-events:none;animation:flyPremium 2s cubic-bezier(0.25,0.46,0.45,0.94) forwards;`;
+        plane.innerHTML = '<i class="fas fa-paper-plane" style="color:#3b82f6;font-size:28px;filter:drop-shadow(0 0 10px rgba(59,130,246,0.9));"></i>';
         document.body.appendChild(plane);
         setTimeout(() => plane.remove(), 2000);
     }
 
-    // Kirim data ke Google Sheets
     feedbackForm.onsubmit = async function (e) {
         e.preventDefault();
-
-        // Set loading state
         submitBtn.disabled = true;
         submitBtn.classList.add('loading');
         btnText.textContent = 'Mengirim...';
-
         const payload = {
             name:   document.getElementById('nameInput').value,
             status: document.querySelector('input[name="status"]:checked').value,
             msg:    document.getElementById('msgInput').value,
             time:   new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })
         };
-
         try {
             await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
+                method: 'POST', mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-
-            // Animasi pesawat terbang
             launchPlane();
-
-            // Notifikasi sukses
             showNotif('✅ Terima kasih! Saran Anda telah berhasil disimpan.', 'success');
             feedbackForm.reset();
-
-            // Refresh admin panel jika terbuka
             if (adminPanel.style.display === 'block') setTimeout(loadData, 2000);
-
         } catch (err) {
             showNotif('❌ Gagal mengirim. Periksa koneksi internet.', 'error');
         } finally {
-            // Reset tombol
             submitBtn.disabled = false;
             submitBtn.classList.remove('loading');
             btnText.textContent = 'Kirim Sekarang';
         }
     };
 
-    // Muat data dari Google Sheets ke admin panel
     async function loadData() {
         dataContainer.innerHTML = '<p class="loading-msg"><i class="fas fa-spinner fa-spin"></i> Memuat data dari Google Sheets...</p>';
         try {
             const res  = await fetch(APPS_SCRIPT_URL);
             const data = await res.json();
-
             document.getElementById('totalCount').textContent = data.length;
-
-            if (data.length === 0) {
-                dataContainer.innerHTML = '<p class="loading-msg">Belum ada masukan yang masuk.</p>';
-                return;
-            }
-
+            if (data.length === 0) { dataContainer.innerHTML = '<p class="loading-msg">Belum ada masukan yang masuk.</p>'; return; }
             dataContainer.innerHTML = '';
             [...data].reverse().forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'feedback-card';
-                div.innerHTML = `
-                    <strong>${escapeHtml(item.name)}</strong>
-                    <span class="badge">${escapeHtml(item.status)}</span>
-                    <br><br>
-                    <span style="color:#334155;">${escapeHtml(item.msg)}</span>
-                    <br><br>
-                    <small style="color:#64748b;"><i class="fas fa-clock"></i> ${item.time}</small>
-                `;
+                div.innerHTML = `<strong>${escapeHtml(item.name)}</strong><span class="badge">${escapeHtml(item.status)}</span><br><br><span style="color:#334155;">${escapeHtml(item.msg)}</span><br><br><small style="color:#64748b;"><i class="fas fa-clock"></i> ${item.time}</small>`;
                 dataContainer.appendChild(div);
             });
-
         } catch (err) {
-            dataContainer.innerHTML = '<p class="loading-msg" style="color:#dc2626;">Gagal memuat data. Periksa koneksi internet.</p>';
+            dataContainer.innerHTML = '<p class="loading-msg" style="color:#dc2626;">Gagal memuat data.</p>';
         }
     }
 
-    // Admin login - klik logo 5x
     document.getElementById('adminTrigger').onclick = function () {
         clickCount++;
         clearTimeout(clickTimer);
         clickTimer = setTimeout(() => { clickCount = 0; }, 3000);
-
         if (clickCount >= 5) {
-            clickCount = 0;
-            clearTimeout(clickTimer);
+            clickCount = 0; clearTimeout(clickTimer);
             const inputPass = prompt("🔐 Masukkan Password Admin:");
             if (inputPass === null) return;
             if (inputPass === secretPass) {
@@ -1235,14 +1054,12 @@
         }
     };
 
-    // Escape HTML untuk keamanan
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.appendChild(document.createTextNode(text));
         return div.innerHTML;
     }
 
-    // Scroll to top button
     window.addEventListener('scroll', () => {
         document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
     });
