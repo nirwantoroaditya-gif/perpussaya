@@ -1,0 +1,1189 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perpustakaan SMKN 1 Ketapang</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+
+    :root {
+      --navy:       #0f1b35;
+      --navy2:      #152040;
+      --navy3:      #1c2d55;
+      --navy4:      #243360;
+      --blue:       #3b7cf4;
+      --blue-l:     #5b9cf6;
+      --blue-pale:  rgba(59, 124, 244, .12);
+      --white:      #ffffff;
+      --bg:         #f4f6fb;
+      --bg2:        #e8ecf4;
+      --border:     #dde3f0;
+      --border2:    #c8d0e8;
+      --text:       #1a2440;
+      --text2:      #4a5a80;
+      --text3:      #7a8ab0;
+      --green:      #16a34a;
+      --green-bg:   #dcfce7;
+      --orange:     #ea580c;
+      --red:        #dc2626;
+      --red-bg:     #fee2e2;
+      --gold:       #f59e0b;
+      --r:          14px;
+      --r-sm:       10px;
+      --shadow-sm:  0 1px 4px rgba(15, 27, 53, .07);
+      --shadow-md:  0 4px 20px rgba(15, 27, 53, .13);
+      --shadow-lg:  0 16px 50px rgba(15, 27, 53, .2);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .page        { display: none; }
+    .page.active { display: block; }
+    .sect        { display: none; }
+    .sect.on     { display: block; }
+    .tab-section    { display: none; }
+    .tab-section.on { display: block; }
+
+    @keyframes orbFloat  { 0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.05);} }
+    @keyframes scaleIn   { from{opacity:0;transform:scale(.94) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);} }
+    @keyframes fadeUpIn  { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;} }
+    @keyframes spin      { to{transform:rotate(360deg);} }
+
+    /* ── LOGIN ── */
+    #page-login {
+      min-height:100vh;
+      background:linear-gradient(135deg,var(--navy) 0%,#0a1428 40%,#112244 100%);
+      display:flex; align-items:center; justify-content:center;
+      padding:20px; position:relative; overflow:hidden;
+    }
+    #page-login::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(ellipse 70% 70% at 80% 20%,rgba(59,124,244,.18) 0%,transparent 60%),
+                  radial-gradient(ellipse 50% 50% at 10% 80%,rgba(26,107,107,.12) 0%,transparent 55%);
+      pointer-events:none;
+    }
+    #page-login::after {
+      content:''; position:absolute; inset:0;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:50px 50px; pointer-events:none;
+    }
+    .orb { position:absolute; border-radius:50%; pointer-events:none; animation:orbFloat linear infinite; }
+
+    .login-container { display:grid; grid-template-columns:1fr 480px; max-width:940px; width:100%; gap:60px; align-items:center; position:relative; z-index:2; }
+    .login-brand { color:#fff; animation:fadeUpIn .7s ease both; }
+    .login-logo-wrap { display:inline-flex; align-items:center; gap:14px; margin-bottom:40px; }
+    .login-logo-icon { width:52px; height:52px; background:var(--blue); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; color:#fff; box-shadow:0 8px 24px rgba(59,124,244,.4); }
+    .login-logo-text { font-size:1rem; font-weight:700; color:#fff; line-height:1.25; }
+    .login-logo-text small { display:block; font-size:11px; font-weight:400; opacity:.55; letter-spacing:.5px; }
+    .login-headline { font-size:clamp(2rem,4vw,3rem); font-weight:800; line-height:1.15; margin-bottom:18px; letter-spacing:-.5px; }
+    .login-headline .hi { color:rgba(255,255,255,.45); font-weight:300; display:block; font-size:.7em; margin-bottom:4px; }
+    .login-headline .accent { color:var(--blue-l); }
+    .login-desc { font-size:.95rem; color:rgba(255,255,255,.45); line-height:1.7; max-width:380px; margin-bottom:36px; }
+    .login-features { display:flex; flex-direction:column; gap:12px; }
+    .lf-item { display:flex; align-items:center; gap:12px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:var(--r-sm); padding:12px 16px; animation:fadeUpIn .6s ease both; }
+    .lf-icon { width:36px; height:36px; border-radius:8px; background:rgba(59,124,244,.2); border:1px solid rgba(59,124,244,.3); display:flex; align-items:center; justify-content:center; color:var(--blue-l); font-size:14px; flex-shrink:0; }
+    .lf-text { font-size:13px; font-weight:500; color:rgba(255,255,255,.7); }
+
+    .login-card { background:#fff; border-radius:24px; padding:40px 36px; box-shadow:0 30px 80px rgba(0,0,0,.3); animation:scaleIn .6s .15s cubic-bezier(.23,1,.32,1) both; }
+    .lc-header { text-align:center; margin-bottom:30px; }
+    .lc-icon { width:64px; height:64px; background:linear-gradient(135deg,var(--navy3),var(--navy)); border-radius:16px; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-size:26px; color:#fff; box-shadow:0 8px 24px rgba(15,27,53,.3); }
+    .lc-title { font-size:1.4rem; font-weight:800; color:var(--text); margin-bottom:5px; }
+    .lc-sub   { font-size:13px; color:var(--text3); }
+
+    .user-type-tabs { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:5px; margin-bottom:24px; }
+    .utt { padding:9px 6px; border-radius:8px; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700; color:var(--text3); background:transparent; transition:.2s; display:flex; align-items:center; justify-content:center; gap:5px; }
+    .utt i { font-size:11px; }
+    .utt.on { background:#fff; color:var(--navy); box-shadow:var(--shadow-sm); }
+
+    .lf-group { margin-bottom:16px; }
+    .lf-group label { display:block; font-size:11.5px; font-weight:700; color:var(--text2); letter-spacing:.3px; margin-bottom:7px; }
+    .lf-input-wrap { position:relative; }
+    .lf-input-wrap i.prefix { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:14px; pointer-events:none; }
+    .lf-input { width:100%; padding:11px 14px 11px 40px; border:1.5px solid var(--border); border-radius:var(--r-sm); font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; color:var(--text); background:#fff; outline:none; transition:.2s; }
+    .lf-input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(59,124,244,.1); }
+    .lf-input.error { border-color:var(--red); }
+    .eye-btn { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text3); font-size:14px; padding:4px; }
+    .lf-error { font-size:11.5px; color:var(--red); margin-top:5px; display:none; }
+    .lf-error.show { display:block; }
+    .lf-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+    .lf-check { display:flex; align-items:center; gap:7px; cursor:pointer; font-size:13px; color:var(--text2); }
+    .lf-check input { accent-color:var(--blue); width:14px; height:14px; cursor:pointer; }
+    .lf-forgot { font-size:13px; color:var(--blue); font-weight:600; text-decoration:none; cursor:pointer; }
+    .lf-forgot:hover { color:var(--navy); text-decoration:underline; }
+
+    .login-btn { width:100%; padding:14px; border-radius:var(--r-sm); background:linear-gradient(135deg,var(--navy3),var(--navy)); color:#fff; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:700; transition:.25s; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 16px rgba(15,27,53,.25); margin-bottom:20px; position:relative; overflow:hidden; }
+    .login-btn:hover { background:linear-gradient(135deg,var(--blue),var(--navy3)); transform:translateY(-2px); box-shadow:0 8px 24px rgba(59,124,244,.35); }
+    .login-btn .spinner { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+    .login-btn.loading .btn-text { display:none; }
+    .login-btn.loading .spinner  { display:block; }
+
+    .alert-error { background:var(--red-bg); border:1px solid rgba(220,38,38,.2); border-radius:var(--r-sm); padding:11px 14px; margin-bottom:14px; font-size:13px; color:var(--red); display:none; align-items:center; gap:8px; }
+    .alert-error.show { display:flex; }
+
+    .demo-section { border-top:1px solid var(--border); padding-top:18px; margin-top:4px; }
+    .demo-label   { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text3); text-align:center; margin-bottom:12px; }
+    .demo-accounts { display:flex; flex-direction:column; gap:7px; }
+    .demo-acc { display:flex; align-items:center; justify-content:space-between; padding:9px 13px; background:var(--bg); border:1px solid var(--border); border-radius:var(--r-sm); cursor:pointer; transition:.2s; }
+    .demo-acc:hover { background:var(--blue-pale); border-color:rgba(59,124,244,.25); }
+    .da-left { display:flex; align-items:center; gap:9px; }
+    .da-icon { width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; flex-shrink:0; }
+    .da-name { font-size:12px; font-weight:600; color:var(--text); }
+    .da-role { font-size:10px; color:var(--text3); }
+    .da-use  { font-size:11px; font-weight:600; color:var(--blue); }
+
+    /* ── NAVBAR ── */
+    .navbar { background:var(--navy); padding:0 32px; height:62px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:900; box-shadow:0 2px 20px rgba(0,0,0,.3); border-bottom:1px solid rgba(255,255,255,.06); }
+    .nav-logo-btn { display:flex; align-items:center; gap:11px; background:none; border:none; cursor:pointer; padding:0; text-align:left; }
+    .nav-logo-icon { width:38px; height:38px; border-radius:10px; background:var(--blue); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; transition:.2s; flex-shrink:0; }
+    .nav-logo-btn:hover .nav-logo-icon { background:var(--blue-l); transform:scale(1.05); }
+    .nav-logo-name { color:#fff; font-size:.9rem; font-weight:700; line-height:1.2; }
+    .nav-links { display:flex; gap:2px; }
+    .nav-link { padding:7px 13px; border-radius:8px; font-size:13px; font-weight:500; color:rgba(255,255,255,.55); background:none; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; transition:.2s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+    .nav-link i { font-size:12px; }
+    .nav-link:hover { background:rgba(255,255,255,.08); color:#fff; }
+    .nav-link.active { color:#fff; background:rgba(59,124,244,.22); font-weight:600; }
+    .nav-right { display:flex; align-items:center; gap:8px; }
+    .nav-icon-btn { width:36px; height:36px; border-radius:9px; border:none; cursor:pointer; background:rgba(255,255,255,.07); color:rgba(255,255,255,.7); font-size:14px; display:flex; align-items:center; justify-content:center; transition:.2s; position:relative; }
+    .nav-icon-btn:hover { background:rgba(255,255,255,.14); color:#fff; }
+    .notif-dot { width:7px; height:7px; background:#ef4444; border-radius:50%; position:absolute; top:5px; right:5px; border:1.5px solid var(--navy); }
+
+    .user-pill { display:flex; align-items:center; gap:8px; padding:5px 14px 5px 6px; border-radius:50px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); cursor:pointer; transition:.2s; position:relative; }
+    .user-pill:hover { background:rgba(255,255,255,.14); }
+    .user-avatar { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; }
+    .user-name { font-size:12px; font-weight:600; color:#fff; }
+    .user-role { font-size:10px; color:rgba(255,255,255,.45); }
+    .user-dropdown { position:absolute; top:calc(100% + 10px); right:0; background:#fff; border:1px solid var(--border); border-radius:var(--r); box-shadow:var(--shadow-lg); width:220px; opacity:0; visibility:hidden; transform:translateY(-6px); transition:.2s; overflow:hidden; z-index:1000; }
+    .user-pill:hover .user-dropdown, .user-pill:focus-within .user-dropdown { opacity:1; visibility:visible; transform:translateY(0); }
+    .ud-header { padding:14px 16px; background:var(--bg); border-bottom:1px solid var(--border); }
+    .ud-name  { font-size:13px; font-weight:700; color:var(--text); }
+    .ud-email { font-size:11px; color:var(--text3); margin-top:1px; }
+    .ud-item { padding:10px 16px; font-size:13px; font-weight:500; color:var(--text2); cursor:pointer; transition:.15s; display:flex; align-items:center; gap:9px; border:none; background:none; width:100%; font-family:'Plus Jakarta Sans',sans-serif; text-align:left; }
+    .ud-item:hover { background:var(--bg); color:var(--text); }
+    .ud-item i { width:14px; text-align:center; color:var(--text3); }
+    .ud-item.danger { color:var(--red); }
+    .ud-item.danger:hover { background:var(--red-bg); }
+    .ud-item.danger i { color:var(--red); }
+    .ud-sep { height:1px; background:var(--border); }
+
+    /* ── HERO ── */
+    .page-hero { background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 60%,#1e3a6e 100%); padding:40px 32px 46px; position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(59,124,244,.18) 0%,transparent 70%); pointer-events:none; }
+    .page-hero::after { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px); background-size:42px 42px; pointer-events:none; }
+    .hero-inner { position:relative; z-index:1; max-width:1200px; margin:0 auto; }
+    .breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:rgba(255,255,255,.45); margin-bottom:16px; }
+    .breadcrumb span { cursor:pointer; transition:.2s; }
+    .breadcrumb span:hover { color:rgba(255,255,255,.8); }
+    .breadcrumb i { font-size:9px; }
+    .hero-title { font-size:1.9rem; font-weight:800; color:#fff; letter-spacing:-.3px; margin-bottom:7px; animation:fadeUpIn .5s ease both; }
+    .hero-sub   { font-size:13.5px; color:rgba(255,255,255,.5); max-width:500px; line-height:1.65; margin-bottom:26px; animation:fadeUpIn .5s .08s ease both; }
+    .hero-stats { display:flex; gap:28px; flex-wrap:wrap; animation:fadeUpIn .5s .16s ease both; }
+    .hstat { display:flex; flex-direction:column; gap:2px; }
+    .hstat-val { font-size:1.5rem; font-weight:800; color:#fff; line-height:1; display:flex; align-items:baseline; gap:3px; }
+    .hstat-val span { font-size:.85rem; color:var(--blue-l); font-weight:700; }
+    .hstat-lbl { font-size:11px; color:rgba(255,255,255,.4); letter-spacing:.5px; text-transform:uppercase; }
+
+    /* ── TABS ── */
+    .tabs-bar { background:var(--navy2); border-bottom:1px solid rgba(255,255,255,.07); padding:0 32px; display:flex; gap:2px; overflow-x:auto; }
+    .tab-btn { padding:13px 18px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; color:rgba(255,255,255,.4); background:none; border:none; cursor:pointer; border-bottom:2.5px solid transparent; transition:.2s; display:flex; align-items:center; gap:7px; white-space:nowrap; flex-shrink:0; }
+    .tab-btn:hover { color:rgba(255,255,255,.7); }
+    .tab-btn.on { color:#fff; border-bottom-color:var(--blue); }
+    .tab-count { background:rgba(59,124,244,.3); color:var(--blue-l); font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; }
+    .tab-btn.on .tab-count { background:var(--blue); color:#fff; }
+
+    /* ── MAIN ── */
+    .main { max-width:1200px; margin:0 auto; padding:26px 32px 80px; }
+    .toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+    .search-field { flex:1; min-width:200px; display:flex; align-items:center; gap:9px; background:#fff; border:1.5px solid var(--border); border-radius:var(--r-sm); padding:9px 14px; transition:.2s; }
+    .search-field:focus-within { border-color:var(--blue); box-shadow:0 0 0 3px rgba(59,124,244,.1); }
+    .search-field i { color:var(--text3); font-size:13px; }
+    .search-field input { flex:1; border:none; outline:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; color:var(--text); background:none; }
+    .search-field input::placeholder { color:var(--text3); }
+    .pill-group { display:flex; gap:6px; flex-wrap:wrap; }
+    .pill { padding:7px 14px; border-radius:50px; font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:600; border:1.5px solid var(--border); background:#fff; color:var(--text2); cursor:pointer; transition:.2s; display:flex; align-items:center; gap:5px; white-space:nowrap; }
+    .pill:hover { border-color:var(--blue); color:var(--blue); }
+    .pill.on { background:var(--navy); color:#fff; border-color:var(--navy); box-shadow:var(--shadow-sm); }
+    .icon-btn { width:38px; height:38px; border-radius:var(--r-sm); border:1.5px solid var(--border); background:#fff; color:var(--text3); cursor:pointer; transition:.2s; display:flex; align-items:center; justify-content:center; font-size:13px; }
+    .icon-btn:hover { border-color:var(--blue); color:var(--blue); }
+    .icon-btn.on { background:var(--navy); color:#fff; border-color:var(--navy); }
+    .result-meta { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px; }
+    .result-text { font-size:13px; color:var(--text2); }
+    .result-text strong { color:var(--text); }
+    .sort-box { padding:7px 13px; border-radius:var(--r-sm); border:1.5px solid var(--border); background:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--text); outline:none; cursor:pointer; }
+
+    /* ── GRID BUKU ── */
+    .books-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(195px,1fr)); gap:18px; transition:.3s; }
+    .books-grid.list-mode { grid-template-columns:1fr; }
+    .bk { background:#fff; border-radius:var(--r); overflow:hidden; border:1.5px solid var(--border); cursor:pointer; transition:transform .25s,box-shadow .25s,border-color .2s; opacity:0; transform:translateY(16px); }
+    .bk.in { opacity:1; transform:none; }
+    .bk:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); border-color:var(--border2); }
+    .bk-cover { height:170px; position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .bk-cover-inner { width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; transition:transform .4s cubic-bezier(.23,1,.32,1); }
+    .bk:hover .bk-cover-inner { transform:scale(1.04); }
+    .cover-lines { position:absolute; inset:0; background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.07) 0,rgba(255,255,255,.07) 1px,transparent 1px,transparent 18px); }
+    .cover-ico { font-size:2.6rem; color:rgba(255,255,255,.5); position:relative; z-index:2; transition:transform .3s; }
+    .bk:hover .cover-ico { transform:scale(1.1) rotate(-5deg); }
+    .cover-top { position:absolute; top:10px; left:10px; right:10px; display:flex; justify-content:space-between; align-items:flex-start; z-index:5; }
+    .cat-badge { font-size:9px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; background:rgba(0,0,0,.35); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.15); color:#fff; padding:3px 9px; border-radius:20px; }
+    .status-badge { font-size:9px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+    .sb-avail  { background:#16a34a; color:#fff; }
+    .sb-limit  { background:#ea580c; color:#fff; }
+    .sb-borrow { background:#dc2626; color:#fff; }
+    .cover-actions { position:absolute; inset:0; background:rgba(15,27,53,.6); display:flex; align-items:center; justify-content:center; gap:9px; opacity:0; transition:opacity .3s; z-index:6; }
+    .bk:hover .cover-actions { opacity:1; }
+    .ca { width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,.14); backdrop-filter:blur(6px); border:1.5px solid rgba(255,255,255,.3); color:#fff; font-size:14px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:.2s; }
+    .ca:hover { background:#fff; color:var(--navy); }
+    .bk-body { padding:13px 13px 15px; }
+    .bk-cat { font-size:9.5px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--blue); margin-bottom:4px; }
+    .bk-title { font-size:.87rem; font-weight:700; color:var(--text); line-height:1.25; margin-bottom:3px; transition:color .2s; }
+    .bk:hover .bk-title { color:var(--blue); }
+    .bk-author { font-size:11px; color:var(--text3); margin-bottom:9px; display:flex; align-items:center; gap:3px; }
+    .bk-footer { display:flex; align-items:center; justify-content:space-between; padding-top:9px; border-top:1px solid var(--bg2); }
+    .bk-year  { font-size:11px; color:var(--text3); display:flex; align-items:center; gap:3px; }
+    .bk-stock { font-size:11px; font-weight:700; }
+    .stock-ok  { color:var(--green); }
+    .stock-low { color:var(--orange); }
+    .stock-out { color:var(--red); }
+    .books-grid.list-mode .bk { display:flex; }
+    .books-grid.list-mode .bk-cover { width:100px; height:auto; flex-shrink:0; border-radius:0; border-right:1px solid var(--border); }
+    .books-grid.list-mode .bk-cover-inner { height:100%; }
+    .books-grid.list-mode .bk-body { flex:1; display:flex; flex-direction:column; justify-content:center; padding:16px 20px; }
+    .books-grid.list-mode .bk-title { font-size:.95rem; }
+    .books-grid.list-mode .cover-actions { display:none; }
+    .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; display:none; }
+    .empty-state.show { display:block; }
+    .empty-ico { width:64px; height:64px; background:var(--bg2); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:1.6rem; color:var(--text3); }
+    .empty-title { font-size:1rem; font-weight:700; color:var(--text2); margin-bottom:4px; }
+    .empty-sub   { font-size:13px; color:var(--text3); }
+
+    /* ── FORM PEMINJAMAN ── */
+    .pinjam-layout { display:grid; grid-template-columns:1fr 340px; gap:22px; align-items:start; }
+    .card-box { background:#fff; border:1.5px solid var(--border); border-radius:var(--r); padding:24px; box-shadow:var(--shadow-sm); }
+    .card-box-title { font-size:.95rem; font-weight:700; color:var(--text); margin-bottom:18px; display:flex; align-items:center; gap:7px; }
+    .card-box-title i { color:var(--blue); }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .fg { display:flex; flex-direction:column; gap:5px; }
+    .fg label { font-size:11.5px; font-weight:700; color:var(--text2); letter-spacing:.3px; }
+    .fg input, .fg select, .fg textarea { padding:9px 13px; border-radius:var(--r-sm); border:1.5px solid var(--border); font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; color:var(--text); background:#fff; outline:none; transition:.2s; }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(59,124,244,.1); }
+    .fg textarea { resize:vertical; min-height:70px; }
+    .book-search-result { margin-top:7px; border:1.5px solid var(--border); border-radius:var(--r-sm); overflow:hidden; display:none; }
+    .book-search-result.show { display:block; }
+    .bsr-item { display:flex; align-items:center; gap:10px; padding:9px 13px; cursor:pointer; transition:.15s; border-bottom:1px solid var(--bg); }
+    .bsr-item:last-child { border-bottom:none; }
+    .bsr-item:hover { background:var(--bg); }
+    .bsr-thumb { width:32px; height:42px; border-radius:5px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.7); font-size:.9rem; flex-shrink:0; }
+    .bsr-info  { flex:1; min-width:0; }
+    .bsr-title { font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bsr-meta  { font-size:10.5px; color:var(--text3); }
+    .bsr-stock { font-size:10.5px; font-weight:700; flex-shrink:0; }
+    .selected-book { display:none; align-items:center; gap:10px; padding:10px 13px; background:rgba(59,124,244,.06); border:1.5px solid rgba(59,124,244,.2); border-radius:var(--r-sm); margin-top:8px; }
+    .selected-book.show { display:flex; }
+    .sb-remove { width:26px; height:26px; border-radius:50%; border:none; background:rgba(220,38,38,.1); color:var(--red); cursor:pointer; transition:.2s; display:flex; align-items:center; justify-content:center; font-size:11px; }
+    .sb-remove:hover { background:var(--red); color:#fff; }
+    .submit-btn { width:100%; padding:13px; border-radius:var(--r-sm); background:var(--navy); color:#fff; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:7px; transition:.25s; margin-top:8px; }
+    .submit-btn:hover { background:var(--blue); transform:translateY(-2px); box-shadow:0 6px 20px rgba(59,124,244,.3); }
+    .summary-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--bg2); font-size:12.5px; }
+    .summary-row:last-child { border-bottom:none; }
+    .sr-label { color:var(--text2); }
+    .sr-val   { font-weight:600; color:var(--text); }
+    .sr-val.accent { color:var(--blue); }
+    .sr-val.green  { color:var(--green); }
+    .sr-val.red    { color:var(--red); }
+    .info-box { background:rgba(59,124,244,.06); border:1px solid rgba(59,124,244,.15); border-radius:var(--r-sm); padding:12px; margin-top:14px; font-size:12px; color:var(--text2); line-height:1.6; display:flex; gap:7px; }
+    .info-box i { color:var(--blue); margin-top:1px; flex-shrink:0; }
+
+    /* ── TABEL RIWAYAT ── */
+    .riwayat-table { width:100%; border-collapse:collapse; }
+    .riwayat-table thead tr { background:var(--bg); }
+    .riwayat-table th { padding:11px 14px; text-align:left; font-size:10.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--text3); white-space:nowrap; }
+    .riwayat-table td { padding:13px 14px; border-bottom:1px solid var(--bg2); font-size:12.5px; color:var(--text); }
+    .riwayat-table tr:last-child td { border-bottom:none; }
+    .riwayat-table tr:hover td { background:rgba(59,124,244,.025); }
+    .book-cell { display:flex; align-items:center; gap:9px; }
+    .rt-thumb  { width:28px; height:36px; border-radius:5px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.65); font-size:.8rem; flex-shrink:0; }
+    .rt-title  { font-weight:600; font-size:12.5px; }
+    .rt-author { font-size:10.5px; color:var(--text3); }
+    .status-pill { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; white-space:nowrap; }
+    .sp-active { background:var(--green-bg); color:var(--green); }
+    .sp-late   { background:var(--red-bg);   color:var(--red); }
+    .sp-done   { background:var(--bg2);       color:var(--text3); }
+    .sp-borrow { background:#ffedd5;           color:var(--orange); }
+    .action-link { font-size:12px; font-weight:600; color:var(--blue); background:none; border:none; cursor:pointer; padding:0; transition:.2s; }
+    .action-link:hover { color:var(--navy); }
+
+    /* ── DENDA ── */
+    .denda-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px; margin-bottom:24px; }
+    .denda-card { background:#fff; border:1.5px solid var(--border); border-radius:var(--r); padding:18px; transition:.2s; }
+    .denda-card.has-fine { border-color:rgba(220,38,38,.25); background:rgba(254,242,242,.3); }
+    .denda-card:hover { box-shadow:var(--shadow-md); }
+    .dc-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+    .dc-thumb { width:32px; height:42px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.7); font-size:.9rem; flex-shrink:0; }
+    .dc-title  { font-size:12.5px; font-weight:700; color:var(--text); }
+    .dc-author { font-size:10.5px; color:var(--text3); margin-top:2px; }
+    .dc-amount { font-size:1.2rem; font-weight:800; color:var(--red); text-align:right; }
+    .dc-amount small { display:block; font-size:9.5px; font-weight:500; color:var(--text3); }
+    .dc-row { display:flex; justify-content:space-between; font-size:11.5px; margin-bottom:7px; }
+    .dc-row-label { color:var(--text2); }
+    .dc-row-val   { font-weight:600; color:var(--text); }
+    .dc-pay-btn { width:100%; padding:9px; margin-top:12px; border-radius:var(--r-sm); background:var(--red); color:#fff; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px; font-weight:700; transition:.2s; display:flex; align-items:center; justify-content:center; gap:5px; }
+    .dc-pay-btn:hover { background:#b91c1c; transform:translateY(-1px); }
+    .no-fine { padding:13px; background:var(--green-bg); border:1px solid rgba(22,163,74,.2); border-radius:var(--r-sm); display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:var(--green); }
+
+    /* ── MODAL ── */
+    .modal-backdrop { position:fixed; inset:0; background:rgba(15,27,53,.6); backdrop-filter:blur(8px); z-index:2000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; visibility:hidden; transition:.3s; }
+    .modal-backdrop.open { opacity:1; visibility:visible; }
+    .modal { background:#fff; border-radius:20px; max-width:600px; width:100%; overflow:hidden; transform:scale(.94) translateY(14px); transition:transform .35s cubic-bezier(.23,1,.32,1); box-shadow:0 30px 80px rgba(0,0,0,.25); border:1px solid var(--border); max-height:90vh; overflow-y:auto; }
+    .modal-backdrop.open .modal { transform:scale(1) translateY(0); }
+    .modal-cover { height:180px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .modal-cover-ico { font-size:3.5rem; color:rgba(255,255,255,.4); position:relative; z-index:2; }
+    .modal-cover-lines { position:absolute; inset:0; background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.07) 0,rgba(255,255,255,.07) 1px,transparent 1px,transparent 18px); }
+    .modal-cover-badge { position:absolute; top:13px; left:13px; background:rgba(0,0,0,.3); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.15); color:#fff; font-size:9px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
+    .modal-close { position:absolute; top:11px; right:11px; width:32px; height:32px; border-radius:50%; background:rgba(0,0,0,.25); backdrop-filter:blur(6px); border:none; color:#fff; cursor:pointer; font-size:13px; z-index:10; display:flex; align-items:center; justify-content:center; transition:.2s; }
+    .modal-close:hover { background:rgba(0,0,0,.5); transform:rotate(90deg); }
+    .modal-body { padding:24px 26px; }
+    .modal-genre  { font-size:9.5px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--blue); margin-bottom:5px; }
+    .modal-title  { font-size:1.4rem; font-weight:800; color:var(--text); margin-bottom:3px; line-height:1.2; }
+    .modal-author { font-size:12.5px; color:var(--text3); margin-bottom:16px; }
+    .modal-hr     { height:1px; background:var(--border); margin-bottom:16px; }
+    .modal-desc   { font-size:13px; line-height:1.75; color:var(--text2); margin-bottom:18px; }
+    .modal-meta-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:20px; }
+    .mm-item  { background:var(--bg); border-radius:var(--r-sm); padding:10px 12px; }
+    .mm-label { font-size:9.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text3); margin-bottom:2px; }
+    .mm-val   { font-size:12.5px; font-weight:600; color:var(--text); }
+    .modal-actions { display:flex; gap:9px; }
+    .m-btn { flex:1; padding:12px; border-radius:var(--r-sm); border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:700; transition:.25s; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .m-btn.prim { background:var(--navy); color:#fff; }
+    .m-btn.prim:hover { background:var(--blue); }
+    .m-btn.sec { background:var(--bg); color:var(--text); }
+    .m-btn.sec:hover { background:var(--bg2); }
+
+    /* ── TOAST ── */
+    .toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:12px 18px; border-radius:var(--r); font-size:13px; font-weight:600; display:flex; align-items:center; gap:9px; box-shadow:var(--shadow-lg); transform:translateY(80px); opacity:0; transition:.35s cubic-bezier(.23,1,.32,1); z-index:9999; max-width:310px; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast.success { background:var(--green); }
+    .toast.error   { background:var(--red); }
+    .toast.info    { background:var(--blue); }
+
+    @media(max-width:860px) {
+      .login-container { grid-template-columns:1fr; max-width:440px; }
+      .login-brand { display:none; }
+      .navbar { padding:0 16px; }
+      .nav-links { display:none; }
+      .main { padding:18px 16px 60px; }
+      .pinjam-layout { grid-template-columns:1fr; }
+      .form-grid { grid-template-columns:1fr; }
+      .books-grid { grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:13px; }
+      .tabs-bar { padding:0 16px; }
+      .page-hero { padding:28px 16px 34px; }
+      .hero-stats { gap:18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ PAGE 1: LOGIN ══ -->
+<div id="page-login" class="page active">
+
+  <div class="orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(59,124,244,.12),transparent);top:-80px;right:-60px;animation-duration:8s;"></div>
+  <div class="orb" style="width:200px;height:200px;background:radial-gradient(circle,rgba(26,107,107,.1),transparent);bottom:60px;left:-40px;animation-duration:11s;animation-delay:2s;"></div>
+  <div class="orb" style="width:150px;height:150px;background:radial-gradient(circle,rgba(59,124,244,.08),transparent);bottom:200px;right:200px;animation-duration:7s;animation-delay:1s;"></div>
+
+  <div class="login-container">
+    <div class="login-brand">
+      <div class="login-logo-wrap">
+        <div class="login-logo-icon"><i class="fas fa-book-open"></i></div>
+        <div class="login-logo-text">Perpustakaan<small>SMKN 1 Ketapang</small></div>
+      </div>
+      <div class="login-headline">
+        <span class="hi">Selamat datang di</span>
+        Sistem <span class="accent">Perpustakaan</span> Digital
+      </div>
+      <p class="login-desc">Akses ribuan koleksi buku, kelola peminjaman, dan pantau riwayat secara mudah dari mana saja.</p>
+      <div class="login-features">
+        <div class="lf-item" style="animation-delay:.3s;"><div class="lf-icon"><i class="fas fa-book"></i></div><div class="lf-text">20+ Koleksi buku pelajaran, fiksi &amp; referensi</div></div>
+        <div class="lf-item" style="animation-delay:.4s;"><div class="lf-icon"><i class="fas fa-clock"></i></div><div class="lf-text">Pantau tenggat pengembalian secara real-time</div></div>
+        <div class="lf-item" style="animation-delay:.5s;"><div class="lf-icon"><i class="fas fa-shield-alt"></i></div><div class="lf-text">Data peminjaman aman &amp; terenkripsi</div></div>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <div class="lc-header">
+        <div class="lc-icon" style="background:none;box-shadow:none;width:72px;height:72px;">
+          <img src="logo smkn bulat.jpg" style="width:72px;height:72px;object-fit:contain;border-radius:50%;">
+        </div>
+        <div class="lc-title">Masuk ke Akun</div>
+        <div class="lc-sub">Gunakan NIS/NIP dan kata sandi Anda</div>
+      </div>
+
+      <div class="user-type-tabs" id="userTypeTabs">
+        <button class="utt on" data-role="siswa" onclick="setRole('siswa',this)"><i class="fas fa-user-graduate"></i> Siswa</button>
+        <button class="utt" data-role="guru" onclick="setRole('guru',this)"><i class="fas fa-chalkboard-teacher"></i> Guru</button>
+        <button class="utt" data-role="admin" onclick="setRole('admin',this)"><i class="fas fa-user-shield"></i> Admin</button>
+      </div>
+
+      <div class="alert-error" id="loginAlert">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="loginAlertMsg">NIS/NIP atau kata sandi salah.</span>
+      </div>
+
+      <div class="lf-group">
+        <label id="nisLabel">NIS (Nomor Induk Siswa)</label>
+        <div class="lf-input-wrap">
+          <i class="fas fa-id-card prefix"></i>
+          <input type="text" id="loginNis" class="lf-input" placeholder="Masukkan NIS Anda" autocomplete="username">
+        </div>
+        <div class="lf-error" id="nisErr">NIS/NIP wajib diisi.</div>
+      </div>
+
+      <div class="lf-group">
+        <label>Kata Sandi</label>
+        <div class="lf-input-wrap">
+          <i class="fas fa-lock prefix"></i>
+          <input type="password" id="loginPass" class="lf-input" placeholder="••••••••" autocomplete="current-password">
+          <button class="eye-btn" type="button" onclick="toggleEye()" id="eyeBtn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="lf-error" id="passErr">Kata sandi wajib diisi.</div>
+      </div>
+
+      <div class="lf-row">
+        <label class="lf-check"><input type="checkbox" id="rememberMe"> Ingat saya</label>
+        <a class="lf-forgot" onclick="showToast('Hubungi admin perpustakaan untuk reset password.','info')">Lupa kata sandi?</a>
+      </div>
+
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">
+        <span class="btn-text"><i class="fas fa-sign-in-alt"></i> Masuk Sekarang</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="demo-section">
+        <div class="demo-label">✦ Akun Demo — Klik untuk Isi Otomatis</div>
+        <div class="demo-accounts">
+          <div class="demo-acc" onclick="fillDemo('siswa')">
+            <div class="da-left"><div class="da-icon" style="background:var(--blue);"><i class="fas fa-user-graduate"></i></div><div><div class="da-name">Aditya Nirwantoro — Siswa</div><div class="da-role">NIS: 12282008 · Pass: aditya1228</div></div></div>
+            <span class="da-use">Gunakan →</span>
+          </div>
+          <div class="demo-acc" onclick="fillDemo('guru')">
+            <div class="da-left"><div class="da-icon" style="background:var(--green);"><i class="fas fa-chalkboard-teacher"></i></div><div><div class="da-name">Korawati, S.Pd — Guru</div><div class="da-role">NIP: 197805012005012001 · Pass: guru123</div></div></div>
+            <span class="da-use">Gunakan →</span>
+          </div>
+          <div class="demo-acc" onclick="fillDemo('admin')">
+            <div class="da-left"><div class="da-icon" style="background:var(--gold);"><i class="fas fa-user-shield"></i></div><div><div class="da-name">Admin Perpustakaan</div><div class="da-role">ID: admin · Pass: admin123</div></div></div>
+            <span class="da-use">Gunakan →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ PAGE 2: PEMINJAMAN ══ -->
+<div id="page-peminjaman" class="page">
+
+  <nav class="navbar">
+    <!-- ✅ Tombol logo/beranda kembali ke TugasAkhir.html -->
+    <button class="nav-logo-btn" onclick="goHome()" title="Kembali ke Halaman Utama">
+      <div class="nav-logo-icon" style="background:none;box-shadow:none;padding:0;overflow:hidden;">
+        <img src="logo smkn bulat.jpg" style="width:38px;height:38px;object-fit:contain;border-radius:50%;">
+      </div>
+      <div>
+        <div class="nav-logo-name">Perpustakaan</div>
+        <small class="nav-logo-name" style="font-size:10px;opacity:.5;font-weight:400;color:#fff;">SMKN 1 Ketapang</small>
+      </div>
+    </button>
+
+    <div class="nav-links">
+      <!-- ✅ Semua link navbar mengarah kembali ke TugasAkhir.html -->
+      <button class="nav-link" onclick="navGo('beranda')"><i class="fas fa-home"></i> Beranda</button>
+      <button class="nav-link" onclick="navGo('tentang')"><i class="fas fa-info-circle"></i> Tentang Kami</button>
+      <button class="nav-link" onclick="navGo('koleksi')"><i class="fas fa-book"></i> Koleksi</button>
+      <button class="nav-link" onclick="navGo('layanan')"><i class="fas fa-concierge-bell"></i> Layanan</button>
+      <button class="nav-link" onclick="navGo('kontak')"><i class="fas fa-envelope"></i> Kontak</button>
+      <button class="nav-link active"><i class="fas fa-hand-holding-heart"></i> Peminjaman</button>
+    </div>
+
+    <div class="nav-right">
+      <button class="nav-icon-btn" onclick="showToast('Tidak ada notifikasi baru.','info')" title="Notifikasi">
+        <i class="fas fa-bell"></i><span class="notif-dot"></span>
+      </button>
+      <button class="nav-icon-btn" onclick="showToast('Fitur pencarian global segera hadir!','info')" title="Cari">
+        <i class="fas fa-search"></i>
+      </button>
+      <div class="user-pill" tabindex="0">
+        <div class="user-avatar" id="navAvatar" style="background:var(--blue);">A</div>
+        <div>
+          <div class="user-name" id="navName">Pengguna</div>
+          <div class="user-role" id="navRole">Siswa</div>
+        </div>
+        <i class="fas fa-chevron-down" style="font-size:10px;color:rgba(255,255,255,.5);margin-left:4px;"></i>
+        <div class="user-dropdown">
+          <div class="ud-header">
+            <div class="ud-name"  id="ddName">Aditya</div>
+            <div class="ud-email" id="ddEmail">NIS: 12282008</div>
+          </div>
+          <button class="ud-item" onclick="switchMainTab('pinjam')"><i class="fas fa-book-reader"></i> Pinjam Buku</button>
+          <button class="ud-item" onclick="switchMainTab('riwayat')"><i class="fas fa-history"></i> Riwayat Peminjaman</button>
+          <button class="ud-item" onclick="switchMainTab('denda')"><i class="fas fa-receipt"></i> Tagihan Denda</button>
+          <button class="ud-item" onclick="showToast('Fitur profil segera hadir!','info')"><i class="fas fa-user-cog"></i> Pengaturan Profil</button>
+          <div class="ud-sep"></div>
+          <button class="ud-item danger" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="hero-inner">
+      <!-- ✅ Breadcrumb Beranda mengarah kembali ke TugasAkhir.html -->
+      <div class="breadcrumb">
+        <span onclick="goHome()"><i class="fas fa-home"></i> Beranda</span>
+        <i class="fas fa-chevron-right"></i>
+        <span>Peminjaman Buku</span>
+      </div>
+      <div class="hero-title">Peminjaman Buku</div>
+      <div class="hero-sub">Pinjam, lacak, dan kembalikan buku perpustakaan dengan mudah.</div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-val"><span id="sTotal">20</span><span>+</span></div><div class="hstat-lbl">Total Buku</div></div>
+        <div class="hstat"><div class="hstat-val"><span id="sAvail">17</span><span>+</span></div><div class="hstat-lbl">Tersedia</div></div>
+        <div class="hstat"><div class="hstat-val"><span id="sCat">4</span></div><div class="hstat-lbl">Kategori</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs-bar">
+    <button class="tab-btn on" id="tabBtnKoleksi" onclick="switchMainTab('koleksi')"><i class="fas fa-book"></i> Koleksi Buku <span class="tab-count" id="tcKoleksi">20</span></button>
+    <button class="tab-btn" id="tabBtnPinjam"   onclick="switchMainTab('pinjam')"><i class="fas fa-hand-holding-heart"></i> Form Peminjaman</button>
+    <button class="tab-btn" id="tabBtnRiwayat"  onclick="switchMainTab('riwayat')"><i class="fas fa-history"></i> Riwayat <span class="tab-count">8</span></button>
+    <button class="tab-btn" id="tabBtnDenda"    onclick="switchMainTab('denda')"><i class="fas fa-receipt"></i> Denda <span class="tab-count" id="tcDenda">1</span></button>
+  </div>
+
+  <div class="main">
+
+    <!-- Tab Koleksi -->
+    <div class="tab-section on" id="tsKoleksi">
+      <div class="toolbar">
+        <div class="search-field">
+          <i class="fas fa-search"></i>
+          <input type="text" id="bookSearch" placeholder="Cari judul buku atau pengarang...">
+          <i class="fas fa-times" id="clearBook" style="cursor:pointer;color:var(--border2);display:none;font-size:12px;" onclick="clearBookSearch()"></i>
+        </div>
+        <div class="pill-group" id="catPills">
+          <div class="pill on" data-c="all">Semua</div>
+          <div class="pill" data-c="Pelajaran"><i class="fas fa-graduation-cap" style="font-size:10px;"></i> Pelajaran</div>
+          <div class="pill" data-c="Fiksi"><i class="fas fa-feather" style="font-size:10px;"></i> Fiksi</div>
+          <div class="pill" data-c="Non-Fiksi"><i class="fas fa-globe" style="font-size:10px;"></i> Non-Fiksi</div>
+          <div class="pill" data-c="Referensi"><i class="fas fa-book-open" style="font-size:10px;"></i> Referensi</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="icon-btn on" id="gBtn" title="Grid"><i class="fas fa-grip"></i></button>
+          <button class="icon-btn"    id="lBtn" title="List"><i class="fas fa-list"></i></button>
+        </div>
+      </div>
+      <div class="result-meta">
+        <div class="result-text" id="bookCount"><strong>20</strong> buku ditampilkan</div>
+        <select class="sort-box" id="bookSort">
+          <option value="default">Urutkan: Default</option>
+          <option value="title">Judul A–Z</option>
+          <option value="year_new">Tahun Terbaru</option>
+          <option value="stock">Stok Terbanyak</option>
+        </select>
+      </div>
+      <div class="books-grid" id="booksGrid">
+        <div class="empty-state" id="bookEmpty">
+          <div class="empty-ico"><i class="fas fa-search"></i></div>
+          <div class="empty-title">Buku tidak ditemukan</div>
+          <div class="empty-sub">Coba kata kunci lain atau ubah filter.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Form Peminjaman -->
+    <div class="tab-section" id="tsPinjam">
+      <div class="pinjam-layout">
+        <div>
+          <div class="card-box" style="margin-bottom:18px;">
+            <div class="card-box-title"><i class="fas fa-user-circle"></i> Data Peminjam</div>
+            <div class="form-grid">
+              <div class="fg"><label>Nama Lengkap *</label><input type="text" id="fNama" placeholder="Nama lengkap"></div>
+              <div class="fg"><label>NIS / NIP *</label><input type="text" id="fNis" placeholder="Nomor induk"></div>
+              <div class="fg"><label>Kelas / Jabatan</label><input type="text" id="fKelas" placeholder="XI RPL 1 / Guru"></div>
+              <div class="fg"><label>No. HP / WhatsApp</label><input type="text" id="fHp" placeholder="08xxxxxxxxxx"></div>
+            </div>
+          </div>
+          <div class="card-box">
+            <div class="card-box-title"><i class="fas fa-book"></i> Pilih Buku</div>
+            <div class="fg" style="margin-bottom:13px;">
+              <label>Cari &amp; Pilih Buku *</label>
+              <div class="search-field"><i class="fas fa-search"></i><input type="text" id="fBookSearch" placeholder="Ketik judul atau pengarang..."></div>
+              <div class="book-search-result" id="bookSearchResult"></div>
+              <div class="selected-book" id="selectedBookChip">
+                <div id="sbThumb"></div>
+                <div style="flex:1;"><div style="font-size:13px;font-weight:700;" id="sbTitle"></div><div style="font-size:11px;color:var(--text3);margin-top:2px;" id="sbDetail"></div></div>
+                <button class="sb-remove" onclick="clearSelectedBook()"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="fg"><label>Tanggal Pinjam *</label><input type="date" id="fTglPinjam"></div>
+              <div class="fg"><label>Tanggal Kembali *</label><input type="date" id="fTglKembali"></div>
+            </div>
+            <div class="fg" style="margin-top:13px;"><label>Catatan (opsional)</label><textarea id="fCatatan" placeholder="Catatan untuk petugas..."></textarea></div>
+            <button class="submit-btn" onclick="submitPinjam()"><i class="fas fa-paper-plane"></i> Ajukan Peminjaman</button>
+          </div>
+        </div>
+        <div>
+          <div class="card-box" style="position:sticky;top:20px;">
+            <div class="card-box-title"><i class="fas fa-clipboard-list"></i> Ringkasan</div>
+            <div class="summary-row"><span class="sr-label">Peminjam</span><span class="sr-val accent" id="sumNama">—</span></div>
+            <div class="summary-row"><span class="sr-label">NIS/NIP</span><span class="sr-val" id="sumNis">—</span></div>
+            <div class="summary-row"><span class="sr-label">Buku Dipilih</span><span class="sr-val accent" id="sumBuku">—</span></div>
+            <div class="summary-row"><span class="sr-label">Tgl. Pinjam</span><span class="sr-val" id="sumPinjam">—</span></div>
+            <div class="summary-row"><span class="sr-label">Tgl. Kembali</span><span class="sr-val" id="sumKembali">—</span></div>
+            <div class="summary-row"><span class="sr-label">Durasi</span><span class="sr-val green" id="sumDur">—</span></div>
+            <div class="summary-row"><span class="sr-label">Denda/hari</span><span class="sr-val red">Rp 500,-</span></div>
+            <div class="info-box"><i class="fas fa-info-circle"></i><div>Maks. <strong>7 hari kerja</strong>. Perpanjangan 1x. Buku rusak/hilang wajib diganti.</div></div>
+          </div>
+          <div class="card-box" style="margin-top:16px;">
+            <div class="card-box-title"><i class="fas fa-shield-alt"></i> Aturan Peminjaman</div>
+            <ul style="font-size:12px;color:var(--text2);line-height:2.1;padding-left:15px;">
+              <li>Wajib membawa kartu anggota aktif</li>
+              <li>Maks. 2 buku dipinjam sekaligus</li>
+              <li>Dikembalikan dalam kondisi baik</li>
+              <li>Terlambat: denda Rp 500/hari</li>
+              <li>Buku hilang: ganti judul yang sama</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Riwayat -->
+    <div class="tab-section" id="tsRiwayat">
+      <div class="card-box">
+        <div class="card-box-title"><i class="fas fa-history"></i> Riwayat Peminjaman</div>
+        <div style="overflow-x:auto;">
+          <table class="riwayat-table">
+            <thead><tr><th>Buku</th><th>Tgl. Pinjam</th><th>Tgl. Kembali</th><th>Dikembalikan</th><th>Status</th><th>Denda</th><th>Aksi</th></tr></thead>
+            <tbody id="riwayatBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Denda -->
+    <div class="tab-section" id="tsDenda">
+      <div class="denda-cards" id="dendaCards"></div>
+      <div class="no-fine" id="noFine" style="display:none;">
+        <i class="fas fa-check-circle" style="font-size:1.4rem;"></i>
+        <div><strong>Tidak ada denda!</strong> Semua buku dikembalikan tepat waktu.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBg">
+  <div class="modal" style="position:relative;">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <div class="modal-cover" id="mCover">
+      <div class="modal-cover-lines"></div>
+      <div class="modal-cover-badge" id="mCovBadge"></div>
+      <div class="modal-cover-ico"><i id="mCovIco"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-genre"  id="mGenre"></div>
+      <div class="modal-title"  id="mTitle"></div>
+      <div class="modal-author" id="mAuthor"></div>
+      <div class="modal-hr"></div>
+      <div class="modal-desc"   id="mDesc"></div>
+      <div class="modal-meta-grid" id="mMeta"></div>
+      <div class="modal-actions">
+        <button class="m-btn prim" id="mPinjamBtn"><i class="fas fa-bookmark"></i> Pilih untuk Dipinjam</button>
+        <button class="m-btn sec" onclick="closeModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
+
+
+<script>
+const ACCOUNTS = [
+  { id:'siswa', nis:'12282008',           pass:'aditya1228', name:'Aditya Nirwantoro',  role:'Siswa',         email:'NIS: 12282008',            avatar:'AN', color:'#3b7cf4' },
+  { id:'guru',  nis:'197805012005012001', pass:'guru123',    name:'Korawati, S.Pd',     role:'Guru',          email:'NIP: 197805012005012001',   avatar:'KR', color:'#16a34a' },
+  { id:'admin', nis:'admin',             pass:'admin123',   name:'Admin Perpustakaan',  role:'Administrator', email:'admin@smkn1ketapang.sch.id', avatar:'AD', color:'#f59e0b' },
+];
+
+const BOOKS = [
+  { id:1,  title:'Matematika Kelas X',                    author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-calculator',     bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:5, pub:'Kemendikbud',      pages:320,  desc:'Buku teks Matematika Kelas X SMA/SMK Kurikulum Merdeka. Mencakup aljabar, fungsi, trigonometri, dan statistika dasar dengan pendekatan kontekstual.' },
+  { id:2,  title:'Bahasa Indonesia Kelas XI',             author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-language',        bg:'linear-gradient(140deg,#15803d,#166534)', stock:4, total:4, pub:'Kemendikbud',      pages:280,  desc:'Buku teks Bahasa Indonesia Kelas XI mencakup teks eksposisi, persuasi, cerpen, puisi, dan keterampilan berbahasa lainnya.' },
+  { id:3,  title:'Bumi',                                  author:'Tere Liye',                 year:2021, cat:'Fiksi',      icon:'fas fa-globe',           bg:'linear-gradient(140deg,#7c3aed,#6d28d9)', stock:1, total:3, pub:'Gramedia',         pages:440,  desc:'Novel petualangan fantasi Tere Liye tentang Raib yang bisa menghilang. Penuh imajinasi dan membawa ke dunia paralel yang menakjubkan.' },
+  { id:4,  title:'Laskar Pelangi',                        author:'Andrea Hirata',             year:2020, cat:'Fiksi',      icon:'fas fa-star',            bg:'linear-gradient(140deg,#d97706,#b45309)', stock:5, total:6, pub:'Bentang Pustaka',  pages:529,  desc:'Kisah sepuluh anak dari keluarga miskin di Belitung yang berjuang keras mendapatkan pendidikan. Novel paling berpengaruh di Indonesia.' },
+  { id:5,  title:'Sapiens: Riwayat Singkat Umat Manusia', author:'Yuval Noah Harari',        year:2019, cat:'Non-Fiksi',  icon:'fas fa-landmark',        bg:'linear-gradient(140deg,#111827,#1f2937)', stock:0, total:2, pub:'KPG',              pages:498,  desc:'Perjalanan umat manusia dari Zaman Batu hingga era modern. Menggabungkan sejarah, biologi, dan filsafat secara brilian.' },
+  { id:6,  title:'Kamus Besar Bahasa Indonesia',          author:'Badan Pengembangan Bahasa', year:2018, cat:'Referensi',  icon:'fas fa-book-open',       bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:3, total:3, pub:'Balai Pustaka',    pages:1800, desc:'Kamus resmi Bahasa Indonesia memuat lebih dari 100.000 entri kata dengan definisi, contoh penggunaan, dan asal-usul kata.' },
+  { id:7,  title:'Fisika untuk SMA/SMK Kelas XI',         author:'Marthen Kanginan',          year:2021, cat:'Pelajaran',  icon:'fas fa-bolt',            bg:'linear-gradient(140deg,#0891b2,#0e7490)', stock:2, total:5, pub:'Erlangga',         pages:410,  desc:'Buku teks Fisika Kelas XI membahas dinamika rotasi, fluida, gelombang, termodinamika, dan optika dengan pendekatan konseptual.' },
+  { id:8,  title:'Atomic Habits',                         author:'James Clear',               year:2022, cat:'Non-Fiksi',  icon:'fas fa-atom',            bg:'linear-gradient(140deg,#059669,#047857)', stock:3, total:4, pub:'Avery',            pages:320,  desc:'Panduan berbasis riset untuk membangun kebiasaan baik. Perubahan kecil 1% setiap hari menghasilkan transformasi besar.' },
+  { id:9,  title:'Kimia Dasar',                           author:'Raymond Chang',             year:2020, cat:'Pelajaran',  icon:'fas fa-flask',           bg:'linear-gradient(140deg,#7c3aed,#5b21b6)', stock:1, total:3, pub:'McGraw-Hill',      pages:850,  desc:'Buku teks kimia umum mencakup stoikiometri, termokimia, kesetimbangan kimia, elektrokimia, dan kimia organik dasar.' },
+  { id:10, title:'Python Crash Course',                   author:'Eric Matthes',              year:2022, cat:'Referensi',  icon:'fab fa-python',          bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:2, pub:'No Starch Press',  pages:544,  desc:'Pengenalan Python yang cepat dan praktis. Dari variabel dan perulangan hingga proyek game dan visualisasi data.' },
+  { id:11, title:'Negeri 5 Menara',                       author:'Ahmad Fuadi',               year:2020, cat:'Fiksi',      icon:'fas fa-mosque',          bg:'linear-gradient(140deg,#16a34a,#15803d)', stock:4, total:5, pub:'Gramedia',         pages:423,  desc:"Kisah Alif Fikri di pesantren Pondok Madani dan mantra 'Man Jadda Wajada' yang mengubah hidup jutaan pembaca." },
+  { id:12, title:'Biologi Kelas XII',                     author:'Irnaningtyas',              year:2021, cat:'Pelajaran',  icon:'fas fa-dna',             bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:2, total:4, pub:'Erlangga',         pages:390,  desc:'Buku teks Biologi Kelas XII mencakup pertumbuhan, metabolisme sel, genetika, evolusi, dan ekologi.' },
+  { id:13, title:'Sejarah Indonesia Kelas X',             author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-scroll',          bg:'linear-gradient(140deg,#b45309,#92400e)', stock:5, total:5, pub:'Kemendikbud',      pages:310,  desc:'Membahas prasejarah, kerajaan Hindu-Buddha, kerajaan Islam, hingga penjajahan dan perjuangan kemerdekaan.' },
+  { id:14, title:'The Art of War',                        author:'Sun Tzu',                   year:2019, cat:'Non-Fiksi',  icon:'fas fa-chess-king',      bg:'linear-gradient(140deg,#1f2937,#111827)', stock:2, total:3, pub:'Various',          pages:273,  desc:'Risalah strategi militer kuno yang relevan dalam kepemimpinan dan bisnis modern. 13 bab kebijaksanaan abadi.' },
+  { id:15, title:'Ensiklopedia Sains',                    author:'Tim DK',                    year:2020, cat:'Referensi',  icon:'fas fa-microscope',      bg:'linear-gradient(140deg,#0891b2,#155e75)', stock:0, total:2, pub:'DK Publishing',    pages:1200, desc:'Ensiklopedia sains bergambar komprehensif mencakup fisika, kimia, biologi, astronomi, geologi, dan teknologi.' },
+  { id:16, title:'Matematika Kelas XI',                   author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-square-root-alt', bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:5, pub:'Kemendikbud',      pages:340,  desc:'Membahas program linear, matriks, transformasi, barisan, dan peluang dengan pendekatan kontekstual.' },
+  { id:17, title:'Ekonomi Kelas X',                       author:'Alam S.',                   year:2021, cat:'Pelajaran',  icon:'fas fa-chart-line',      bg:'linear-gradient(140deg,#059669,#065f46)', stock:4, total:4, pub:'Esis',             pages:295,  desc:'Membahas konsep dasar ekonomi, permintaan dan penawaran, sistem ekonomi, dan APBN/APBD.' },
+  { id:18, title:'Thinking, Fast and Slow',               author:'Daniel Kahneman',           year:2018, cat:'Non-Fiksi',  icon:'fas fa-brain',           bg:'linear-gradient(140deg,#7c3aed,#4c1d95)', stock:1, total:2, pub:'Farrar Straus',    pages:499,  desc:'Pemenang Nobel menjelaskan dua sistem berpikir manusia. Revolusi pemahaman tentang cara pengambilan keputusan.' },
+  { id:19, title:'Bahasa Inggris Kelas XII',              author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-comments',        bg:'linear-gradient(140deg,#0891b2,#0c4a6e)', stock:3, total:5, pub:'Kemendikbud',      pages:260,  desc:'Mencakup reading comprehension, grammar, writing skills, dan conversation practice untuk Kelas XII.' },
+  { id:20, title:'Dunia Sophie',                          author:'Jostein Gaarder',           year:2020, cat:'Fiksi',      icon:'fas fa-question-circle', bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:3, pub:'Gyldendal',        pages:512,  desc:'Novel filsafat tentang Sophie yang menjelajahi pemikiran filosof besar dari Socrates hingga Sartre.' },
+];
+
+const RIWAYAT = [
+  { id:1, bookId:4,  tglPinjam:'10 Feb 2025', tglKembali:'17 Feb 2025', tglDikembalikan:'16 Feb 2025', status:'done',   denda:0 },
+  { id:2, bookId:8,  tglPinjam:'01 Mar 2025', tglKembali:'08 Mar 2025', tglDikembalikan:null,          status:'active', denda:0 },
+  { id:3, bookId:3,  tglPinjam:'12 Jan 2025', tglKembali:'19 Jan 2025', tglDikembalikan:'25 Jan 2025', status:'late',   denda:3000 },
+  { id:4, bookId:11, tglPinjam:'05 Mar 2025', tglKembali:'12 Mar 2025', tglDikembalikan:null,          status:'borrow', denda:0 },
+  { id:5, bookId:14, tglPinjam:'20 Feb 2025', tglKembali:'27 Feb 2025', tglDikembalikan:'27 Feb 2025', status:'done',   denda:0 },
+  { id:6, bookId:2,  tglPinjam:'15 Feb 2025', tglKembali:'22 Feb 2025', tglDikembalikan:'20 Feb 2025', status:'done',   denda:0 },
+  { id:7, bookId:5,  tglPinjam:'25 Jan 2025', tglKembali:'01 Feb 2025', tglDikembalikan:'05 Feb 2025', status:'late',   denda:2000 },
+  { id:8, bookId:17, tglPinjam:'28 Feb 2025', tglKembali:'07 Mar 2025', tglDikembalikan:null,          status:'active', denda:0 },
+];
+
+let currentUser  = null;
+let currentRole  = 'siswa';
+let activeCat    = 'all';
+let activeSearch = '';
+let isGridView   = true;
+let selectedBook = null;
+
+/* ════ LOGIN ════ */
+function setRole(role, el) {
+  currentRole = role;
+  document.querySelectorAll('.utt').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  const lbl = { siswa:'NIS (Nomor Induk Siswa)', guru:'NIP (Nomor Induk Pegawai)', admin:'ID Admin' };
+  document.getElementById('nisLabel').textContent = lbl[role];
+  document.getElementById('loginNis').placeholder = role==='admin' ? 'Masukkan ID Admin' : role==='guru' ? 'Masukkan NIP Anda' : 'Masukkan NIS Anda';
+}
+
+function fillDemo(role) {
+  const a = ACCOUNTS.find(x => x.id === role);
+  document.querySelector(`[data-role="${role}"]`).click();
+  document.getElementById('loginNis').value  = a.nis;
+  document.getElementById('loginPass').value = a.pass;
+  hideAlert();
+}
+
+function toggleEye() {
+  const inp = document.getElementById('loginPass');
+  const ico = document.getElementById('eyeBtn').querySelector('i');
+  if (inp.type==='password') { inp.type='text'; ico.className='fas fa-eye-slash'; }
+  else { inp.type='password'; ico.className='fas fa-eye'; }
+}
+
+function hideAlert() {
+  document.getElementById('loginAlert').classList.remove('show');
+  document.getElementById('loginNis').classList.remove('error');
+  document.getElementById('loginPass').classList.remove('error');
+  document.getElementById('nisErr').classList.remove('show');
+  document.getElementById('passErr').classList.remove('show');
+}
+
+function doLogin() {
+  hideAlert();
+  const nis  = document.getElementById('loginNis').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  let valid  = true;
+  if (!nis)  { document.getElementById('nisErr').classList.add('show');  document.getElementById('loginNis').classList.add('error');  valid=false; }
+  if (!pass) { document.getElementById('passErr').classList.add('show'); document.getElementById('loginPass').classList.add('error'); valid=false; }
+  if (!valid) return;
+  const btn = document.getElementById('loginBtn');
+  btn.classList.add('loading');
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    const acc = ACCOUNTS.find(a => a.nis===nis && a.pass===pass);
+    if (!acc) {
+      document.getElementById('loginAlertMsg').textContent = 'NIS/NIP atau kata sandi salah. Coba lagi.';
+      document.getElementById('loginAlert').classList.add('show');
+      document.getElementById('loginNis').classList.add('error');
+      document.getElementById('loginPass').classList.add('error');
+      return;
+    }
+    currentUser = acc;
+    loadUserToUI(acc);
+    showPage('peminjaman');
+    initPeminjaman();
+    showToast(`Selamat datang, ${acc.name}! 👋`, 'success');
+  }, 1200);
+}
+
+function loadUserToUI(acc) {
+  document.getElementById('navAvatar').textContent       = acc.avatar;
+  document.getElementById('navAvatar').style.background = acc.color;
+  document.getElementById('navName').textContent         = acc.name.split(' ')[0];
+  document.getElementById('navRole').textContent         = acc.role;
+  document.getElementById('ddName').textContent          = acc.name;
+  document.getElementById('ddEmail').textContent         = acc.email;
+  document.getElementById('fNama').value                 = acc.name;
+  document.getElementById('fNis').value                  = acc.nis;
+}
+
+function doLogout() {
+  if (!confirm('Yakin ingin keluar?')) return;
+  currentUser = null; selectedBook = null;
+  document.getElementById('loginNis').value  = '';
+  document.getElementById('loginPass').value = '';
+  hideAlert();
+  showPage('login');
+  showToast('Anda telah keluar.', 'info');
+}
+
+/* ════ ROUTING ════ */
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ✅ Fungsi kembali ke TugasAkhir.html — SESUAIKAN PATH ini dengan lokasi file Anda di hosting
+function goHome() {
+  window.location.href = 'TugasAkhir.html';
+}
+
+// ✅ Fungsi navigasi ke section di TugasAkhir.html — SESUAIKAN PATH ini dengan lokasi file Anda di hosting
+function navGo(section) {
+  const urls = {
+    beranda: 'TugasAkhir.html',
+    tentang: 'TugasAkhir.html#struktur-organisasi',
+    koleksi: 'TugasAkhir.html#koleksi',
+    layanan: 'TugasAkhir.html#layanan',
+    kontak:  'TugasAkhir.html#kontak',
+  };
+  if (urls[section]) window.location.href = urls[section];
+}
+
+/* ════ TABS ════ */
+function switchMainTab(name) {
+  const map = { koleksi:'Koleksi', pinjam:'Pinjam', riwayat:'Riwayat', denda:'Denda' };
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('tabBtn'+map[name]).classList.add('on');
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('on'));
+  document.getElementById('ts'+map[name]).classList.add('on');
+  window.scrollTo({ top:62, behavior:'smooth' });
+}
+
+/* ════ INIT ════ */
+function initPeminjaman() {
+  renderBooks(getFiltered());
+  renderRiwayat();
+  renderDenda();
+  setTodayDate();
+  initFormLive();
+  initBookSearchForm();
+
+  document.querySelectorAll('#catPills .pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('#catPills .pill').forEach(x => x.classList.remove('on'));
+      p.classList.add('on');
+      activeCat = p.dataset.c;
+      renderBooks(getFiltered());
+    });
+  });
+
+  document.getElementById('bookSearch').addEventListener('input', e => {
+    activeSearch = e.target.value.toLowerCase();
+    document.getElementById('clearBook').style.display = activeSearch ? 'block' : 'none';
+    renderBooks(getFiltered());
+  });
+
+  document.getElementById('bookSort').addEventListener('change', () => renderBooks(getFiltered()));
+
+  document.getElementById('gBtn').addEventListener('click', () => {
+    isGridView = true;
+    document.getElementById('booksGrid').classList.remove('list-mode');
+    document.getElementById('gBtn').classList.add('on');
+    document.getElementById('lBtn').classList.remove('on');
+  });
+
+  document.getElementById('lBtn').addEventListener('click', () => {
+    isGridView = false;
+    document.getElementById('booksGrid').classList.add('list-mode');
+    document.getElementById('lBtn').classList.add('on');
+    document.getElementById('gBtn').classList.remove('on');
+  });
+}
+
+function clearBookSearch() {
+  document.getElementById('bookSearch').value = '';
+  activeSearch = '';
+  document.getElementById('clearBook').style.display = 'none';
+  renderBooks(getFiltered());
+}
+
+function getFiltered() {
+  let list = [...BOOKS];
+  if (activeCat !== 'all') list = list.filter(b => b.cat === activeCat);
+  if (activeSearch)        list = list.filter(b => b.title.toLowerCase().includes(activeSearch) || b.author.toLowerCase().includes(activeSearch));
+  const sort = document.getElementById('bookSort')?.value || 'default';
+  if (sort==='title')    list.sort((a,b) => a.title.localeCompare(b.title));
+  else if (sort==='year_new') list.sort((a,b) => b.year-a.year);
+  else if (sort==='stock')    list.sort((a,b) => b.stock-a.stock);
+  return list;
+}
+
+/* ════ RENDER BUKU ════ */
+function renderBooks(list) {
+  const grid  = document.getElementById('booksGrid');
+  const empty = document.getElementById('bookEmpty');
+  grid.querySelectorAll('.bk').forEach(c => c.remove());
+  document.getElementById('bookCount').innerHTML   = `<strong>${list.length}</strong> buku ditampilkan`;
+  document.getElementById('tcKoleksi').textContent = list.length;
+  if (!list.length) { empty.classList.add('show'); return; }
+  empty.classList.remove('show');
+  list.forEach((b, i) => {
+    const sc = b.stock===0 ? 'stock-out' : b.stock<=1 ? 'stock-low' : 'stock-ok';
+    const st = b.stock===0 ? 'Habis' : `${b.stock}/${b.total} stok`;
+    const sb = b.stock===0 ? 'sb-borrow' : b.stock<=1 ? 'sb-limit' : 'sb-avail';
+    const sl = b.stock===0 ? 'Dipinjam' : b.stock<=1 ? 'Terbatas' : 'Tersedia';
+    const card = document.createElement('div');
+    card.className = 'bk';
+    card.style.transitionDelay = `${i*30}ms`;
+    card.innerHTML = `
+      <div class="bk-cover">
+        <div class="bk-cover-inner" style="background:${b.bg};">
+          <div class="cover-lines"></div>
+          <div class="cover-ico"><i class="${b.icon}"></i></div>
+          <div class="cover-top">
+            <span class="cat-badge">${b.cat}</span>
+            <span class="status-badge ${sb}">${sl}</span>
+          </div>
+          <div class="cover-actions">
+            <button class="ca" onclick="event.stopPropagation();openModal(${b.id})" title="Detail"><i class="fas fa-eye"></i></button>
+            <button class="ca" onclick="event.stopPropagation();pilihBuku(${b.id})" title="Pinjam"><i class="fas fa-bookmark"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="bk-body">
+        <div class="bk-cat">${b.cat}</div>
+        <div class="bk-title">${b.title}</div>
+        <div class="bk-author"><i class="fas fa-user" style="font-size:9px;"></i> ${b.author}</div>
+        <div class="bk-footer">
+          <span class="bk-year"><i class="fas fa-calendar-alt" style="font-size:9px;"></i> ${b.year}</span>
+          <span class="bk-stock ${sc}">${st}</span>
+        </div>
+      </div>`;
+    card.addEventListener('click', () => openModal(b.id));
+    grid.insertBefore(card, empty);
+    setTimeout(() => {
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+      }, { threshold:.08 });
+      obs.observe(card);
+    }, 30);
+  });
+}
+
+/* ════ MODAL ════ */
+function openModal(id) {
+  const b = BOOKS.find(x => x.id===id); if (!b) return;
+  document.getElementById('mCover').style.background = b.bg;
+  document.getElementById('mCovBadge').textContent   = b.cat;
+  document.getElementById('mCovIco').className       = b.icon;
+  document.getElementById('mGenre').textContent      = b.cat;
+  document.getElementById('mTitle').textContent      = b.title;
+  document.getElementById('mAuthor').textContent     = 'oleh ' + b.author;
+  document.getElementById('mDesc').textContent       = b.desc;
+  const st = b.stock===0 ? '❌ Tidak Tersedia' : b.stock<=1 ? `⚠️ Terbatas (${b.stock} tersisa)` : `✅ Tersedia (${b.stock}/${b.total})`;
+  document.getElementById('mMeta').innerHTML = `
+    <div class="mm-item"><div class="mm-label">Penerbit</div><div class="mm-val">${b.pub}</div></div>
+    <div class="mm-item"><div class="mm-label">Tahun Terbit</div><div class="mm-val">${b.year}</div></div>
+    <div class="mm-item"><div class="mm-label">Jumlah Halaman</div><div class="mm-val">${b.pages} hal.</div></div>
+    <div class="mm-item"><div class="mm-label">Ketersediaan</div><div class="mm-val">${st}</div></div>`;
+  const pb = document.getElementById('mPinjamBtn');
+  pb.disabled = b.stock===0; pb.style.opacity = b.stock===0 ? '.4' : '1';
+  pb.onclick  = () => { pilihBuku(b.id); closeModal(); };
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalBg').addEventListener('click', e => { if (e.target===document.getElementById('modalBg')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+
+/* ════ PENCARIAN FORM ════ */
+function initBookSearchForm() {
+  const input  = document.getElementById('fBookSearch');
+  const result = document.getElementById('bookSearchResult');
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase(); if (!q) { result.classList.remove('show'); return; }
+    const found = BOOKS.filter(b => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)).slice(0,5);
+    if (!found.length) { result.classList.remove('show'); return; }
+    result.innerHTML = '';
+    found.forEach(b => {
+      const sc  = b.stock===0 ? 'var(--red)' : b.stock<=1 ? 'var(--orange)' : 'var(--green)';
+      const stx = b.stock===0 ? 'Habis' : `${b.stock} tersisa`;
+      result.innerHTML += `<div class="bsr-item" onclick="selectBook(${b.id})">
+        <div class="bsr-thumb" style="background:${b.bg};"><i class="${b.icon}"></i></div>
+        <div class="bsr-info"><div class="bsr-title">${b.title}</div><div class="bsr-meta">${b.author} · ${b.cat}</div></div>
+        <span class="bsr-stock" style="color:${sc};">${stx}</span></div>`;
+    });
+    result.classList.add('show');
+  });
+  document.addEventListener('click', e => { if (!input.contains(e.target) && !result.contains(e.target)) result.classList.remove('show'); });
+}
+
+function selectBook(id) {
+  const b = BOOKS.find(x => x.id===id); if (!b) return;
+  if (b.stock===0) { showToast('Buku ini sedang tidak tersedia.','error'); return; }
+  selectedBook = b;
+  document.getElementById('fBookSearch').value = b.title;
+  document.getElementById('bookSearchResult').classList.remove('show');
+  document.getElementById('sbThumb').innerHTML = `<div style="width:36px;height:48px;border-radius:6px;background:${b.bg};display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:1rem;flex-shrink:0;"><i class="${b.icon}"></i></div>`;
+  document.getElementById('sbTitle').textContent  = b.title;
+  document.getElementById('sbDetail').textContent = `${b.author} · ${b.stock}/${b.total} stok tersedia`;
+  document.getElementById('selectedBookChip').classList.add('show');
+  updateSummary();
+}
+
+function clearSelectedBook() {
+  selectedBook = null;
+  document.getElementById('fBookSearch').value = '';
+  document.getElementById('selectedBookChip').classList.remove('show');
+  document.getElementById('sumBuku').textContent = '—';
+}
+
+function pilihBuku(id) {
+  switchMainTab('pinjam');
+  selectBook(id);
+  setTimeout(() => document.getElementById('fNama').focus(), 250);
+  showToast('Buku dipilih! Lengkapi form peminjaman.', 'success');
+}
+
+/* ════ FORM ════ */
+function setTodayDate() {
+  const fmt = d => d.toISOString().split('T')[0];
+  const today = new Date(); const ret = new Date(today); ret.setDate(ret.getDate()+7);
+  document.getElementById('fTglPinjam').value  = fmt(today);
+  document.getElementById('fTglPinjam').min    = fmt(today);
+  document.getElementById('fTglKembali').value = fmt(ret);
+  document.getElementById('fTglKembali').min   = fmt(today);
+}
+
+function initFormLive() {
+  ['fNama','fNis','fTglPinjam','fTglKembali'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', updateSummary);
+  });
+}
+
+function updateSummary() {
+  const p = document.getElementById('fTglPinjam').value;
+  const k = document.getElementById('fTglKembali').value;
+  document.getElementById('sumNama').textContent    = document.getElementById('fNama').value || '—';
+  document.getElementById('sumNis').textContent     = document.getElementById('fNis').value  || '—';
+  document.getElementById('sumBuku').textContent    = selectedBook ? selectedBook.title : '—';
+  document.getElementById('sumPinjam').textContent  = p ? new Date(p).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}) : '—';
+  document.getElementById('sumKembali').textContent = k ? new Date(k).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}) : '—';
+  if (p && k) {
+    const diff = Math.round((new Date(k)-new Date(p))/86400000);
+    document.getElementById('sumDur').textContent = diff>0 ? diff+' hari' : '—';
+    document.getElementById('fTglKembali').min = p;
+  }
+}
+
+function submitPinjam() {
+  const nama = document.getElementById('fNama').value.trim();
+  const nis  = document.getElementById('fNis').value.trim();
+  const p    = document.getElementById('fTglPinjam').value;
+  const k    = document.getElementById('fTglKembali').value;
+  if (!nama)         { showToast('Nama lengkap wajib diisi.','error');                document.getElementById('fNama').focus();       return; }
+  if (!nis)          { showToast('NIS/NIP wajib diisi.','error');                     document.getElementById('fNis').focus();        return; }
+  if (!selectedBook) { showToast('Pilih buku terlebih dahulu.','error');              document.getElementById('fBookSearch').focus(); return; }
+  if (!p || !k)      { showToast('Tanggal pinjam & kembali wajib diisi.','error');   return; }
+  const diff = Math.round((new Date(k)-new Date(p))/86400000);
+  if (diff<=0) { showToast('Tanggal kembali harus setelah tanggal pinjam.','error'); return; }
+  if (diff>14) { showToast('Durasi maksimal 14 hari.','error'); return; }
+  showToast(`✓ Peminjaman "${selectedBook.title}" berhasil diajukan!`, 'success');
+  setTimeout(() => {
+    clearSelectedBook();
+    document.getElementById('fCatatan').value = '';
+    setTodayDate(); updateSummary();
+  }, 500);
+}
+
+/* ════ RIWAYAT ════ */
+function renderRiwayat() {
+  const tbody = document.getElementById('riwayatBody');
+  tbody.innerHTML = '';
+  const sm = { active:{cls:'sp-active',lbl:'Aktif'}, late:{cls:'sp-late',lbl:'Terlambat'}, done:{cls:'sp-done',lbl:'Selesai'}, borrow:{cls:'sp-borrow',lbl:'Dipinjam'} };
+  RIWAYAT.forEach(r => {
+    const b = BOOKS.find(x=>x.id===r.bookId); const st = sm[r.status];
+    tbody.innerHTML += `<tr>
+      <td><div class="book-cell"><div class="rt-thumb" style="background:${b.bg};"><i class="${b.icon}"></i></div><div><div class="rt-title">${b.title}</div><div class="rt-author">${b.author}</div></div></div></td>
+      <td>${r.tglPinjam}</td><td>${r.tglKembali}</td>
+      <td>${r.tglDikembalikan || '<span style="color:var(--orange);">Belum</span>'}</td>
+      <td><span class="status-pill ${st.cls}">${st.lbl}</span></td>
+      <td style="font-weight:700;color:${r.denda>0?'var(--red)':'var(--green)'};">${r.denda>0?'Rp '+r.denda.toLocaleString('id-ID'):'Lunas'}</td>
+      <td>${r.status!=='done'?`<button class="action-link" onclick="showToast('Permintaan pengembalian dikirim ke petugas!','success')">Kembalikan</button>`:'<span style="color:var(--text3);font-size:11.5px;">—</span>'}</td>
+    </tr>`;
+  });
+}
+
+/* ════ DENDA ════ */
+function renderDenda() {
+  const cont = document.getElementById('dendaCards');
+  const noFine = document.getElementById('noFine');
+  const fines  = RIWAYAT.filter(r => r.denda>0);
+  document.getElementById('tcDenda').textContent = fines.length;
+  if (!fines.length) { noFine.style.display='flex'; return; }
+  fines.forEach(r => {
+    const b = BOOKS.find(x=>x.id===r.bookId);
+    cont.innerHTML += `<div class="denda-card has-fine">
+      <div class="dc-top">
+        <div style="display:flex;gap:9px;align-items:flex-start;">
+          <div class="dc-thumb" style="background:${b.bg};"><i class="${b.icon}"></i></div>
+          <div><div class="dc-title">${b.title}</div><div class="dc-author">${b.author}</div></div>
+        </div>
+        <div class="dc-amount">Rp ${r.denda.toLocaleString('id-ID')}<small>Total Denda</small></div>
+      </div>
+      <div class="dc-row"><span class="dc-row-label">Tgl. Seharusnya</span><span class="dc-row-val">${r.tglKembali}</span></div>
+      <div class="dc-row"><span class="dc-row-label">Tgl. Dikembalikan</span><span class="dc-row-val" style="color:var(--red);">${r.tglDikembalikan}</span></div>
+      <div class="dc-row"><span class="dc-row-label">Keterlambatan</span><span class="dc-row-val" style="color:var(--red);">${r.denda/500} hari</span></div>
+      <button class="dc-pay-btn" onclick="showToast('Konfirmasi pembayaran dikirim ke petugas!','success')">
+        <i class="fas fa-credit-card"></i> Bayar Sekarang
+      </button></div>`;
+  });
+}
+
+/* ════ TOAST ════ */
+let toastTimer;
+function showToast(msg, type='success') {
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast '+type+' show';
+  toastTimer  = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('loginNis').addEventListener('keydown',  e => { if(e.key==='Enter') doLogin(); });
+</script>
+</body>
+</html>
