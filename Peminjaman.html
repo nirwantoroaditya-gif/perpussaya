@@ -159,13 +159,22 @@
     .nav-icon-btn:hover { background:rgba(255,255,255,.14); color:#fff; }
     .notif-dot { width:7px; height:7px; background:#ef4444; border-radius:50%; position:absolute; top:5px; right:5px; border:1.5px solid var(--navy); }
 
-    .user-pill { display:flex; align-items:center; gap:8px; padding:5px 14px 5px 6px; border-radius:50px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); cursor:pointer; transition:.2s; position:relative; }
+    /* ── USER PILL & DROPDOWN ── */
+    .user-pill { display:flex; align-items:center; gap:8px; padding:5px 14px 5px 6px; border-radius:50px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); cursor:pointer; transition:.2s; position:relative; user-select:none; }
     .user-pill:hover { background:rgba(255,255,255,.14); }
     .user-avatar { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; }
     .user-name { font-size:12px; font-weight:600; color:#fff; }
     .user-role { font-size:10px; color:rgba(255,255,255,.45); }
-    .user-dropdown { position:absolute; top:calc(100% + 10px); right:0; background:#fff; border:1px solid var(--border); border-radius:var(--r); box-shadow:var(--shadow-lg); width:220px; opacity:0; visibility:hidden; transform:translateY(-6px); transition:.2s; overflow:hidden; z-index:1000; }
-    .user-pill:hover .user-dropdown, .user-pill:focus-within .user-dropdown { opacity:1; visibility:visible; transform:translateY(0); }
+    .user-dropdown {
+      position:absolute; top:calc(100% + 10px); right:0;
+      background:#fff; border:1px solid var(--border); border-radius:var(--r);
+      box-shadow:var(--shadow-lg); width:220px;
+      opacity:0; visibility:hidden; transform:translateY(-6px);
+      transition:.2s; overflow:hidden; z-index:1050;
+      pointer-events:none;
+    }
+    .user-pill:hover .user-dropdown,
+    .user-pill:focus-within .user-dropdown { opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
     .ud-header { padding:14px 16px; background:var(--bg); border-bottom:1px solid var(--border); }
     .ud-name  { font-size:13px; font-weight:700; color:var(--text); }
     .ud-email { font-size:11px; color:var(--text3); margin-top:1px; }
@@ -176,6 +185,59 @@
     .ud-item.danger:hover { background:var(--red-bg); }
     .ud-item.danger i { color:var(--red); }
     .ud-sep { height:1px; background:var(--border); }
+
+    /* ══ ADMIN NOTIF PANEL (BARU) ══ */
+    .notif-panel-wrapper { position:relative; }
+    .notif-panel {
+      position:absolute; top:calc(100% + 12px); right:0;
+      width:380px; background:#fff; border-radius:16px;
+      border:1.5px solid var(--border); box-shadow:var(--shadow-lg);
+      opacity:0; visibility:hidden; transform:translateY(-8px) scale(.97);
+      transition:.25s cubic-bezier(.23,1,.32,1); z-index:1100;
+      overflow:hidden;
+    }
+    .notif-panel.open { opacity:1; visibility:visible; transform:translateY(0) scale(1); }
+    .np-header {
+      padding:14px 18px; background:linear-gradient(135deg,var(--navy3),var(--navy));
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .np-title { font-size:13px; font-weight:700; color:#fff; display:flex; align-items:center; gap:7px; }
+    .np-badge { background:var(--red); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; }
+    .np-close { background:rgba(255,255,255,.15); border:none; color:#fff; width:26px; height:26px; border-radius:50%; cursor:pointer; font-size:11px; display:flex; align-items:center; justify-content:center; transition:.2s; }
+    .np-close:hover { background:rgba(255,255,255,.3); }
+    .np-body { max-height:400px; overflow-y:auto; }
+    .np-empty { padding:36px 20px; text-align:center; color:var(--text3); font-size:13px; }
+    .np-empty i { font-size:2rem; display:block; margin-bottom:8px; opacity:.35; }
+    .np-item {
+      padding:14px 18px; border-bottom:1px solid var(--bg2);
+      animation:fadeUpIn .3s ease both;
+    }
+    .np-item:last-child { border-bottom:none; }
+    .np-item-top { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+    .np-thumb { width:34px; height:44px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.7); font-size:.85rem; flex-shrink:0; }
+    .np-info { flex:1; min-width:0; }
+    .np-book { font-size:12.5px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .np-user { font-size:11px; color:var(--text3); margin-top:2px; }
+    .np-dates { font-size:10.5px; color:var(--text2); margin-top:3px; }
+    .np-time { font-size:10px; color:var(--text3); white-space:nowrap; flex-shrink:0; }
+    .np-actions { display:flex; gap:8px; }
+    .np-btn { flex:1; padding:8px; border-radius:8px; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700; transition:.2s; display:flex; align-items:center; justify-content:center; gap:5px; }
+    .np-btn.approve { background:var(--green-bg); color:var(--green); }
+    .np-btn.approve:hover { background:var(--green); color:#fff; }
+    .np-btn.reject  { background:var(--red-bg); color:var(--red); }
+    .np-btn.reject:hover { background:var(--red); color:#fff; }
+
+    /* Badge jumlah pending di lonceng */
+    .bell-count {
+      position:absolute; top:-4px; right:-4px;
+      background:var(--red); color:#fff;
+      font-size:9px; font-weight:700;
+      min-width:16px; height:16px;
+      border-radius:20px; padding:0 4px;
+      display:flex; align-items:center; justify-content:center;
+      border:1.5px solid var(--navy);
+      pointer-events:none;
+    }
 
     /* ── HERO ── */
     .page-hero { background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 60%,#1e3a6e 100%); padding:40px 32px 46px; position:relative; overflow:hidden; }
@@ -305,6 +367,8 @@
     .info-box i { color:var(--blue); margin-top:1px; flex-shrink:0; }
 
     /* ── TABEL RIWAYAT ── */
+    .del-riwayat-btn { width:26px;height:26px;border-radius:6px;border:none;background:var(--red-bg);color:var(--red);cursor:pointer;font-size:11px;display:inline-flex;align-items:center;justify-content:center;margin-left:4px;transition:.2s;vertical-align:middle; }
+    .del-riwayat-btn:hover { background:var(--red);color:#fff; }
     .riwayat-table { width:100%; border-collapse:collapse; }
     .riwayat-table thead tr { background:var(--bg); }
     .riwayat-table th { padding:11px 14px; text-align:left; font-size:10.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--text3); white-space:nowrap; }
@@ -316,10 +380,11 @@
     .rt-title  { font-weight:600; font-size:12.5px; }
     .rt-author { font-size:10.5px; color:var(--text3); }
     .status-pill { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; white-space:nowrap; }
-    .sp-active { background:var(--green-bg); color:var(--green); }
-    .sp-late   { background:var(--red-bg);   color:var(--red); }
-    .sp-done   { background:var(--bg2);       color:var(--text3); }
-    .sp-borrow { background:#ffedd5;           color:var(--orange); }
+    .sp-active  { background:var(--green-bg); color:var(--green); }
+    .sp-late    { background:var(--red-bg);   color:var(--red); }
+    .sp-done    { background:var(--bg2);       color:var(--text3); }
+    .sp-borrow  { background:#ffedd5;           color:var(--orange); }
+    .sp-pending { background:#fef9c3;           color:#ca8a04; }
     .action-link { font-size:12px; font-weight:600; color:var(--blue); background:none; border:none; cursor:pointer; padding:0; transition:.2s; }
     .action-link:hover { color:var(--navy); }
 
@@ -388,6 +453,7 @@
       .tabs-bar { padding:0 16px; }
       .page-hero { padding:28px 16px 34px; }
       .hero-stats { gap:18px; }
+      .notif-panel { width:320px; right:-10px; }
     }
   </style>
 </head>
@@ -493,7 +559,6 @@
 <div id="page-peminjaman" class="page">
 
   <nav class="navbar">
-    <!-- ✅ Tombol logo/beranda kembali ke TugasAkhir.html -->
     <button class="nav-logo-btn" onclick="goHome()" title="Kembali ke Halaman Utama">
       <div class="nav-logo-icon" style="background:none;box-shadow:none;padding:0;overflow:hidden;">
         <img src="logo smkn bulat.jpg" style="width:38px;height:38px;object-fit:contain;border-radius:50%;">
@@ -505,7 +570,6 @@
     </button>
 
     <div class="nav-links">
-      <!-- ✅ Semua link navbar mengarah kembali ke TugasAkhir.html -->
       <button class="nav-link" onclick="navGo('beranda')"><i class="fas fa-home"></i> Beranda</button>
       <button class="nav-link" onclick="navGo('tentang')"><i class="fas fa-info-circle"></i> Tentang Kami</button>
       <button class="nav-link" onclick="navGo('koleksi')"><i class="fas fa-book"></i> Koleksi</button>
@@ -515,9 +579,31 @@
     </div>
 
     <div class="nav-right">
-      <button class="nav-icon-btn" onclick="showToast('Tidak ada notifikasi baru.','info')" title="Notifikasi">
-        <i class="fas fa-bell"></i><span class="notif-dot"></span>
-      </button>
+
+      <!-- ══ TOMBOL LONCENG: hanya aktif untuk admin ══ -->
+      <div class="notif-panel-wrapper">
+        <button class="nav-icon-btn" id="bellBtn" onclick="toggleNotifPanel()" title="Notifikasi Peminjaman">
+          <i class="fas fa-bell"></i>
+          <!-- Badge jumlah pending, hanya muncul untuk admin -->
+          <span class="bell-count" id="bellCount" style="display:none;">0</span>
+        </button>
+
+        <!-- Panel notifikasi admin -->
+        <div class="notif-panel" id="notifPanel">
+          <div class="np-header">
+            <div class="np-title">
+              <i class="fas fa-bell"></i>
+              Permintaan Peminjaman
+              <span class="np-badge" id="npBadge">0</span>
+            </div>
+            <button class="np-close" onclick="toggleNotifPanel()"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="np-body" id="npBody">
+            <div class="np-empty"><i class="fas fa-inbox"></i>Belum ada permintaan masuk.</div>
+          </div>
+        </div>
+      </div>
+
       <button class="nav-icon-btn" onclick="showToast('Fitur pencarian global segera hadir!','info')" title="Cari">
         <i class="fas fa-search"></i>
       </button>
@@ -546,7 +632,6 @@
 
   <div class="page-hero">
     <div class="hero-inner">
-      <!-- ✅ Breadcrumb Beranda mengarah kembali ke TugasAkhir.html -->
       <div class="breadcrumb">
         <span onclick="goHome()"><i class="fas fa-home"></i> Beranda</span>
         <i class="fas fa-chevron-right"></i>
@@ -565,7 +650,7 @@
   <div class="tabs-bar">
     <button class="tab-btn on" id="tabBtnKoleksi" onclick="switchMainTab('koleksi')"><i class="fas fa-book"></i> Koleksi Buku <span class="tab-count" id="tcKoleksi">20</span></button>
     <button class="tab-btn" id="tabBtnPinjam"   onclick="switchMainTab('pinjam')"><i class="fas fa-hand-holding-heart"></i> Form Peminjaman</button>
-    <button class="tab-btn" id="tabBtnRiwayat"  onclick="switchMainTab('riwayat')"><i class="fas fa-history"></i> Riwayat <span class="tab-count">8</span></button>
+    <button class="tab-btn" id="tabBtnRiwayat"  onclick="switchMainTab('riwayat')"><i class="fas fa-history"></i> Riwayat <span class="tab-count" id="tcRiwayat">0</span></button>
     <button class="tab-btn" id="tabBtnDenda"    onclick="switchMainTab('denda')"><i class="fas fa-receipt"></i> Denda <span class="tab-count" id="tcDenda">1</span></button>
   </div>
 
@@ -671,10 +756,20 @@
     <!-- Tab Riwayat -->
     <div class="tab-section" id="tsRiwayat">
       <div class="card-box">
-        <div class="card-box-title"><i class="fas fa-history"></i> Riwayat Peminjaman</div>
-        <div style="overflow-x:auto;">
+        <div class="card-box-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span><i class="fas fa-history" style="color:var(--blue);"></i> Riwayat Peminjaman</span>
+          <span id="adminRiwayatBadge" style="display:none;font-size:11px;font-weight:600;color:var(--text3);background:var(--bg2);padding:4px 10px;border-radius:20px;">
+            <i class="fas fa-user-shield" style="font-size:10px;color:var(--gold);"></i> Mode Admin — klik 🗑 untuk hapus
+          </span>
+        </div>
+        <div id="riwayatEmpty" style="display:none;padding:40px 0;text-align:center;">
+          <div style="width:52px;height:52px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.4rem;color:var(--text3);"><i class="fas fa-history"></i></div>
+          <div style="font-size:.95rem;font-weight:700;color:var(--text2);margin-bottom:4px;">Belum ada riwayat</div>
+          <div style="font-size:13px;color:var(--text3);">Riwayat akan muncul setelah peminjaman disetujui admin.</div>
+        </div>
+        <div style="overflow-x:auto;" id="riwayatTableWrap">
           <table class="riwayat-table">
-            <thead><tr><th>Buku</th><th>Tgl. Pinjam</th><th>Tgl. Kembali</th><th>Dikembalikan</th><th>Status</th><th>Denda</th><th>Aksi</th></tr></thead>
+            <thead><tr><th>Buku</th><th>Peminjam</th><th>Tgl. Pinjam</th><th>Tgl. Kembali</th><th>Dikembalikan</th><th>Status</th><th>Denda</th><th>Aksi</th></tr></thead>
             <tbody id="riwayatBody"></tbody>
           </table>
         </div>
@@ -752,16 +847,12 @@ const BOOKS = [
   { id:20, title:'Dunia Sophie',                          author:'Jostein Gaarder',           year:2020, cat:'Fiksi',      icon:'fas fa-question-circle', bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:3, pub:'Gyldendal',        pages:512,  desc:'Novel filsafat tentang Sophie yang menjelajahi pemikiran filosof besar dari Socrates hingga Sartre.' },
 ];
 
-const RIWAYAT = [
-  { id:1, bookId:4,  tglPinjam:'10 Feb 2025', tglKembali:'17 Feb 2025', tglDikembalikan:'16 Feb 2025', status:'done',   denda:0 },
-  { id:2, bookId:8,  tglPinjam:'01 Mar 2025', tglKembali:'08 Mar 2025', tglDikembalikan:null,          status:'active', denda:0 },
-  { id:3, bookId:3,  tglPinjam:'12 Jan 2025', tglKembali:'19 Jan 2025', tglDikembalikan:'25 Jan 2025', status:'late',   denda:3000 },
-  { id:4, bookId:11, tglPinjam:'05 Mar 2025', tglKembali:'12 Mar 2025', tglDikembalikan:null,          status:'borrow', denda:0 },
-  { id:5, bookId:14, tglPinjam:'20 Feb 2025', tglKembali:'27 Feb 2025', tglDikembalikan:'27 Feb 2025', status:'done',   denda:0 },
-  { id:6, bookId:2,  tglPinjam:'15 Feb 2025', tglKembali:'22 Feb 2025', tglDikembalikan:'20 Feb 2025', status:'done',   denda:0 },
-  { id:7, bookId:5,  tglPinjam:'25 Jan 2025', tglKembali:'01 Feb 2025', tglDikembalikan:'05 Feb 2025', status:'late',   denda:2000 },
-  { id:8, bookId:17, tglPinjam:'28 Feb 2025', tglKembali:'07 Mar 2025', tglDikembalikan:null,          status:'active', denda:0 },
-];
+// Riwayat dimulai kosong — hanya terisi setelah admin menyetujui peminjaman
+let RIWAYAT = [];
+
+/* ══ DATA PENDING REQUESTS (BARU) ══ */
+let pendingRequests = [];
+let pendingIdCounter = 1000;
 
 let currentUser  = null;
 let currentRole  = 'siswa';
@@ -840,11 +931,30 @@ function loadUserToUI(acc) {
   document.getElementById('ddEmail').textContent         = acc.email;
   document.getElementById('fNama').value                 = acc.name;
   document.getElementById('fNis').value                  = acc.nis;
+
+  /* ══ TOMBOL LONCENG: hanya admin yang bisa membuka panel ══ */
+  const bellBtn = document.getElementById('bellBtn');
+  if (acc.id === 'admin') {
+    // Admin: bell aktif, tampilkan badge jika ada pending
+    bellBtn.title = 'Panel Persetujuan Peminjaman';
+    bellBtn.style.cursor = 'pointer';
+    bellBtn.style.opacity = '1';
+    updateBellBadge();
+  } else {
+    // Non-admin: bell tidak fungsional, tampilkan tooltip khusus
+    bellBtn.title = 'Notifikasi (hanya admin)';
+    bellBtn.style.cursor = 'not-allowed';
+    bellBtn.style.opacity = '0.45';
+    // Sembunyikan badge
+    document.getElementById('bellCount').style.display = 'none';
+  }
 }
 
 function doLogout() {
   if (!confirm('Yakin ingin keluar?')) return;
   currentUser = null; selectedBook = null;
+  // Tutup panel notif jika terbuka
+  document.getElementById('notifPanel').classList.remove('open');
   document.getElementById('loginNis').value  = '';
   document.getElementById('loginPass').value = '';
   hideAlert();
@@ -859,12 +969,10 @@ function showPage(name) {
   window.scrollTo(0, 0);
 }
 
-// ✅ Fungsi kembali ke TugasAkhir.html — SESUAIKAN PATH ini dengan lokasi file Anda di hosting
 function goHome() {
   window.location.href = 'TugasAkhir.html';
 }
 
-// ✅ Fungsi navigasi ke section di TugasAkhir.html — SESUAIKAN PATH ini dengan lokasi file Anda di hosting
 function navGo(section) {
   const urls = {
     beranda: 'TugasAkhir.html',
@@ -1108,9 +1216,11 @@ function updateSummary() {
   }
 }
 
+/* ══ SUBMIT PINJAM → masuk ke antrian pending (DIUBAH) ══ */
 function submitPinjam() {
   const nama = document.getElementById('fNama').value.trim();
   const nis  = document.getElementById('fNis').value.trim();
+  const kelas = document.getElementById('fKelas').value.trim();
   const p    = document.getElementById('fTglPinjam').value;
   const k    = document.getElementById('fTglKembali').value;
   if (!nama)         { showToast('Nama lengkap wajib diisi.','error');                document.getElementById('fNama').focus();       return; }
@@ -1120,7 +1230,36 @@ function submitPinjam() {
   const diff = Math.round((new Date(k)-new Date(p))/86400000);
   if (diff<=0) { showToast('Tanggal kembali harus setelah tanggal pinjam.','error'); return; }
   if (diff>14) { showToast('Durasi maksimal 14 hari.','error'); return; }
-  showToast(`✓ Peminjaman "${selectedBook.title}" berhasil diajukan!`, 'success');
+
+  // Buat request baru dan masukkan ke antrian pending
+  const req = {
+    id: ++pendingIdCounter,
+    bookId: selectedBook.id,
+    bookTitle: selectedBook.title,
+    bookBg: selectedBook.bg,
+    bookIcon: selectedBook.icon,
+    nama: nama,
+    nis: nis,
+    kelas: kelas || '—',
+    tglPinjam: new Date(p).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}),
+    tglKembali: new Date(k).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}),
+    waktuAjukan: new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),
+    catatan: document.getElementById('fCatatan').value.trim(),
+  };
+
+  pendingRequests.push(req);
+
+  // Update badge lonceng jika ada admin yang sedang login
+  if (currentUser && currentUser.id === 'admin') {
+    updateBellBadge();
+    renderNotifPanel();
+  }
+
+  showToast(`✓ Permintaan "${selectedBook.title}" dikirim! Menunggu konfirmasi admin.`, 'success');
+
+  // Riwayat hanya ditambah setelah admin approve — tidak perlu push pending ke sini
+  renderRiwayat();
+
   setTimeout(() => {
     clearSelectedBook();
     document.getElementById('fCatatan').value = '';
@@ -1130,26 +1269,110 @@ function submitPinjam() {
 
 /* ════ RIWAYAT ════ */
 function renderRiwayat() {
-  const tbody = document.getElementById('riwayatBody');
+  var tbody = document.getElementById('riwayatBody');
+  var emptyEl = document.getElementById('riwayatEmpty');
+  var tableWrap = document.getElementById('riwayatTableWrap');
+  var adminBadge = document.getElementById('adminRiwayatBadge');
   tbody.innerHTML = '';
-  const sm = { active:{cls:'sp-active',lbl:'Aktif'}, late:{cls:'sp-late',lbl:'Terlambat'}, done:{cls:'sp-done',lbl:'Selesai'}, borrow:{cls:'sp-borrow',lbl:'Dipinjam'} };
-  RIWAYAT.forEach(r => {
-    const b = BOOKS.find(x=>x.id===r.bookId); const st = sm[r.status];
-    tbody.innerHTML += `<tr>
-      <td><div class="book-cell"><div class="rt-thumb" style="background:${b.bg};"><i class="${b.icon}"></i></div><div><div class="rt-title">${b.title}</div><div class="rt-author">${b.author}</div></div></div></td>
-      <td>${r.tglPinjam}</td><td>${r.tglKembali}</td>
-      <td>${r.tglDikembalikan || '<span style="color:var(--orange);">Belum</span>'}</td>
-      <td><span class="status-pill ${st.cls}">${st.lbl}</span></td>
-      <td style="font-weight:700;color:${r.denda>0?'var(--red)':'var(--green)'};">${r.denda>0?'Rp '+r.denda.toLocaleString('id-ID'):'Lunas'}</td>
-      <td>${r.status!=='done'?`<button class="action-link" onclick="showToast('Permintaan pengembalian dikirim ke petugas!','success')">Kembalikan</button>`:'<span style="color:var(--text3);font-size:11.5px;">—</span>'}</td>
-    </tr>`;
+
+  var isAdmin = currentUser && currentUser.id === 'admin';
+
+  if (adminBadge) adminBadge.style.display = isAdmin ? 'inline-flex' : 'none';
+
+  var list = isAdmin ? RIWAYAT : RIWAYAT.filter(function(r){ return r.nis === (currentUser ? currentUser.nis : ''); });
+
+  if (!list.length) {
+    emptyEl.style.display = 'block';
+    tableWrap.style.display = 'none';
+    document.getElementById('tcRiwayat').textContent = '0';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  tableWrap.style.display = 'block';
+  document.getElementById('tcRiwayat').textContent = list.length;
+
+  var sm = {
+    active: {cls:'sp-active',  lbl:'Aktif'},
+    late:   {cls:'sp-late',    lbl:'Terlambat'},
+    done:   {cls:'sp-done',    lbl:'Selesai'},
+    borrow: {cls:'sp-borrow',  lbl:'Dipinjam'},
+  };
+
+  list.forEach(function(r) {
+    var b = BOOKS.find(function(x){ return x.id===r.bookId; });
+    if (!b) return;
+    var st = sm[r.status] || sm.done;
+
+    // Buat aksi HTML tanpa nested template literal
+    var aksiHtml = '';
+    if (isAdmin) {
+      var kembalikanBtn = '';
+      if (r.status === 'active' || r.status === 'borrow') {
+        kembalikanBtn = "<button class='action-link' onclick='showToast(\"Pengembalian dicatat.\",\"success\")'>Kembalikan</button>";
+      } else {
+        kembalikanBtn = '<span style="color:var(--text3);font-size:11px;">—</span>';
+      }
+      var hapusBtn = '<button onclick="deleteRiwayat(' + r.id + ')" title="Hapus riwayat ini" class="del-riwayat-btn"><i class="fas fa-trash"></i></button>';
+      aksiHtml = '<div style="display:flex;align-items:center;gap:4px;">' + kembalikanBtn + hapusBtn + '</div>';
+    } else {
+      if (r.status === 'active' || r.status === 'borrow') {
+        aksiHtml = "<button class='action-link' onclick='showToast(\"Permintaan pengembalian dikirim ke petugas!\",\"success\")'>Kembalikan</button>";
+      } else {
+        aksiHtml = '<span style="color:var(--text3);font-size:11.5px;">—</span>';
+      }
+    }
+
+    var dikembalikan = r.tglDikembalikan ? r.tglDikembalikan : '<span style="color:var(--orange);">Belum</span>';
+    var dendaStr = r.denda > 0 ? 'Rp ' + r.denda.toLocaleString('id-ID') : 'Lunas';
+    var dendaColor = r.denda > 0 ? 'var(--red)' : 'var(--green)';
+
+    var tr = document.createElement('tr');
+    tr.id = 'riwayat-row-' + r.id;
+    tr.innerHTML =
+      '<td><div class="book-cell"><div class="rt-thumb" style="background:' + b.bg + ';"><i class="' + b.icon + '"></i></div><div><div class="rt-title">' + b.title + '</div><div class="rt-author">' + b.author + '</div></div></div></td>' +
+      '<td><div style="font-size:12px;font-weight:600;">' + (r.nama||'—') + '</div><div style="font-size:10.5px;color:var(--text3);">' + (r.nis||'') + '</div></td>' +
+      '<td>' + r.tglPinjam + '</td>' +
+      '<td>' + r.tglKembali + '</td>' +
+      '<td>' + dikembalikan + '</td>' +
+      '<td><span class="status-pill ' + st.cls + '">' + st.lbl + '</span></td>' +
+      '<td style="font-weight:700;color:' + dendaColor + ';">' + dendaStr + '</td>' +
+      '<td>' + aksiHtml + '</td>';
+    tbody.appendChild(tr);
   });
+}
+
+
+function deleteRiwayat(rId) {
+  if (!currentUser || currentUser.id !== 'admin') { showToast('Hanya admin yang bisa menghapus riwayat.','error'); return; }
+  const r = RIWAYAT.find(x => x.id === rId); if (!r) return;
+  const b = BOOKS.find(x => x.id === r.bookId);
+  if (!confirm('Hapus riwayat peminjaman "' + (b ? b.title : 'buku ini') + '"?')) return;
+
+  // Kembalikan stok jika masih aktif dipinjam
+  if ((r.status === 'active' || r.status === 'borrow') && b) b.stock++;
+
+  const idx = RIWAYAT.findIndex(x => x.id === rId);
+  if (idx !== -1) RIWAYAT.splice(idx, 1);
+
+  // Animasi baris hilang
+  const row = document.getElementById('riwayat-row-' + rId);
+  if (row) {
+    row.style.transition = '.3s';
+    row.style.opacity = '0';
+    row.style.transform = 'translateX(20px)';
+    setTimeout(() => { renderRiwayat(); renderBooks(getFiltered()); renderDenda(); }, 320);
+  } else {
+    renderRiwayat(); renderBooks(getFiltered()); renderDenda();
+  }
+  showToast('Riwayat berhasil dihapus.', 'success');
 }
 
 /* ════ DENDA ════ */
 function renderDenda() {
   const cont = document.getElementById('dendaCards');
   const noFine = document.getElementById('noFine');
+  cont.innerHTML = '';
+  noFine.style.display = 'none';
   const fines  = RIWAYAT.filter(r => r.denda>0);
   document.getElementById('tcDenda').textContent = fines.length;
   if (!fines.length) { noFine.style.display='flex'; return; }
@@ -1170,6 +1393,149 @@ function renderDenda() {
         <i class="fas fa-credit-card"></i> Bayar Sekarang
       </button></div>`;
   });
+}
+
+/* ══ PANEL NOTIFIKASI ADMIN (BARU) ══ */
+function toggleNotifPanel() {
+  // Hanya admin yang boleh membuka panel
+  if (!currentUser || currentUser.id !== 'admin') {
+    showToast('Fitur ini hanya tersedia untuk Admin.', 'error');
+    return;
+  }
+  const panel = document.getElementById('notifPanel');
+  const isOpen = panel.classList.contains('open');
+  if (!isOpen) {
+    renderNotifPanel();
+    panel.classList.add('open');
+  } else {
+    panel.classList.remove('open');
+  }
+}
+
+// Tutup panel jika klik di luar
+document.addEventListener('click', function(e) {
+  const wrapper = document.querySelector('.notif-panel-wrapper');
+  if (wrapper && !wrapper.contains(e.target)) {
+    document.getElementById('notifPanel').classList.remove('open');
+  }
+});
+
+function updateBellBadge() {
+  const count = pendingRequests.length;
+  const badge = document.getElementById('bellCount');
+  const npBadge = document.getElementById('npBadge');
+  if (count > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = count;
+    // Hapus notif-dot lama jika ada
+    const oldDot = document.getElementById('bellBtn').querySelector('.notif-dot');
+    if (oldDot) oldDot.remove();
+  } else {
+    badge.style.display = 'none';
+  }
+  if (npBadge) npBadge.textContent = count;
+}
+
+function renderNotifPanel() {
+  const body = document.getElementById('npBody');
+  if (!pendingRequests.length) {
+    body.innerHTML = '<div class="np-empty"><i class="fas fa-inbox"></i>Belum ada permintaan peminjaman masuk.</div>';
+    return;
+  }
+  body.innerHTML = '';
+  pendingRequests.forEach(req => {
+    const item = document.createElement('div');
+    item.className = 'np-item';
+    item.id = 'req-' + req.id;
+    item.innerHTML = `
+      <div class="np-item-top">
+        <div class="np-thumb" style="background:${req.bookBg};"><i class="${req.bookIcon}"></i></div>
+        <div class="np-info">
+          <div class="np-book">${req.bookTitle}</div>
+          <div class="np-user"><i class="fas fa-user" style="font-size:9px;"></i> ${req.nama} · ${req.kelas}</div>
+          <div class="np-dates"><i class="fas fa-calendar" style="font-size:9px;"></i> ${req.tglPinjam} → ${req.tglKembali}</div>
+          ${req.catatan ? `<div style="font-size:10.5px;color:var(--text3);margin-top:2px;font-style:italic;">"${req.catatan}"</div>` : ''}
+        </div>
+        <div class="np-time">${req.waktuAjukan}</div>
+      </div>
+      <div class="np-actions">
+        <button class="np-btn approve" onclick="approveRequest(${req.id})">
+          <i class="fas fa-check"></i> Setujui
+        </button>
+        <button class="np-btn reject" onclick="rejectRequest(${req.id})">
+          <i class="fas fa-times"></i> Tolak
+        </button>
+      </div>`;
+    body.appendChild(item);
+  });
+}
+
+function approveRequest(reqId) {
+  const req = pendingRequests.find(r => r.id === reqId);
+  if (!req) return;
+
+  // Kurangi stok buku
+  const book = BOOKS.find(b => b.id === req.bookId);
+  if (book && book.stock > 0) book.stock--;
+
+  // Tambahkan langsung ke RIWAYAT dengan data lengkap (nama, nis)
+  RIWAYAT.push({
+    id: reqId,
+    bookId: req.bookId,
+    nama: req.nama,
+    nis: req.nis,
+    kelas: req.kelas,
+    tglPinjam: req.tglPinjam,
+    tglKembali: req.tglKembali,
+    tglDikembalikan: null,
+    status: 'active',
+    denda: 0,
+  });
+
+  // Hapus dari pending
+  pendingRequests = pendingRequests.filter(r => r.id !== reqId);
+
+  // Animasi hapus item dari panel
+  const el = document.getElementById('req-' + reqId);
+  if (el) { el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='.3s'; setTimeout(()=>el.remove(), 300); }
+
+  updateBellBadge();
+  renderRiwayat();
+  renderBooks(getFiltered());
+
+  showToast(`✓ Peminjaman "${req.bookTitle}" oleh ${req.nama} disetujui!`, 'success');
+
+  if (!pendingRequests.length) {
+    setTimeout(() => {
+      document.getElementById('npBody').innerHTML = '<div class="np-empty"><i class="fas fa-inbox"></i>Semua permintaan sudah diproses.</div>';
+    }, 350);
+  }
+}
+
+function rejectRequest(reqId) {
+  const req = pendingRequests.find(r => r.id === reqId);
+  if (!req) return;
+
+  // Hapus dari RIWAYAT
+  const idx = RIWAYAT.findIndex(r => r.id === reqId);
+  if (idx !== -1) RIWAYAT.splice(idx, 1);
+
+  // Hapus dari pending
+  pendingRequests = pendingRequests.filter(r => r.id !== reqId);
+
+  const el = document.getElementById('req-' + reqId);
+  if (el) { el.style.opacity='0'; el.style.transform='translateX(-20px)'; el.style.transition='.3s'; setTimeout(()=>el.remove(), 300); }
+
+  updateBellBadge();
+  renderRiwayat();
+
+  showToast(`✗ Peminjaman "${req.bookTitle}" oleh ${req.nama} ditolak.`, 'error');
+
+  if (!pendingRequests.length) {
+    setTimeout(() => {
+      document.getElementById('npBody').innerHTML = '<div class="np-empty"><i class="fas fa-inbox"></i>Semua permintaan sudah diproses.</div>';
+    }, 350);
+  }
 }
 
 /* ════ TOAST ════ */
