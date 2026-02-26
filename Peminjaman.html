@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
 <head>
@@ -7,6 +9,9 @@
   <title>Perpustakaan SMKN 1 Ketapang</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
 
     :root {
@@ -58,6 +63,7 @@
     @keyframes orbFloat  { 0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.05);} }
     @keyframes scaleIn   { from{opacity:0;transform:scale(.94) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);} }
     @keyframes fadeUpIn  { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;} }
+    @keyframes latePulse { 0%,100%{background:rgba(220,38,38,.0);} 50%{background:rgba(220,38,38,.08);} }
 
     [data-theme="dark"] { --navy:#0a1020;--navy2:#0d1628;--navy3:#121e3a;--bg:#111827;--bg2:#1a2540;--border:#1e3050;--border2:#243a60;--text:#e2e8f8;--text2:#8a9bc0;--text3:#4a5a80;--card-bg:#131d32;--page-bg:#0d1525;--input-bg:#1a2540;--blue:#5b9cf6;--blue-l:#7bb4f8;--blue-pale:rgba(91,156,246,.12); }
     [data-theme="dark"] .login-card{background:#131d32;}
@@ -116,7 +122,7 @@
     .mc-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;position:relative;z-index:1;}
     .mc-logo{width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;}
     .mc-school{font-size:10px;font-weight:700;line-height:1.3;opacity:.8;}
-    .mc-avatar-big{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:#fff;border:3px solid rgba(255,255,255,.3);margin:0 auto 11px;position:relative;z-index:1;}
+    .mc-avatar-big{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;color:#fff;border:3px solid rgba(255,255,255,.35);box-shadow:0 4px 18px rgba(0,0,0,.35),0 0 0 5px rgba(255,255,255,.08);margin:0 auto 14px;position:relative;z-index:1;animation:none!important;transform:none!important;}
     .mc-name{font-size:.95rem;font-weight:800;text-align:center;margin-bottom:3px;position:relative;z-index:1;}
     .mc-role-text{font-size:11px;opacity:.6;text-align:center;margin-bottom:15px;position:relative;z-index:1;}
     .mc-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:1;}
@@ -150,6 +156,7 @@
     .reminder-banner{padding:10px 32px;display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:#fff;}
     .reminder-banner.warn-b{background:linear-gradient(90deg,var(--orange),var(--red));}
     .reminder-banner.info-b{background:linear-gradient(90deg,#4f46e5,var(--blue));}
+    .reminder-banner.urgent-b{background:linear-gradient(90deg,#991b1b,var(--red));}
     .rb-close{margin-left:auto;background:rgba(255,255,255,.2);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
     @media(max-width:900px){.profil-layout{grid-template-columns:1fr;}.dash-row{grid-template-columns:1fr;}.dash-grid{grid-template-columns:1fr 1fr;}}
@@ -484,6 +491,190 @@
     .action-link { font-size:12px; font-weight:600; color:var(--blue); background:none; border:none; cursor:pointer; padding:0; transition:.2s; }
     .action-link:hover { color:var(--navy); }
 
+    /* ── BARIS TERLAMBAT PULSE ── */
+    .row-late { animation:latePulse 1.8s ease-in-out infinite; border-left:3px solid var(--red) !important; }
+    .row-late td:first-child { border-left:3px solid var(--red); }
+    [data-theme="dark"] .row-late { animation:latePulseDark 1.8s ease-in-out infinite; }
+    @keyframes latePulseDark { 0%,100%{background:rgba(220,38,38,.0);} 50%{background:rgba(220,38,38,.13);} }
+
+    /* ════════════════════════════════
+       EXPORT BUTTONS
+    ════════════════════════════════ */
+    .export-btn-group { display:flex; gap:7px; align-items:center; flex-wrap:wrap; }
+    .export-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:7px 13px; border-radius:8px; border:1.5px solid var(--border);
+      background:var(--bg); color:var(--text2); cursor:pointer;
+      font-family:inherit; font-size:12px; font-weight:700;
+      transition:.18s; white-space:nowrap;
+    }
+    .export-btn:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-pale); transform:translateY(-1px); }
+    .export-btn.excel:hover { border-color:#16a34a; color:#16a34a; background:rgba(22,163,74,.08); }
+    .export-btn.pdf:hover   { border-color:#dc2626; color:#dc2626; background:rgba(220,38,38,.08); }
+    .export-btn i { font-size:13px; }
+
+    /* ════════════════════════════════
+       GRAFIK BULAN (MONTHLY CHART)
+    ════════════════════════════════ */
+    .monthly-chart-wrap { width:100%; overflow-x:auto; margin-top:8px; }
+    .monthly-chart { display:flex; align-items:flex-end; gap:6px; min-height:130px; padding:0 4px 0; }
+    .mc-bar-col { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:34px; flex:1; }
+    .mc-bar-col:hover .mc-bar-fill { opacity:.8; }
+    .mc-bar-fill {
+      width:100%; max-width:38px; border-radius:5px 5px 0 0;
+      background:linear-gradient(180deg, var(--blue-l), var(--blue));
+      transition:height .55s cubic-bezier(.34,1.56,.64,1);
+      cursor:default; position:relative;
+    }
+    .mc-bar-fill.late-fill { background:linear-gradient(180deg,#f87171,var(--red)); }
+    .mc-bar-fill[data-tip]:hover::after {
+      content:attr(data-tip); position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%);
+      background:var(--navy); color:#fff; font-size:10px; font-weight:700; padding:3px 7px;
+      border-radius:5px; white-space:nowrap; pointer-events:none; z-index:5;
+    }
+    .mc-bar-fill[data-tip]:hover::before {
+      content:''; position:absolute; bottom:calc(100% + 1px); left:50%; transform:translateX(-50%);
+      border:4px solid transparent; border-top-color:var(--navy); pointer-events:none; z-index:5;
+    }
+    .mc-bar-label { font-size:9.5px; font-weight:700; color:var(--text3); text-align:center; }
+    .mc-bar-val   { font-size:10px; font-weight:800; color:var(--blue); text-align:center; }
+    .mc-legend { display:flex; gap:14px; margin-top:10px; flex-wrap:wrap; }
+    .mc-legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text2); font-weight:600; }
+    .mc-legend-dot { width:10px; height:10px; border-radius:3px; }
+    .chart-tab-group { display:flex; gap:6px; margin-bottom:14px; }
+    .chart-tab { padding:5px 12px; border-radius:20px; border:1.5px solid var(--border); background:var(--bg); color:var(--text3); font-size:11.5px; font-weight:700; cursor:pointer; transition:.15s; font-family:inherit; }
+    .chart-tab.on { background:var(--blue); border-color:var(--blue); color:#fff; }
+    .dash-row-full { margin-bottom:16px; }
+
+    /* ════════════════════════════════
+   AVATAR UPLOAD - FIXED
+════════════════════════════════ */
+.avatar-upload-wrap {
+  position: relative;
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+}
+.mc-avatar-big {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  border: 3px solid rgba(255,255,255,.35);
+  box-shadow: 0 4px 18px rgba(0,0,0,.35), 0 0 0 5px rgba(255,255,255,.08);
+  cursor: pointer;
+  transition: box-shadow .2s, opacity .2s;
+  position: relative;
+  z-index: 1;
+  animation: none !important;
+  transform: none !important;
+}
+.avatar-upload-wrap:hover .mc-avatar-big {
+  opacity: .85;
+  box-shadow: 0 6px 24px rgba(0,0,0,.45), 0 0 0 6px rgba(255,255,255,.12);
+}
+.avatar-upload-overlay {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.9);
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,.6);
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  transition: background .18s, transform .18s;
+  z-index: 2;
+}
+.avatar-upload-overlay:hover { background: var(--blue); color: #fff; transform: scale(1.1); }
+#avatarFileInput { display: none; }
+.mc-avatar-big.has-photo {
+  background: none !important;
+  padding: 0;
+  overflow: hidden;
+}
+.mc-avatar-big.has-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  animation: none !important;
+  transform: none !important;
+}
+
+    /* ════════════════════════════════
+       PRINT KARTU ANGGOTA
+    ════════════════════════════════ */
+    .cetak-btn-real {
+      width:100%; padding:10px; border-radius:var(--r-sm);
+      border:1.5px solid var(--blue); background:var(--blue-pale);
+      color:var(--blue); cursor:pointer; font-family:inherit;
+      font-size:12px; font-weight:700; display:flex; align-items:center;
+      justify-content:center; gap:6px; transition:.2s;
+    }
+    .cetak-btn-real:hover { background:var(--blue); color:#fff; }
+
+    @media print {
+      body > * { display:none !important; }
+      #printCardArea { display:block !important; position:fixed; inset:0; z-index:99999; background:#fff; }
+    }
+    #printCardArea {
+      display:none;
+      width:86mm; height:54mm;
+      background:linear-gradient(135deg,#0f1b35 0%,#1c2d55 55%,#3b7cf4 100%);
+      border-radius:8px; padding:0; overflow:hidden;
+      font-family:'Plus Jakarta Sans',sans-serif; color:#fff;
+      box-shadow:0 8px 32px rgba(0,0,0,.35);
+    }
+    .pca-header {
+      display:flex; align-items:center; gap:8px;
+      padding:7px 10px 5px; border-bottom:1px solid rgba(255,255,255,.15);
+    }
+    .pca-logo {
+      width:22px; height:22px; border-radius:5px; background:rgba(255,255,255,.15);
+      display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0;
+    }
+    .pca-school { font-size:7px; font-weight:700; line-height:1.4; }
+    .pca-school span { display:block; font-size:8.5px; color:rgba(255,255,255,.85); }
+    .pca-type { margin-left:auto; font-size:7px; font-weight:800; letter-spacing:.5px; background:rgba(255,255,255,.15); padding:2px 6px; border-radius:10px; }
+    .pca-body { display:flex; gap:9px; align-items:center; padding:7px 10px; }
+    .pca-avatar {
+      width:34px; height:34px; border-radius:50%; flex-shrink:0;
+      background:rgba(255,255,255,.2); display:flex; align-items:center;
+      justify-content:center; font-size:13px; font-weight:800; overflow:hidden;
+      border:2px solid rgba(255,255,255,.4);
+    }
+    .pca-avatar img { width:100%; height:100%; object-fit:cover; }
+    .pca-info { flex:1; }
+    .pca-name { font-size:11px; font-weight:800; line-height:1.3; }
+    .pca-nis  { font-size:8px; color:rgba(255,255,255,.7); margin-top:1px; }
+    .pca-meta { display:grid; grid-template-columns:1fr 1fr; gap:3px; margin-top:5px; }
+    .pca-meta-item label { font-size:6.5px; color:rgba(255,255,255,.55); display:block; }
+    .pca-meta-item span  { font-size:8px; font-weight:700; }
+    .pca-footer { padding:4px 10px 6px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,.12); }
+    .pca-barcode-wrap { display:flex; gap:1px; align-items:flex-end; }
+    .pca-bar { background:rgba(255,255,255,.7); border-radius:1px; }
+    .pca-num { font-size:6px; color:rgba(255,255,255,.5); margin-top:2px; }
+    .pca-status-badge { font-size:7px; font-weight:800; background:rgba(74,222,128,.2); color:#4ade80; padding:2px 7px; border-radius:10px; border:1px solid rgba(74,222,128,.3); }
+
+    /* ── PERPANJANG BUTTON ── */
+    .perpanjang-btn { font-size:11.5px; font-weight:700; color:#fff; background:var(--blue); border:none; cursor:pointer; padding:4px 10px; border-radius:6px; transition:.2s; display:inline-flex; align-items:center; gap:4px; }
+    .perpanjang-btn:hover { background:var(--navy); }
+    .perpanjang-done { font-size:11px; font-weight:600; color:var(--text3); font-style:italic; }
+
     /* ── DENDA ── */
     .denda-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px; margin-bottom:24px; }
     .denda-card { background:#fff; border:1.5px solid var(--border); border-radius:var(--r); padding:18px; transition:.2s; }
@@ -530,6 +721,22 @@
     .m-btn.sec { background:var(--bg); color:var(--text); }
     .m-btn.sec:hover { background:var(--bg2); }
 
+    /* ── MODAL PERPANJANG ── */
+    .perpanjang-modal-body { padding:22px 24px; }
+    .perpanjang-modal-body .pm-book-info { display:flex; align-items:center; gap:12px; padding:12px; background:var(--bg); border-radius:var(--r-sm); margin-bottom:18px; }
+    .perpanjang-modal-body .pm-thumb { width:36px; height:48px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.7); font-size:1rem; flex-shrink:0; }
+    .perpanjang-modal-body .pm-title { font-size:13px; font-weight:700; color:var(--text); }
+    .perpanjang-modal-body .pm-author { font-size:11px; color:var(--text3); margin-top:2px; }
+    .perpanjang-dates { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+    .pd-item { background:var(--bg); border-radius:var(--r-sm); padding:12px; text-align:center; }
+    .pd-label { font-size:10px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--text3); margin-bottom:5px; }
+    .pd-val { font-size:14px; font-weight:700; color:var(--text); }
+    .pd-val.new { color:var(--green); }
+    .pd-arrow { display:flex; align-items:center; justify-content:center; color:var(--text3); font-size:1.2rem; }
+    .perpanjang-info { background:rgba(59,124,244,.06); border:1px solid rgba(59,124,244,.15); border-radius:var(--r-sm); padding:12px; font-size:12px; color:var(--text2); line-height:1.6; display:flex; gap:7px; margin-bottom:18px; }
+    .perpanjang-info i { color:var(--blue); flex-shrink:0; margin-top:1px; }
+    .perpanjang-modal-footer { display:flex; gap:9px; justify-content:flex-end; padding-top:4px; }
+
     /* ── TOAST ── */
     .toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:12px 18px; border-radius:var(--r); font-size:13px; font-weight:600; display:flex; align-items:center; gap:9px; box-shadow:var(--shadow-lg); transform:translateY(80px); opacity:0; transition:.35s cubic-bezier(.23,1,.32,1); z-index:9999; max-width:310px; }
     .toast.show { transform:translateY(0); opacity:1; }
@@ -564,77 +771,6 @@
     [data-theme="dark"] .mgmt-table th{background:var(--bg2);}
     [data-theme="dark"] .mgmt-table td{border-color:var(--border);color:var(--text);}
     [data-theme="dark"] .modal,[data-theme="dark"] .notif-panel,[data-theme="dark"] .user-dropdown{background:var(--card-bg);border-color:var(--border);}
-
-    /* DASHBOARD */
-    .dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-bottom:22px;}
-    .dash-stat{background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;display:flex;align-items:center;gap:14px;transition:.2s;}
-    .dash-stat:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
-    .ds-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
-    .ds-val{font-size:1.5rem;font-weight:800;color:var(--text);line-height:1;}
-    .ds-label{font-size:11px;color:var(--text3);margin-top:2px;}
-    .dash-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-    .chart-bar-item{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
-    .cbi-label{font-size:11px;color:var(--text2);width:110px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .cbi-bar-bg{flex:1;height:7px;background:var(--bg2);border-radius:20px;overflow:hidden;}
-    .cbi-bar{height:100%;border-radius:20px;background:var(--blue);transition:width 1s cubic-bezier(.23,1,.32,1);width:0;}
-    .cbi-val{font-size:10.5px;font-weight:700;color:var(--text2);width:18px;text-align:right;flex-shrink:0;}
-    .rl-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--bg2);}
-    .rl-item:last-child{border-bottom:none;}
-    .rl-thumb{width:28px;height:36px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:rgba(255,255,255,.7);}
-    .rl-info{flex:1;min-width:0;}
-    .rl-title{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .rl-sub{font-size:10.5px;color:var(--text3);margin-top:1px;}
-    .rl-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;}
-    .add-btn{padding:9px 17px;border-radius:var(--r-sm);background:var(--navy);color:#fff;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;transition:.2s;}
-    .add-btn:hover{background:var(--blue);transform:translateY(-1px);}
-    .mgmt-table{width:100%;border-collapse:collapse;}
-    .mgmt-table th{padding:10px 12px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);background:var(--bg);}
-    .mgmt-table td{padding:11px 12px;border-bottom:1px solid var(--bg2);font-size:12.5px;color:var(--text);vertical-align:middle;}
-    .mgmt-table tr:last-child td{border-bottom:none;}
-    .tbl-btn{width:27px;height:27px;border-radius:7px;border:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:.2s;}
-    .tbl-btn.edit{background:rgba(59,124,244,.1);color:var(--blue);}
-    .tbl-btn.edit:hover{background:var(--blue);color:#fff;}
-    .tbl-btn.del{background:var(--red-bg);color:var(--red);}
-    .tbl-btn.del:hover{background:var(--red);color:#fff;}
-    .profil-layout{display:grid;grid-template-columns:285px 1fr;gap:20px;align-items:start;}
-    .member-card{background:linear-gradient(135deg,var(--navy3),var(--navy));border-radius:18px;padding:22px;color:#fff;position:relative;overflow:hidden;}
-    .member-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 80% 20%,rgba(59,124,244,.25),transparent);pointer-events:none;}
-    .member-card::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 20px);pointer-events:none;}
-    .mc-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;position:relative;z-index:1;}
-    .mc-logo{width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;}
-    .mc-school{font-size:10px;font-weight:700;line-height:1.3;opacity:.8;}
-    .mc-avatar-big{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:#fff;border:3px solid rgba(255,255,255,.3);margin:0 auto 11px;position:relative;z-index:1;}
-    .mc-name{font-size:.95rem;font-weight:800;text-align:center;margin-bottom:3px;position:relative;z-index:1;}
-    .mc-role-text{font-size:11px;opacity:.6;text-align:center;margin-bottom:15px;position:relative;z-index:1;}
-    .mc-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:1;}
-    .mc-field{background:rgba(255,255,255,.08);border-radius:8px;padding:8px 10px;}
-    .mc-field-label{font-size:9px;opacity:.55;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
-    .mc-field-val{font-size:12px;font-weight:700;}
-    .mc-barcode{margin-top:14px;position:relative;z-index:1;text-align:center;}
-    .mc-barcode-bars{display:flex;gap:2px;justify-content:center;height:28px;align-items:flex-end;margin-bottom:4px;}
-    .mc-bar{background:rgba(255,255,255,.6);border-radius:1px;}
-    .mc-barcode-num{font-size:9px;opacity:.45;letter-spacing:2px;font-family:monospace;}
-    .mc-status-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(22,163,74,.2);border:1px solid rgba(22,163,74,.3);color:#4ade80;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px;}
-    .profil-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;margin-bottom:16px;}
-    .ps-item{background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:13px;text-align:center;}
-    .ps-val{font-size:1.35rem;font-weight:800;color:var(--blue);}
-    .ps-label{font-size:10.5px;color:var(--text3);margin-top:2px;}
-    .fmodal{max-width:500px;}
-    .fmodal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-    .fmodal-title{font-size:.95rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px;}
-    .fmodal-close{width:28px;height:28px;border-radius:50%;border:none;background:var(--bg2);color:var(--text3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:.2s;}
-    .fmodal-close:hover{background:var(--red-bg);color:var(--red);}
-    .fmodal-body{padding:20px 22px;}
-    .fmodal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:9px;justify-content:flex-end;}
-    .fmodal-btn{padding:10px 20px;border-radius:var(--r-sm);border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;transition:.2s;}
-    .fmodal-btn.save{background:var(--navy);color:#fff;}
-    .fmodal-btn.save:hover{background:var(--blue);}
-    .fmodal-btn.cancel{background:var(--bg2);color:var(--text2);}
-    .reminder-banner{padding:10px 32px;display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:#fff;}
-    .reminder-banner.warn-b{background:linear-gradient(90deg,var(--orange),var(--red));}
-    .reminder-banner.info-b{background:linear-gradient(90deg,#4f46e5,var(--blue));}
-    .rb-close{margin-left:auto;background:rgba(255,255,255,.2);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-    @media(max-width:900px){.profil-layout{grid-template-columns:1fr;}.dash-row{grid-template-columns:1fr;}.dash-grid{grid-template-columns:1fr 1fr;}}
 
   </style>
 </head>
@@ -761,17 +897,12 @@
     </div>
 
     <div class="nav-right">
-
-      <!-- ══ TOMBOL LONCENG: hanya aktif untuk admin ══ -->
       <button class="nav-icon-btn" id="themeBtn" onclick="toggleTheme()" title="Mode Gelap"><i class="fas fa-moon" id="themeIcon"></i></button>
       <div class="notif-panel-wrapper">
         <button class="nav-icon-btn" id="bellBtn" onclick="toggleNotifPanel()" title="Notifikasi Peminjaman">
           <i class="fas fa-bell"></i>
-          <!-- Badge jumlah pending, hanya muncul untuk admin -->
           <span class="bell-count" id="bellCount" style="display:none;">0</span>
         </button>
-
-        <!-- Panel notifikasi admin -->
         <div class="notif-panel" id="notifPanel">
           <div class="np-header">
             <div class="np-title">
@@ -945,9 +1076,15 @@
       <div class="card-box">
         <div class="card-box-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
           <span><i class="fas fa-history" style="color:var(--blue);"></i> Riwayat Peminjaman</span>
-          <span id="adminRiwayatBadge" style="display:none;font-size:11px;font-weight:600;color:var(--text3);background:var(--bg2);padding:4px 10px;border-radius:20px;">
-            <i class="fas fa-user-shield" style="font-size:10px;color:var(--gold);"></i> Mode Admin — klik 🗑 untuk hapus
-          </span>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span id="adminRiwayatBadge" style="display:none;font-size:11px;font-weight:600;color:var(--text3);background:var(--bg2);padding:4px 10px;border-radius:20px;">
+              <i class="fas fa-user-shield" style="font-size:10px;color:var(--gold);"></i> Mode Admin — klik 🗑 untuk hapus
+            </span>
+            <div class="export-btn-group">
+              <button class="export-btn excel" onclick="exportExcel()" title="Export ke Excel"><i class="fas fa-file-excel"></i> Excel</button>
+              <button class="export-btn pdf"   onclick="exportPDF()"   title="Export ke PDF"><i class="fas fa-file-pdf"></i> PDF</button>
+            </div>
+          </div>
         </div>
         <div id="riwayatEmpty" style="display:none;padding:40px 0;text-align:center;">
           <div style="width:52px;height:52px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.4rem;color:var(--text3);"><i class="fas fa-history"></i></div>
@@ -983,7 +1120,13 @@
               <div class="mc-logo"><i class="fas fa-book-open"></i></div>
               <div class="mc-school">Perpustakaan<br>SMKN 1 Ketapang</div>
             </div>
-            <div class="mc-avatar-big" id="mcAvatar" style="background:var(--blue);">AN</div>
+            <div class="avatar-upload-wrap">
+           <div class="mc-avatar-big" id="mcAvatar" style="background:var(--blue);" onclick="document.getElementById('avatarFileInput').click()" title="Klik untuk ganti foto profil">AN</div>
+          <div class="avatar-upload-overlay" onclick="document.getElementById('avatarFileInput').click()" title="Ganti foto">
+        <i class="fas fa-camera"></i>
+  </div>
+</div>
+            <input type="file" id="avatarFileInput" accept="image/*" onchange="handleAvatarUpload(event)">
             <div class="mc-name" id="mcName">Nama Anggota</div>
             <div class="mc-role-text" id="mcRoleText">Siswa</div>
             <div class="mc-info">
@@ -999,7 +1142,7 @@
             <div style="text-align:center;"><span class="mc-status-badge"><i class="fas fa-check-circle" style="font-size:9px;"></i> Anggota Aktif</span></div>
           </div>
           <div style="margin-top:10px;">
-            <button onclick="showToast('Fitur cetak kartu segera hadir!','info')" style="width:100%;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--card-bg);color:var(--text2);cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;transition:.2s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'"><i class="fas fa-print"></i> Cetak Kartu Anggota</button>
+            <button onclick="cetakKartuAnggota()" class="cetak-btn-real"><i class="fas fa-print"></i> Cetak Kartu Anggota</button>
           </div>
         </div>
         <div>
@@ -1035,24 +1178,46 @@
     <!-- TAB: DASHBOARD ADMIN -->
     <div class="tab-section" id="tsDashboard">
       <div class="dash-grid" id="dashStatGrid"></div>
-      <div class="dash-row">
+      <!-- Grafik peminjaman per bulan (full width) -->
+      <div class="dash-row-full">
         <div class="card-box">
-          <div class="card-box-title"><i class="fas fa-chart-bar"></i> Buku Paling Banyak Dipinjam</div>
-          <div id="chartBars" style="margin-top:10px;"></div>
-        </div>
-        <div class="card-box">
-          <div class="card-box-title"><i class="fas fa-clock"></i> Aktivitas Peminjaman Terbaru</div>
-          <div id="recentList"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+            <div class="card-box-title" style="margin:0;"><i class="fas fa-chart-line" style="color:var(--blue);"></i> Statistik Peminjaman</div>
+            <div class="chart-tab-group" id="chartTabGroup">
+              <button class="chart-tab on" onclick="switchChartView('monthly',this)">Per Bulan</button>
+              <button class="chart-tab" onclick="switchChartView('book',this)">Per Buku</button>
+            </div>
+          </div>
+          <div id="monthlyChartWrap" class="monthly-chart-wrap">
+            <div class="monthly-chart" id="monthlyChartBars"></div>
+            <div class="mc-legend">
+              <div class="mc-legend-item"><div class="mc-legend-dot" style="background:var(--blue);"></div> Peminjaman</div>
+              <div class="mc-legend-item"><div class="mc-legend-dot" style="background:var(--red);"></div> Terlambat</div>
+            </div>
+          </div>
+          <div id="bookChartWrap" style="display:none;">
+            <div id="chartBars" style="margin-top:10px;"></div>
+          </div>
         </div>
       </div>
       <div class="dash-row">
         <div class="card-box">
+          <div class="card-box-title"><i class="fas fa-clock"></i> Aktivitas Peminjaman Terbaru</div>
+          <div id="recentList"></div>
+        </div>
+        <div class="card-box">
           <div class="card-box-title" style="color:var(--orange);"><i class="fas fa-exclamation-triangle"></i> Stok Buku Rendah</div>
           <div id="lowStockList"></div>
         </div>
+      </div>
+      <div class="dash-row">
         <div class="card-box">
           <div class="card-box-title"><i class="fas fa-users"></i> Anggota Aktif Meminjam</div>
           <div id="activeLoans"></div>
+        </div>
+        <div class="card-box">
+          <div class="card-box-title" style="color:var(--red);"><i class="fas fa-exclamation-circle"></i> Peminjaman Terlambat</div>
+          <div id="lateLoans"></div>
         </div>
       </div>
     </div>
@@ -1079,7 +1244,36 @@
 
 
 
-<!-- MODAL -->
+<!-- AREA CETAK KARTU (hanya tampil saat print) -->
+<div id="printCardArea">
+  <div class="pca-header">
+    <div class="pca-logo"><i class="fas fa-book-open" style="font-size:10px;"></i></div>
+    <div class="pca-school">Perpustakaan<span>SMKN 1 Ketapang</span></div>
+    <div class="pca-type">KARTU ANGGOTA</div>
+  </div>
+  <div class="pca-body">
+    <div class="pca-avatar" id="pcaAvatar">AN</div>
+    <div class="pca-info">
+      <div class="pca-name" id="pcaName">—</div>
+      <div class="pca-nis" id="pcaNis">—</div>
+      <div class="pca-meta">
+        <div class="pca-meta-item"><label>Role</label><span id="pcaRole">—</span></div>
+        <div class="pca-meta-item"><label>Tahun</label><span>2024</span></div>
+        <div class="pca-meta-item"><label>Status</label><span style="color:#4ade80;">Aktif</span></div>
+        <div class="pca-meta-item"><label>Berlaku s/d</label><span>Des 2025</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="pca-footer">
+    <div>
+      <div class="pca-barcode-wrap" id="pcaBarcode"></div>
+      <div class="pca-num" id="pcaBarcodeNum">000000000000</div>
+    </div>
+    <div class="pca-status-badge">✓ Anggota Aktif</div>
+  </div>
+</div>
+
+<!-- MODAL DETAIL BUKU -->
 <div class="modal-backdrop" id="modalBg">
   <div class="modal" style="position:relative;">
     <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
@@ -1103,6 +1297,44 @@
   </div>
 </div>
 
+<!-- ══ MODAL PERPANJANG (BARU) ══ -->
+<div class="modal-backdrop" id="perpanjangModalBg" onclick="if(event.target===this)closePerpanjangModal()">
+  <div class="modal fmodal" style="max-width:420px;">
+    <div class="fmodal-header">
+      <div class="fmodal-title"><i class="fas fa-calendar-plus" style="color:var(--blue);"></i> Perpanjang Peminjaman</div>
+      <button class="fmodal-close" onclick="closePerpanjangModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="perpanjang-modal-body">
+      <div class="pm-book-info">
+        <div class="pm-thumb" id="pmThumb"></div>
+        <div>
+          <div class="pm-title" id="pmTitle">Judul Buku</div>
+          <div class="pm-author" id="pmAuthor">Pengarang</div>
+        </div>
+      </div>
+      <div class="perpanjang-dates">
+        <div class="pd-item">
+          <div class="pd-label">Tenggat Lama</div>
+          <div class="pd-val" id="pmOldDate">—</div>
+        </div>
+        <div class="pd-arrow"><i class="fas fa-arrow-right"></i></div>
+        <div class="pd-item">
+          <div class="pd-label">Tenggat Baru</div>
+          <div class="pd-val new" id="pmNewDate">—</div>
+        </div>
+      </div>
+      <div class="perpanjang-info">
+        <i class="fas fa-info-circle"></i>
+        <div>Perpanjangan hanya bisa dilakukan <strong>1 kali</strong>. Tenggat baru adalah <strong>+7 hari</strong> dari tenggat sebelumnya. Pastikan buku dalam kondisi baik.</div>
+      </div>
+    </div>
+    <div class="fmodal-footer">
+      <button class="fmodal-btn cancel" onclick="closePerpanjangModal()">Batal</button>
+      <button class="fmodal-btn save" onclick="konfirmasiPerpanjang()"><i class="fas fa-check"></i> Konfirmasi Perpanjang</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
 
@@ -1115,8 +1347,8 @@ const ACCOUNTS = [
 ];
 
 const BOOKS = [
-  { id:1,  title:'Matematika Kelas X',                    author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-calculator',     bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:5, pub:'Kemendikbud',      pages:320,  desc:'Buku teks Matematika Kelas X SMA/SMK Kurikulum Merdeka. Mencakup aljabar, fungsi, trigonometri, dan statistika dasar dengan pendekatan kontekstual.' },
-  { id:2,  title:'Bahasa Indonesia Kelas XI',             author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-language',        bg:'linear-gradient(140deg,#15803d,#166534)', stock:4, total:4, pub:'Kemendikbud',      pages:280,  desc:'Buku teks Bahasa Indonesia Kelas XI mencakup teks eksposisi, persuasi, cerpen, puisi, dan keterampilan berbahasa lainnya.' },
+{ id:1,  title:'Matematika Kelas X', author:'Kemendikbud', year:2022, cat:'Pelajaran', icon:'fas fa-square-root-alt', bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:4, pub:'Kemendikbud', pages:320, desc:'Buku teks Matematika Kelas X mencakup aljabar, fungsi, trigonometri, dan statistika dengan pendekatan kontekstual.' },
+{ id:2,  title:'Bahasa Indonesia Kelas XI', author:'Kemendikbud', year:2022, cat:'Pelajaran', icon:'fas fa-language', bg:'linear-gradient(140deg,#15803d,#166534)', stock:4, total:4, pub:'Kemendikbud', pages:280, desc:'Buku teks Bahasa Indonesia Kelas XI mencakup teks eksposisi, persuasi, cerpen, puisi, dan keterampilan berbahasa lainnya.' },
   { id:3,  title:'Bumi',                                  author:'Tere Liye',                 year:2021, cat:'Fiksi',      icon:'fas fa-globe',           bg:'linear-gradient(140deg,#7c3aed,#6d28d9)', stock:1, total:3, pub:'Gramedia',         pages:440,  desc:'Novel petualangan fantasi Tere Liye tentang Raib yang bisa menghilang. Penuh imajinasi dan membawa ke dunia paralel yang menakjubkan.' },
   { id:4,  title:'Laskar Pelangi',                        author:'Andrea Hirata',             year:2020, cat:'Fiksi',      icon:'fas fa-star',            bg:'linear-gradient(140deg,#d97706,#b45309)', stock:5, total:6, pub:'Bentang Pustaka',  pages:529,  desc:'Kisah sepuluh anak dari keluarga miskin di Belitung yang berjuang keras mendapatkan pendidikan. Novel paling berpengaruh di Indonesia.' },
   { id:5,  title:'Sapiens: Riwayat Singkat Umat Manusia', author:'Yuval Noah Harari',        year:2019, cat:'Non-Fiksi',  icon:'fas fa-landmark',        bg:'linear-gradient(140deg,#111827,#1f2937)', stock:0, total:2, pub:'KPG',              pages:498,  desc:'Perjalanan umat manusia dari Zaman Batu hingga era modern. Menggabungkan sejarah, biologi, dan filsafat secara brilian.' },
@@ -1137,12 +1369,114 @@ const BOOKS = [
   { id:20, title:'Dunia Sophie',                          author:'Jostein Gaarder',           year:2020, cat:'Fiksi',      icon:'fas fa-question-circle', bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:3, pub:'Gyldendal',        pages:512,  desc:'Novel filsafat tentang Sophie yang menjelajahi pemikiran filosof besar dari Socrates hingga Sartre.' },
 ];
 
-// Riwayat dimulai kosong — hanya terisi setelah admin menyetujui peminjaman
-let RIWAYAT = [];
+const JB_KEY         = "$2a$10$WAEc7BsjDoeLvtCrWkBm5..cIBB6Whb/uKYNwWr5Lmwm1GMHehxXe";
+const JB_BIN_RIWAYAT = "699fb74aae596e708f4aaef3";
+const JB_BIN_PENDING = "699fb790ae596e708f4aaf8e";
+const JB_BASE = "https://api.jsonbin.io/v3/b";
 
-/* ══ DATA PENDING REQUESTS (BARU) ══ */
+let RIWAYAT         = [];
 let pendingRequests = [];
 let pendingIdCounter = 1000;
+let _pollInterval   = null;
+let _isSyncing      = false;
+
+function jbHeaders() {
+  return {
+    'Content-Type'    : 'application/json',
+    'X-Master-Key'    : JB_KEY,
+    'X-Bin-Versioning': 'false'
+  };
+}
+
+async function fetchBin(binId) {
+  try {
+    const res  = await fetch(`${JB_BASE}/${binId}/latest`, { headers: jbHeaders() });
+    const json = await res.json();
+    return Array.isArray(json.record) ? json.record : [];
+  } catch(e) { return null; }
+}
+
+async function putBin(binId, data) {
+  try {
+    await fetch(`${JB_BASE}/${binId}`, {
+      method : 'PUT',
+      headers: jbHeaders(),
+      body   : JSON.stringify(data)
+    });
+  } catch(e) { console.warn('JSONBin save error:', e); }
+}
+
+async function saveRiwayat() { await putBin(JB_BIN_RIWAYAT, RIWAYAT); }
+async function savePending()  { await putBin(JB_BIN_PENDING, pendingRequests); }
+
+async function loadFromCloud() {
+  showToast('⏳ Memuat data dari cloud...', 'info');
+  const [r, p] = await Promise.all([
+    fetchBin(JB_BIN_RIWAYAT),
+    fetchBin(JB_BIN_PENDING)
+  ]);
+  if (r !== null) { RIWAYAT = r; }
+  if (p !== null) {
+    pendingRequests = p;
+    if (p.length) {
+      const maxId = Math.max(...p.map(x => x.id || 0));
+      if (maxId > pendingIdCounter) pendingIdCounter = maxId;
+    }
+  }
+  checkAndUpdateLateStatus();
+  renderRiwayat();
+  renderDenda();
+  updateHeroStats();
+  if (currentUser && currentUser.id === 'admin') updateBellBadge();
+}
+
+function startPolling() {
+  if (_pollInterval) return;
+  _pollInterval = setInterval(async () => {
+    if (_isSyncing) return;
+    _isSyncing = true;
+    const [r, p] = await Promise.all([
+      fetchBin(JB_BIN_RIWAYAT),
+      fetchBin(JB_BIN_PENDING)
+    ]);
+    if (r !== null && JSON.stringify(r) !== JSON.stringify(RIWAYAT)) {
+      RIWAYAT = r;
+      checkAndUpdateLateStatus();
+      renderRiwayat();
+      renderDenda();
+      showDueDateBanner();
+      updateHeroStats();
+      const tsDash = document.getElementById('tsDashboard');
+      if (tsDash && tsDash.classList.contains('on')) renderDashboard();
+    }
+    if (p !== null && JSON.stringify(p) !== JSON.stringify(pendingRequests)) {
+      const wasCount = pendingRequests.length;
+      pendingRequests = p;
+      if (p.length) {
+        const maxId = Math.max(...p.map(x => x.id || 0));
+        if (maxId > pendingIdCounter) pendingIdCounter = maxId;
+      }
+      if (currentUser && currentUser.id === 'admin') {
+        updateBellBadge();
+        if (p.length > wasCount) {
+          showToast(`🔔 Ada ${p.length - wasCount} permintaan baru!`, 'info');
+          const bell = document.getElementById('bellBtn');
+          if (bell) {
+            bell.style.transform = 'scale(1.3)';
+            setTimeout(() => { bell.style.transform = ''; }, 300);
+          }
+        }
+        const panel = document.getElementById('notifPanel');
+        if (panel && panel.classList.contains('open')) renderNotifPanel();
+      }
+    }
+    _isSyncing = false;
+  }, 5000);
+}
+
+function stopPolling() {
+  if (_pollInterval) { clearInterval(_pollInterval); _pollInterval = null; }
+}
 
 let currentUser  = null;
 let currentRole  = 'siswa';
@@ -1150,6 +1484,9 @@ let activeCat    = 'all';
 let activeSearch = '';
 let isGridView   = true;
 let selectedBook = null;
+
+// ══ STATE PERPANJANG ══
+let perpanjangTargetId = null; // ID riwayat yang sedang akan diperpanjang
 
 /* ════ LOGIN ════ */
 function setRole(role, el) {
@@ -1207,14 +1544,41 @@ function doLogin() {
     currentUser = acc;
     loadUserToUI(acc);
     showPage('peminjaman');
-    initPeminjaman();
+   initPeminjaman();
+    loadFromCloud();   // ← TAMBAH
+    startPolling();    // ← TAMBAH
+    // ══ BANNER JATUH TEMPO OTOMATIS SAAT LOGIN ══
+    showDueDateBanner();
     showToast(`Selamat datang, ${acc.name}! 👋`, 'success');
   }, 1200);
 }
 
 function loadUserToUI(acc) {
-  document.getElementById('navAvatar').textContent       = acc.avatar;
+  // LOAD foto dari localStorage jika ada
+  var savedPhoto = localStorage.getItem('avatarPhoto_' + acc.nis);
+  if (savedPhoto) {
+    acc.avatarPhoto = savedPhoto;
+  }
+
   document.getElementById('navAvatar').style.background = acc.color;
+
+  // Tampilkan foto atau inisial di navbar
+  var navAv = document.getElementById('navAvatar');
+  if (acc.avatarPhoto) {
+    navAv.textContent = '';
+    navAv.style.background = 'none';
+    navAv.style.padding = '0';
+    navAv.style.overflow = 'hidden';
+    var img = document.createElement('img');
+    img.src = acc.avatarPhoto;
+    img.alt = 'Avatar';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
+    navAv.appendChild(img);
+  } else {
+    navAv.textContent = acc.avatar;
+    navAv.style.background = acc.color;
+  }
+
   document.getElementById('navName').textContent         = acc.name.split(' ')[0];
   document.getElementById('navRole').textContent         = acc.role;
   document.getElementById('ddName').textContent          = acc.name;
@@ -1222,30 +1586,28 @@ function loadUserToUI(acc) {
   document.getElementById('fNama').value                 = acc.name;
   document.getElementById('fNis').value                  = acc.nis;
 
-  /* ══ TOMBOL LONCENG: hanya admin yang bisa membuka panel ══ */
-  const bellBtn = document.getElementById('bellBtn');
+  var bellBtn = document.getElementById('bellBtn');
   if (acc.id === 'admin') {
-    // Admin: bell aktif, tampilkan badge jika ada pending
     bellBtn.title = 'Panel Persetujuan Peminjaman';
     bellBtn.style.cursor = 'pointer';
     bellBtn.style.opacity = '1';
     updateBellBadge();
   } else {
-    // Non-admin: bell tidak fungsional, tampilkan tooltip khusus
     bellBtn.title = 'Notifikasi (hanya admin)';
     bellBtn.style.cursor = 'not-allowed';
     bellBtn.style.opacity = '0.45';
-    // Sembunyikan badge
     document.getElementById('bellCount').style.display = 'none';
   }
-  document.querySelectorAll('.admin-tab').forEach(function(t){ t.style.display = acc.id === 'admin' ? 'flex' : 'none'; });
+  document.querySelectorAll('.admin-tab').forEach(function(t){
+    t.style.display = acc.id === 'admin' ? 'flex' : 'none';
+  });
   loadProfilFields(acc);
 }
 
 function doLogout() {
-  if (!confirm('Yakin ingin keluar?')) return;
+ if (!confirm('Yakin ingin keluar?')) return;
+  stopPolling();  
   currentUser = null; selectedBook = null;
-  // Tutup panel notif jika terbuka
   document.getElementById('notifPanel').classList.remove('open');
   document.getElementById('loginNis').value  = '';
   document.getElementById('loginPass').value = '';
@@ -1432,7 +1794,7 @@ function closeModal() {
 }
 
 document.getElementById('modalBg').addEventListener('click', e => { if (e.target===document.getElementById('modalBg')) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') { closeModal(); closePerpanjangModal(); } });
 
 /* ════ PENCARIAN FORM ════ */
 function initBookSearchForm() {
@@ -1514,7 +1876,7 @@ function updateSummary() {
   }
 }
 
-/* ══ SUBMIT PINJAM → masuk ke antrian pending (DIUBAH) ══ */
+/* ══ SUBMIT PINJAM ══ */
 function submitPinjam() {
   const nama = document.getElementById('fNama').value.trim();
   const nis  = document.getElementById('fNis').value.trim();
@@ -1529,7 +1891,6 @@ function submitPinjam() {
   if (diff<=0) { showToast('Tanggal kembali harus setelah tanggal pinjam.','error'); return; }
   if (diff>14) { showToast('Durasi maksimal 14 hari.','error'); return; }
 
-  // Buat request baru dan masukkan ke antrian pending
   const req = {
     id: ++pendingIdCounter,
     bookId: selectedBook.id,
@@ -1541,13 +1902,15 @@ function submitPinjam() {
     kelas: kelas || '—',
     tglPinjam: new Date(p).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}),
     tglKembali: new Date(k).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}),
+    // Simpan nilai Date asli untuk keperluan perhitungan jatuh tempo
+    tglKembaliRaw: k,
     waktuAjukan: new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),
     catatan: document.getElementById('fCatatan').value.trim(),
   };
 
   pendingRequests.push(req);
+  savePending();  // ← TAMBAH
 
-  // Update badge lonceng jika ada admin yang sedang login
   if (currentUser && currentUser.id === 'admin') {
     updateBellBadge();
     renderNotifPanel();
@@ -1555,7 +1918,6 @@ function submitPinjam() {
 
   showToast(`✓ Permintaan "${selectedBook.title}" dikirim! Menunggu konfirmasi admin.`, 'success');
 
-  // Riwayat hanya ditambah setelah admin approve — tidak perlu push pending ke sini
   renderRiwayat();
 
   setTimeout(() => {
@@ -1565,8 +1927,42 @@ function submitPinjam() {
   }, 500);
 }
 
+/* ══════════════════════════════════════════════════
+   ══ FITUR BARU: AUTO TERLAMBAT + DENDA ══
+   ══════════════════════════════════════════════════ */
+function checkAndUpdateLateStatus() {
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  RIWAYAT.forEach(function(r) {
+    // Hanya proses yang masih aktif/borrow (belum dikembalikan)
+    if (r.status !== 'active' && r.status !== 'borrow') return;
+    if (!r.tglKembaliRaw) return;
+
+    var due = new Date(r.tglKembaliRaw);
+    due.setHours(0, 0, 0, 0);
+
+    var diffDays = Math.round((today - due) / 86400000);
+
+    if (diffDays > 0) {
+      // Sudah melewati jatuh tempo → ubah status ke late dan hitung denda
+      r.status = 'late';
+      r.denda  = diffDays * 500; // Rp 500 per hari
+    } else {
+      // Belum terlambat — pastikan status kembali ke active jika sebelumnya sempat berubah
+      if (r.status === 'late') {
+        r.status = 'active';
+        r.denda  = 0;
+      }
+    }
+  });
+}
+
 /* ════ RIWAYAT ════ */
 function renderRiwayat() {
+  // ── Auto-update status terlambat & denda sebelum render ──
+  checkAndUpdateLateStatus();
+
   var tbody = document.getElementById('riwayatBody');
   var emptyEl = document.getElementById('riwayatEmpty');
   var tableWrap = document.getElementById('riwayatTableWrap');
@@ -1601,20 +1997,31 @@ function renderRiwayat() {
     if (!b) return;
     var st = sm[r.status] || sm.done;
 
-    // Buat aksi HTML tanpa nested template literal
+    // ── TOMBOL AKSI (termasuk Perpanjang) ──
     var aksiHtml = '';
+    var perpanjangHtml = '';
+
+    // Tombol Perpanjang hanya untuk peminjaman aktif yang belum pernah diperpanjang
+    if (r.status === 'active' || r.status === 'borrow' || r.status === 'late') {
+      if (!r.sudahDiperpanjang) {
+        perpanjangHtml = '<button class="perpanjang-btn" onclick="openPerpanjangModal(' + r.id + ')" title="Perpanjang 7 hari"><i class="fas fa-calendar-plus"></i> Perpanjang</button>';
+      } else {
+        perpanjangHtml = '<span class="perpanjang-done"><i class="fas fa-check" style="color:var(--green);font-size:9px;"></i> (sudah diperpanjang)</span>';
+      }
+    }
+
     if (isAdmin) {
       var kembalikanBtn = '';
-      if (r.status === 'active' || r.status === 'borrow') {
+      if (r.status === 'active' || r.status === 'borrow' || r.status === 'late') {
         kembalikanBtn = "<button class='action-link' onclick='showToast(\"Pengembalian dicatat.\",\"success\")'>Kembalikan</button>";
       } else {
         kembalikanBtn = '<span style="color:var(--text3);font-size:11px;">—</span>';
       }
       var hapusBtn = '<button onclick="deleteRiwayat(' + r.id + ')" title="Hapus riwayat ini" class="del-riwayat-btn"><i class="fas fa-trash"></i></button>';
-      aksiHtml = '<div style="display:flex;align-items:center;gap:4px;">' + kembalikanBtn + hapusBtn + '</div>';
+      aksiHtml = '<div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">' + perpanjangHtml + kembalikanBtn + hapusBtn + '</div>';
     } else {
-      if (r.status === 'active' || r.status === 'borrow') {
-        aksiHtml = "<button class='action-link' onclick='showToast(\"Permintaan pengembalian dikirim ke petugas!\",\"success\")'>Kembalikan</button>";
+      if (r.status === 'active' || r.status === 'borrow' || r.status === 'late') {
+        aksiHtml = '<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">' + perpanjangHtml + "<button class='action-link' onclick='showToast(\"Permintaan pengembalian dikirim ke petugas!\",\"success\")'>Kembalikan</button></div>";
       } else {
         aksiHtml = '<span style="color:var(--text3);font-size:11.5px;">—</span>';
       }
@@ -1626,6 +2033,8 @@ function renderRiwayat() {
 
     var tr = document.createElement('tr');
     tr.id = 'riwayat-row-' + r.id;
+    // Tambahkan class pulse untuk baris terlambat
+    if (r.status === 'late') tr.classList.add('row-late');
     tr.innerHTML =
       '<td><div class="book-cell"><div class="rt-thumb" style="background:' + b.bg + ';"><i class="' + b.icon + '"></i></div><div><div class="rt-title">' + b.title + '</div><div class="rt-author">' + b.author + '</div></div></div></td>' +
       '<td><div style="font-size:12px;font-weight:600;">' + (r.nama||'—') + '</div><div style="font-size:10.5px;color:var(--text3);">' + (r.nis||'') + '</div></td>' +
@@ -1646,13 +2055,11 @@ function deleteRiwayat(rId) {
   const b = BOOKS.find(x => x.id === r.bookId);
   if (!confirm('Hapus riwayat peminjaman "' + (b ? b.title : 'buku ini') + '"?')) return;
 
-  // Kembalikan stok jika masih aktif dipinjam
   if ((r.status === 'active' || r.status === 'borrow') && b) b.stock++;
 
   const idx = RIWAYAT.findIndex(x => x.id === rId);
   if (idx !== -1) RIWAYAT.splice(idx, 1);
 
-  // Animasi baris hilang
   const row = document.getElementById('riwayat-row-' + rId);
   if (row) {
     row.style.transition = '.3s';
@@ -1667,6 +2074,9 @@ function deleteRiwayat(rId) {
 
 /* ════ DENDA ════ */
 function renderDenda() {
+  // Sinkronkan status terlambat sebelum render denda
+  checkAndUpdateLateStatus();
+
   const cont = document.getElementById('dendaCards');
   const noFine = document.getElementById('noFine');
   cont.innerHTML = '';
@@ -1693,9 +2103,172 @@ function renderDenda() {
   });
 }
 
-/* ══ PANEL NOTIFIKASI ADMIN (BARU) ══ */
+/* ══════════════════════════════════════════════════
+   ══ FITUR BARU: BANNER JATUH TEMPO ══
+   ══════════════════════════════════════════════════ */
+function showDueDateBanner() {
+  if (!currentUser) return;
+  // Perbarui status terlambat sebelum cek banner
+  checkAndUpdateLateStatus();
+  var banner = document.getElementById('reminderBanner');
+  if (!banner) return;
+
+  // Ambil peminjaman aktif milik user ini (termasuk yang terlambat)
+  var myActive = RIWAYAT.filter(function(r){
+    return r.nis === currentUser.nis && (r.status === 'active' || r.status === 'borrow' || r.status === 'late');
+  });
+
+  if (!myActive.length) {
+    // Tidak ada peminjaman aktif — tampilkan pesan sambutan singkat
+    banner.className = 'reminder-banner info-b';
+    banner.style.display = 'flex';
+    banner.innerHTML = '<i class="fas fa-info-circle"></i> Selamat datang, <strong style="margin:0 4px;">' + currentUser.name.split(' ')[0] + '</strong>! Tidak ada buku yang sedang dipinjam. <button class="rb-close" onclick="this.parentElement.style.display=\'none\'"><i class="fas fa-times"></i></button>';
+    setTimeout(function(){ if(banner) banner.style.display = 'none'; }, 4000);
+    return;
+  }
+
+  // Cek buku jatuh tempo paling dekat
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  var earliestDays = Infinity;
+  var earliestBook = null;
+
+  myActive.forEach(function(r) {
+    if (!r.tglKembaliRaw) return;
+    var due = new Date(r.tglKembaliRaw);
+    due.setHours(0, 0, 0, 0);
+    var diff = Math.round((due - today) / 86400000);
+    if (diff < earliestDays) {
+      earliestDays = diff;
+      earliestBook = r;
+    }
+  });
+
+  if (earliestBook === null) {
+    // Tidak ada tglKembaliRaw, tampilkan reminder umum
+    banner.className = 'reminder-banner warn-b';
+    banner.style.display = 'flex';
+    banner.innerHTML = '<i class="fas fa-bell"></i> Anda memiliki <strong style="margin:0 4px;">' + myActive.length + ' buku</strong> yang sedang dipinjam. Jangan lupa kembalikan tepat waktu! <button class="rb-close" onclick="this.parentElement.style.display=\'none\'"><i class="fas fa-times"></i></button>';
+    return;
+  }
+
+  var b = BOOKS.find(function(x){ return x.id === earliestBook.bookId; });
+  var judulBuku = b ? b.title : 'buku Anda';
+
+  var msg = '';
+  var cls = '';
+
+  if (earliestDays < 0) {
+    // Sudah melewati jatuh tempo
+    cls = 'urgent-b';
+    msg = '🚨 <strong>Terlambat!</strong> "' + judulBuku + '" sudah melewati jatuh tempo <strong>' + Math.abs(earliestDays) + ' hari</strong>. Segera kembalikan untuk menghindari denda lebih lanjut!';
+  } else if (earliestDays === 0) {
+    // Jatuh tempo hari ini
+    cls = 'urgent-b';
+    msg = '⚠️ <strong>Jatuh tempo HARI INI!</strong> "' + judulBuku + '" harus dikembalikan hari ini sebelum perpustakaan tutup.';
+  } else if (earliestDays === 1) {
+    // Besok jatuh tempo
+    cls = 'warn-b';
+    msg = '⏰ Pengingat: "' + judulBuku + '" akan jatuh tempo <strong>besok</strong>. Segera siapkan untuk dikembalikan!';
+  } else if (earliestDays === 2) {
+    // 2 hari lagi
+    cls = 'warn-b';
+    msg = '📅 Pengingat: "' + judulBuku + '" akan jatuh tempo dalam <strong>2 hari</strong>. Jangan sampai terlambat!';
+  } else {
+    // Lebih dari 2 hari
+    cls = 'info-b';
+    msg = '📚 Anda memiliki <strong>' + myActive.length + ' buku</strong> yang sedang dipinjam. Tenggat terdekat: <strong>' + earliestDays + ' hari lagi</strong>.';
+  }
+
+  banner.className = 'reminder-banner ' + cls;
+  banner.style.display = 'flex';
+  banner.innerHTML = msg + ' <button class="rb-close" onclick="this.parentElement.style.display=\'none\'"><i class="fas fa-times"></i></button>';
+}
+
+/* ══════════════════════════════════════════════════
+   ══ FITUR BARU: MODAL PERPANJANG ══
+   ══════════════════════════════════════════════════ */
+
+// Helper: tambah hari ke tanggal string "d MMM yyyy"
+function addDaysToRiwayatDate(r, days) {
+  // Gunakan tglKembaliRaw jika ada, kalau tidak parse dari string
+  var baseDate;
+  if (r.tglKembaliRaw) {
+    baseDate = new Date(r.tglKembaliRaw);
+  } else {
+    // Fallback: coba parse dari tglKembali (format id-ID: "1 Jan 2025")
+    baseDate = new Date(r.tglKembali);
+  }
+  if (isNaN(baseDate)) baseDate = new Date();
+  baseDate.setDate(baseDate.getDate() + days);
+  return baseDate;
+}
+
+function openPerpanjangModal(rId) {
+  var r = RIWAYAT.find(function(x){ return x.id === rId; });
+  if (!r) return;
+  if (r.sudahDiperpanjang) { showToast('Peminjaman ini sudah pernah diperpanjang.', 'error'); return; }
+
+  var b = BOOKS.find(function(x){ return x.id === r.bookId; });
+  if (!b) return;
+
+  perpanjangTargetId = rId;
+
+  // Isi info buku
+  document.getElementById('pmThumb').innerHTML = '<div style="width:36px;height:48px;border-radius:6px;background:' + b.bg + ';display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:1rem;"><i class="' + b.icon + '"></i></div>';
+  document.getElementById('pmTitle').textContent = b.title;
+  document.getElementById('pmAuthor').textContent = b.author;
+
+  // Tenggat lama
+  document.getElementById('pmOldDate').textContent = r.tglKembali;
+
+  // Tenggat baru = +7 hari dari tenggat lama
+  var newDate = addDaysToRiwayatDate(r, 7);
+  var newDateStr = newDate.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+  document.getElementById('pmNewDate').textContent = newDateStr;
+
+  // Simpan newDate string ke dataset untuk digunakan saat konfirmasi
+  document.getElementById('perpanjangModalBg').dataset.newDate = newDateStr;
+  document.getElementById('perpanjangModalBg').dataset.newDateRaw = newDate.toISOString().split('T')[0];
+
+  document.getElementById('perpanjangModalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePerpanjangModal() {
+  document.getElementById('perpanjangModalBg').classList.remove('open');
+  document.body.style.overflow = '';
+  perpanjangTargetId = null;
+}
+
+function konfirmasiPerpanjang() {
+  if (!perpanjangTargetId) return;
+  var r = RIWAYAT.find(function(x){ return x.id === perpanjangTargetId; });
+  if (!r) { closePerpanjangModal(); return; }
+
+  var newDateStr = document.getElementById('perpanjangModalBg').dataset.newDate;
+  var newDateRaw = document.getElementById('perpanjangModalBg').dataset.newDateRaw;
+
+  // Update data riwayat
+ r.tglKembali = newDateStr;
+  r.tglKembaliRaw = newDateRaw;
+  r.sudahDiperpanjang = true;
+  saveRiwayat(); 
+
+  var b = BOOKS.find(function(x){ return x.id === r.bookId; });
+  var judulBuku = b ? b.title : 'buku';
+
+  closePerpanjangModal();
+  renderRiwayat();
+  // Refresh banner jatuh tempo setelah perpanjangan
+  showDueDateBanner();
+
+  showToast('✓ Peminjaman "' + judulBuku + '" berhasil diperpanjang hingga ' + newDateStr + '!', 'success');
+}
+
+/* ══ PANEL NOTIFIKASI ADMIN ══ */
 function toggleNotifPanel() {
-  // Hanya admin yang boleh membuka panel
   if (!currentUser || currentUser.id !== 'admin') {
     showToast('Fitur ini hanya tersedia untuk Admin.', 'error');
     return;
@@ -1710,7 +2283,6 @@ function toggleNotifPanel() {
   }
 }
 
-// Tutup panel jika klik di luar
 document.addEventListener('click', function(e) {
   const wrapper = document.querySelector('.notif-panel-wrapper');
   if (wrapper && !wrapper.contains(e.target)) {
@@ -1725,7 +2297,6 @@ function updateBellBadge() {
   if (count > 0) {
     badge.style.display = 'flex';
     badge.textContent = count;
-    // Hapus notif-dot lama jika ada
     const oldDot = document.getElementById('bellBtn').querySelector('.notif-dot');
     if (oldDot) oldDot.remove();
   } else {
@@ -1772,11 +2343,9 @@ function approveRequest(reqId) {
   const req = pendingRequests.find(r => r.id === reqId);
   if (!req) return;
 
-  // Kurangi stok buku
   const book = BOOKS.find(b => b.id === req.bookId);
   if (book && book.stock > 0) book.stock--;
 
-  // Tambahkan langsung ke RIWAYAT dengan data lengkap (nama, nis)
   RIWAYAT.push({
     id: reqId,
     bookId: req.bookId,
@@ -1785,15 +2354,18 @@ function approveRequest(reqId) {
     kelas: req.kelas,
     tglPinjam: req.tglPinjam,
     tglKembali: req.tglKembali,
+    tglKembaliRaw: req.tglKembaliRaw || null,
     tglDikembalikan: null,
     status: 'active',
     denda: 0,
+    sudahDiperpanjang: false, // ← flag perpanjang
   });
 
-  // Hapus dari pending
-  pendingRequests = pendingRequests.filter(r => r.id !== reqId);
+ pendingRequests = pendingRequests.filter(r => r.id !== reqId);
+  savePending();   // ← TAMBAH
+  saveRiwayat();   // ← TAMBAH
+  savePending(); 
 
-  // Animasi hapus item dari panel
   const el = document.getElementById('req-' + reqId);
   if (el) { el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='.3s'; setTimeout(()=>el.remove(), 300); }
 
@@ -1814,11 +2386,12 @@ function rejectRequest(reqId) {
   const req = pendingRequests.find(r => r.id === reqId);
   if (!req) return;
 
-  // Hapus dari RIWAYAT
   const idx = RIWAYAT.findIndex(r => r.id === reqId);
-  if (idx !== -1) RIWAYAT.splice(idx, 1);
+ if (idx !== -1) {
+    RIWAYAT.splice(idx, 1);
+    saveRiwayat();  // ← TAMBAH
+  }
 
-  // Hapus dari pending
   pendingRequests = pendingRequests.filter(r => r.id !== reqId);
 
   const el = document.getElementById('req-' + reqId);
@@ -1859,27 +2432,10 @@ function toggleTheme() {
   if (ico) ico.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
 }
 
-/* ════ REMINDER BANNER ════ */
+/* ════ REMINDER BANNER (legacy, masih dipakai di beberapa tempat) ════ */
 function showReminderBanner() {
-  if (!currentUser) return;
-  var myActive = RIWAYAT.filter(function(r){ return r.nis === currentUser.nis && (r.status === 'active' || r.status === 'borrow'); });
-  var banner = document.getElementById('reminderBanner');
-  if (!banner) return;
-  if (myActive.length > 0) {
-    banner.className = 'reminder-banner warn-b';
-    banner.style.display = 'flex';
-    banner.innerHTML = '<i class="fas fa-bell"></i> Anda memiliki <strong style="margin:0 4px;">' + myActive.length + ' buku</strong> yang sedang dipinjam. Jangan lupa kembalikan tepat waktu! <button class="rb-close" onclick="this.parentElement.style.display=\'none\'"><i class="fas fa-times"></i></button>';
-  } else {
-    banner.className = 'reminder-banner info-b';
-    banner.style.display = 'flex';
-    banner.innerHTML = '<i class="fas fa-info-circle"></i> Selamat datang, <strong style="margin:0 4px;">' + (currentUser ? currentUser.name.split(' ')[0] : '') + '</strong>! Tidak ada buku yang sedang dipinjam. <button class="rb-close" onclick="this.parentElement.style.display=\'none\'"><i class="fas fa-times"></i></button>';
-    setTimeout(function(){ if(banner) banner.style.display = 'none'; }, 4000);
-  }
+  showDueDateBanner();
 }
-
-/* switchMainTab: uses existing function - extended below */
-
-/* loadUserToUI admin tabs: integrated below */
 
 function loadProfilFields(acc) {
   var setVal = function(id, v){ var el = document.getElementById(id); if(el) el.value = v || ''; };
@@ -1890,19 +2446,43 @@ function loadProfilFields(acc) {
   setVal('profEmail', acc.email || '');
 }
 
-/* ════ PROFIL ════ */
 function renderProfil() {
   if (!currentUser) return;
   var u = currentUser;
-  var setEl = function(id, v){ var el = document.getElementById(id); if(el) { if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = v||''; else el.textContent = v||''; }};
-  setEl('mcAvatar', u.avatar);
+ var setEl = function(id, v){ 
+  var el = document.getElementById(id); 
+  if(el) { 
+    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = v||''; 
+    else el.textContent = v||''; 
+  }
+};
+  
+  // Load foto dari localStorage
+  if (!u.avatarPhoto) {
+    var savedPhoto = localStorage.getItem('avatarPhoto_' + u.nis);
+    if (savedPhoto) u.avatarPhoto = savedPhoto;
+  }
+
+  // Avatar
   var av = document.getElementById('mcAvatar');
-  if (av) av.style.background = u.color;
+  if (av) {
+    if (u.avatarPhoto) {
+      av.classList.add('has-photo');
+      av.innerHTML = '<img src="' + u.avatarPhoto + '" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">';
+    } else {
+      av.classList.remove('has-photo');
+      av.innerHTML = u.avatar;
+      av.style.background = u.color;
+    }
+  }
+
+  // ← LANJUTKAN di sini (masih di DALAM fungsi)
   setEl('mcName', u.name);
   setEl('mcRoleText', u.role);
   setEl('mcNis', u.nis);
   setEl('mcRoleVal', u.role);
   loadProfilFields(u);
+
   // Barcode
   var barcodeEl = document.getElementById('mcBarcode');
   if (barcodeEl) {
@@ -1918,14 +2498,16 @@ function renderProfil() {
   }
   var bn = document.getElementById('mcBarcodeNum');
   if (bn) bn.textContent = u.nis.replace(/\D/g,'').padEnd(12,'0').substring(0,12);
-  // Stats
+
+  // Statistik
   var myRiwayat = RIWAYAT.filter(function(r){ return r.nis === u.nis; });
-  var myActive  = myRiwayat.filter(function(r){ return r.status === 'active' || r.status === 'borrow'; });
+  var myActive  = myRiwayat.filter(function(r){ return r.status==='active'||r.status==='borrow'; });
   var myDenda   = myRiwayat.filter(function(r){ return r.denda > 0; });
-  var psT = document.getElementById('psTotal');   if(psT) psT.textContent = myRiwayat.length;
-  var psA = document.getElementById('psActive');  if(psA) psA.textContent = myActive.length;
-  var psD = document.getElementById('psDenda');   if(psD) psD.textContent = myDenda.length;
-}
+  var psT = document.getElementById('psTotal');  if(psT) psT.textContent = myRiwayat.length;
+  var psA = document.getElementById('psActive'); if(psA) psA.textContent = myActive.length;
+  var psD = document.getElementById('psDenda');  if(psD) psD.textContent = myDenda.length;
+
+} // ← TUTUP renderProfil di SINI
 
 function saveProfil() {
   if (!currentUser) return;
@@ -1933,7 +2515,6 @@ function saveProfil() {
   var kl = document.getElementById('profKelas'); if (kl) currentUser.kelas = kl.value;
   var hp = document.getElementById('profHp');   if (hp) currentUser.hp    = hp.value;
   var em = document.getElementById('profEmail'); if (em) currentUser.email = em.value;
-  // Update navbar
   var nn = document.getElementById('navName'); if (nn) nn.textContent = currentUser.name.split(' ')[0];
   var dn = document.getElementById('ddName');  if (dn) dn.textContent = currentUser.name;
   var de = document.getElementById('ddEmail'); if (de) de.textContent = currentUser.email;
@@ -1955,26 +2536,109 @@ function changePassword() {
   showToast('Kata sandi berhasil diubah!', 'success');
 }
 
-/* showReminderBanner is called from initPeminjaman */
-
 /* ════ DASHBOARD ════ */
+var currentChartView = 'monthly';
+
+function switchChartView(view, btn) {
+  currentChartView = view;
+  document.querySelectorAll('.chart-tab').forEach(function(b){ b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  var mw = document.getElementById('monthlyChartWrap');
+  var bw = document.getElementById('bookChartWrap');
+  if (view === 'monthly') { if(mw) mw.style.display='block'; if(bw) bw.style.display='none'; renderMonthlyChart(); }
+  else                    { if(mw) mw.style.display='none'; if(bw) bw.style.display='block'; renderBookChart(); }
+}
+
+function renderMonthlyChart() {
+  var el = document.getElementById('monthlyChartBars'); if (!el) return;
+  el.innerHTML = '';
+
+  var today = new Date();
+  var months = [];
+  for (var i = 11; i >= 0; i--) {
+    var d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    months.push({ year:d.getFullYear(), month:d.getMonth(), label:d.toLocaleDateString('id-ID',{month:'short'}), count:0, late:0 });
+  }
+
+  RIWAYAT.forEach(function(r) {
+    if (!r.tglKembaliRaw && !r.tglPinjam) return;
+    // Parse dari tglPinjam (format "1 Jan 2025")
+    var d;
+    try { d = new Date(r.tglPinjam); } catch(e) { return; }
+    if (isNaN(d)) return;
+    months.forEach(function(m) {
+      if (d.getFullYear() === m.year && d.getMonth() === m.month) {
+        m.count++;
+        if (r.status === 'late') m.late++;
+      }
+    });
+  });
+
+  var maxVal = Math.max.apply(null, months.map(function(m){ return m.count; })) || 1;
+
+  months.forEach(function(m) {
+    var col = document.createElement('div');
+    col.className = 'mc-bar-col';
+    var pct = Math.round(m.count / maxVal * 100);
+    var latePct = m.count > 0 ? Math.round(m.late / maxVal * 100) : 0;
+    var minH = m.count > 0 ? 6 : 0;
+    col.innerHTML =
+      '<div class="mc-bar-val">' + (m.count > 0 ? m.count : '') + '</div>' +
+      '<div class="mc-bar-fill" style="height:' + Math.max(pct, minH) + 'px;" data-tip="' + m.count + ' pinjam, ' + m.late + ' terlambat · ' + m.label + '"></div>' +
+      (m.late > 0 ? '<div class="mc-bar-fill late-fill" style="height:' + Math.max(latePct, 4) + 'px;" data-tip="' + m.late + ' terlambat · ' + m.label + '"></div>' : '') +
+      '<div class="mc-bar-label">' + m.label + '</div>';
+    el.appendChild(col);
+  });
+}
+
+function renderBookChart() {
+  var chartEl = document.getElementById('chartBars');
+  if (!chartEl) return;
+  chartEl.innerHTML = '';
+  var borrowCount = {};
+  RIWAYAT.forEach(function(r){ borrowCount[r.bookId] = (borrowCount[r.bookId]||0) + 1; });
+  var topBooks = BOOKS.map(function(b){ return { b:b, count:borrowCount[b.id]||0 }; })
+    .sort(function(a,b){ return b.count - a.count; }).slice(0,6);
+  var maxCount = topBooks[0] ? topBooks[0].count : 1;
+  if (!topBooks[0] || topBooks[0].count === 0) {
+    chartEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">Belum ada data peminjaman.</div>';
+    return;
+  }
+  topBooks.forEach(function(item) {
+    var pct = maxCount > 0 ? Math.round(item.count / maxCount * 100) : 0;
+    var row = document.createElement('div');
+    row.className = 'chart-bar-item';
+    row.innerHTML = '<div class="cbi-label" title="' + item.b.title + '">' + item.b.title + '</div>' +
+      '<div class="cbi-bar-bg"><div class="cbi-bar" data-w="' + pct + '" style="width:0;"></div></div>' +
+      '<div class="cbi-val">' + item.count + '</div>';
+    chartEl.appendChild(row);
+  });
+  setTimeout(function() {
+    chartEl.querySelectorAll('.cbi-bar').forEach(function(bar) {
+      bar.style.width = bar.getAttribute('data-w') + '%';
+    });
+  }, 80);
+}
+
 function renderDashboard() {
   var statGrid = document.getElementById('dashStatGrid');
   if (!statGrid) return;
+  checkAndUpdateLateStatus();
   var totalBuku  = BOOKS.length;
   var totalStok  = BOOKS.reduce(function(s,b){ return s+b.total; }, 0);
   var tersedia   = BOOKS.filter(function(b){ return b.stock > 0; }).length;
-  var dipinjam   = RIWAYAT.filter(function(r){ return r.status==='active'||r.status==='borrow'; }).length;
+  var dipinjam   = RIWAYAT.filter(function(r){ return r.status==='active'||r.status==='borrow'||r.status==='late'; }).length;
+  var terlambat  = RIWAYAT.filter(function(r){ return r.status==='late'; }).length;
   var pending    = pendingRequests.length;
   var totalDenda = RIWAYAT.reduce(function(s,r){ return s+r.denda; }, 0);
 
   var stats = [
-    { ico:'fas fa-book', bg:'rgba(59,124,244,.12)', clr:'var(--blue)',   val:totalBuku,  lbl:'Total Judul Buku' },
-    { ico:'fas fa-check-circle', bg:'rgba(22,163,74,.12)', clr:'var(--green)', val:tersedia,  lbl:'Judul Tersedia' },
-    { ico:'fas fa-hand-holding-heart', bg:'rgba(234,88,12,.12)', clr:'var(--orange)', val:dipinjam,  lbl:'Sedang Dipinjam' },
-    { ico:'fas fa-clock', bg:'rgba(245,158,11,.12)', clr:'var(--gold)',  val:pending,   lbl:'Menunggu Approval' },
-    { ico:'fas fa-receipt', bg:'rgba(220,38,38,.12)', clr:'var(--red)',   val:'Rp ' + (totalDenda/1000).toFixed(0) + 'rb', lbl:'Total Denda' },
-    { ico:'fas fa-layer-group', bg:'rgba(99,102,241,.12)', clr:'#6366f1', val:totalStok, lbl:'Total Eksemplar' },
+    { ico:'fas fa-book',             bg:'rgba(59,124,244,.12)',  clr:'var(--blue)',   val:totalBuku,  lbl:'Total Judul Buku' },
+    { ico:'fas fa-check-circle',     bg:'rgba(22,163,74,.12)',   clr:'var(--green)',  val:tersedia,   lbl:'Judul Tersedia' },
+    { ico:'fas fa-hand-holding-heart',bg:'rgba(234,88,12,.12)', clr:'var(--orange)', val:dipinjam,   lbl:'Sedang Dipinjam' },
+    { ico:'fas fa-clock',            bg:'rgba(245,158,11,.12)',  clr:'var(--gold)',   val:pending,    lbl:'Menunggu Approval' },
+    { ico:'fas fa-receipt',          bg:'rgba(220,38,38,.12)',   clr:'var(--red)',    val:'Rp '+(totalDenda/1000).toFixed(0)+'rb', lbl:'Total Denda' },
+    { ico:'fas fa-exclamation-triangle',bg:'rgba(220,38,38,.12)',clr:'var(--red)',    val:terlambat,  lbl:'Buku Terlambat' },
   ];
 
   statGrid.innerHTML = '';
@@ -1986,36 +2650,10 @@ function renderDashboard() {
     statGrid.appendChild(d);
   });
 
-  // Chart bars - borrow count per book
-  var borrowCount = {};
-  RIWAYAT.forEach(function(r){ borrowCount[r.bookId] = (borrowCount[r.bookId]||0) + 1; });
-  var topBooks = BOOKS.map(function(b){ return { b:b, count:borrowCount[b.id]||0 }; })
-    .sort(function(a,b){ return b.count - a.count; }).slice(0,6);
-  var maxCount = topBooks[0] ? topBooks[0].count : 1;
-  var chartEl = document.getElementById('chartBars');
-  if (chartEl) {
-    chartEl.innerHTML = '';
-    if (!topBooks[0] || topBooks[0].count === 0) {
-      chartEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px;">Belum ada data peminjaman.</div>';
-    } else {
-      topBooks.forEach(function(item) {
-        var pct = maxCount > 0 ? Math.round(item.count / maxCount * 100) : 0;
-        var row = document.createElement('div');
-        row.className = 'chart-bar-item';
-        row.innerHTML = '<div class="cbi-label" title="' + item.b.title + '">' + item.b.title + '</div>' +
-          '<div class="cbi-bar-bg"><div class="cbi-bar" data-w="' + pct + '" style="width:0;"></div></div>' +
-          '<div class="cbi-val">' + item.count + '</div>';
-        chartEl.appendChild(row);
-      });
-      setTimeout(function() {
-        chartEl.querySelectorAll('.cbi-bar').forEach(function(bar) {
-          bar.style.width = bar.getAttribute('data-w') + '%';
-        });
-      }, 80);
-    }
-  }
+  // Render chart sesuai view aktif
+  if (currentChartView === 'monthly') renderMonthlyChart();
+  else renderBookChart();
 
-  // Recent list
   var recentEl = document.getElementById('recentList');
   if (recentEl) {
     recentEl.innerHTML = '';
@@ -2036,7 +2674,6 @@ function renderDashboard() {
     }
   }
 
-  // Low stock
   var lowEl = document.getElementById('lowStockList');
   if (lowEl) {
     var lowBooks = BOOKS.filter(function(b){ return b.stock <= 1; }).sort(function(a,b){ return a.stock-b.stock; }).slice(0,5);
@@ -2055,7 +2692,6 @@ function renderDashboard() {
     }
   }
 
-  // Active loans
   var activeEl = document.getElementById('activeLoans');
   if (activeEl) {
     var actives = RIWAYAT.filter(function(r){ return r.status==='active'||r.status==='borrow'; }).slice(0,5);
@@ -2073,6 +2709,243 @@ function renderDashboard() {
       });
     }
   }
+
+  var lateEl = document.getElementById('lateLoans');
+  if (lateEl) {
+    var lates = RIWAYAT.filter(function(r){ return r.status==='late'; }).slice(0,5);
+    if (!lates.length) {
+      lateEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--green);font-size:13px;"><i class="fas fa-check-circle"></i> Tidak ada keterlambatan!</div>';
+    } else {
+      lateEl.innerHTML = '';
+      lates.forEach(function(r) {
+        var b = BOOKS.find(function(x){ return x.id===r.bookId; }); if (!b) return;
+        var item = document.createElement('div'); item.className = 'rl-item';
+        item.innerHTML = '<div class="rl-thumb" style="background:' + b.bg + ';"><i class="' + b.icon + '"></i></div>' +
+          '<div class="rl-info"><div class="rl-title">' + (r.nama||'—') + '</div><div class="rl-sub">' + b.title + ' · Denda: Rp ' + r.denda.toLocaleString('id-ID') + '</div></div>' +
+          '<span class="status-pill sp-late">Terlambat</span>';
+        lateEl.appendChild(item);
+      });
+    }
+  }
+}
+
+/* ════════════════════════════════════════════════
+   EXPORT EXCEL
+════════════════════════════════════════════════ */
+function exportExcel() {
+  if (!currentUser) { showToast('Login terlebih dahulu.','error'); return; }
+  checkAndUpdateLateStatus();
+
+var isAdmin = currentUser && currentUser.id === 'admin';
+var list = isAdmin
+  ? RIWAYAT
+  : RIWAYAT.filter(function(r){ return r.nis === currentUser.nis; });
+  if (!list.length) { showToast('Tidak ada data riwayat untuk diekspor.','info'); return; }
+
+  var bulan = new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+  var rows = [['No','Nama Peminjam','NIS/NIP','Judul Buku','Pengarang','Tgl. Pinjam','Tgl. Kembali','Status','Denda (Rp)']];
+
+  list.forEach(function(r, i) {
+    var b = BOOKS.find(function(x){ return x.id===r.bookId; });
+    var stLbl = r.status==='active'?'Aktif':r.status==='late'?'Terlambat':r.status==='borrow'?'Dipinjam':'Selesai';
+    rows.push([
+      i+1,
+      r.nama||'—',
+      r.nis||'—',
+      b ? b.title : '—',
+      b ? b.author : '—',
+      r.tglPinjam||'—',
+      r.tglKembali||'—',
+      stLbl,
+      r.denda||0,
+    ]);
+  });
+
+  var ws = XLSX.utils.aoa_to_sheet(rows);
+  // Lebar kolom
+  ws['!cols'] = [{wch:4},{wch:22},{wch:20},{wch:30},{wch:20},{wch:14},{wch:14},{wch:12},{wch:12}];
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Riwayat Peminjaman');
+  XLSX.writeFile(wb, 'Rekap_Perpustakaan_' + bulan.replace(' ','_') + '.xlsx');
+  showToast('✓ File Excel berhasil diunduh!', 'success');
+}
+
+/* ════════════════════════════════════════════════
+   EXPORT PDF
+════════════════════════════════════════════════ */
+function exportPDF() {
+  if (!currentUser) { showToast('Login terlebih dahulu.','error'); return; }
+  checkAndUpdateLateStatus();
+
+  var isAdmin = currentUser && currentUser.id === 'admin'; // ← TAMBAHAN INI
+
+  var list = isAdmin
+    ? RIWAYAT
+    : RIWAYAT.filter(function(r){ return r.nis === currentUser.nis; });
+
+  if (!list.length) { showToast('Tidak ada data riwayat untuk diekspor.','info'); return; }
+
+  var { jsPDF } = window.jspdf;
+  var doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
+
+  var bulan = new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+
+  // Header
+  doc.setFillColor(15, 27, 53);
+  doc.rect(0, 0, 297, 20, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(13); doc.setFont('helvetica','bold');
+  doc.text('PERPUSTAKAAN SMKN 1 KETAPANG', 14, 9);
+  doc.setFontSize(9); doc.setFont('helvetica','normal');
+  doc.text('Rekap Peminjaman Buku — ' + bulan, 14, 15);
+  doc.text('Dicetak: ' + new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}), 297-14, 15, {align:'right'});
+
+  var rows = list.map(function(r, i) {
+    var b = BOOKS.find(function(x){ return x.id===r.bookId; });
+    var stLbl = r.status==='active'?'Aktif':r.status==='late'?'Terlambat':r.status==='borrow'?'Dipinjam':'Selesai';
+    return [
+      i+1,
+      r.nama||'—',
+      r.nis||'—',
+      b ? b.title : '—',
+      r.tglPinjam||'—',
+      r.tglKembali||'—',
+      stLbl,
+      r.denda > 0 ? 'Rp '+r.denda.toLocaleString('id-ID') : 'Lunas',
+    ];
+  });
+
+  doc.autoTable({
+    startY: 24,
+    head: [['No','Nama Peminjam','NIS/NIP','Judul Buku','Tgl. Pinjam','Tgl. Kembali','Status','Denda']],
+    body: rows,
+    theme: 'grid',
+    headStyles: { fillColor:[59,124,244], textColor:255, fontStyle:'bold', fontSize:9 },
+    bodyStyles: { fontSize:8.5 },
+    alternateRowStyles: { fillColor:[244,246,251] },
+    columnStyles: { 0:{halign:'center',cellWidth:10}, 6:{halign:'center'}, 7:{halign:'right'} },
+    didParseCell: function(data) {
+      if (data.section === 'body' && data.column.index === 6) {
+        var val = data.cell.raw;
+        if (val === 'Terlambat') data.cell.styles.textColor = [220,38,38];
+        else if (val === 'Aktif') data.cell.styles.textColor = [22,163,74];
+      }
+    },
+    margin: { left:14, right:14 },
+  });
+
+  // Footer
+  var pageCount = doc.internal.getNumberOfPages();
+  for (var i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8); doc.setTextColor(150);
+    doc.text('Halaman ' + i + ' dari ' + pageCount, 297/2, 205, {align:'center'});
+  }
+
+  doc.save('Rekap_Perpustakaan_' + bulan.replace(' ','_') + '.pdf');
+  showToast('✓ File PDF berhasil diunduh!', 'success');
+}
+/* ════════════════════════════════════════════════
+   AVATAR UPLOAD
+════════════════════════════════════════════════ */
+function handleAvatarUpload(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { showToast('Pilih file gambar (JPG/PNG/WebP).','error'); return; }
+  if (file.size > 2 * 1024 * 1024) { showToast('Ukuran foto maks. 2 MB.','error'); return; }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var dataUrl = e.target.result;
+
+    // 1. Simpan ke currentUser
+    if (currentUser) currentUser.avatarPhoto = dataUrl;
+
+    // 2. SIMPAN KE LOCALSTORAGE agar tidak hilang saat refresh
+    if (currentUser) {
+      localStorage.setItem('avatarPhoto_' + currentUser.nis, dataUrl);
+    }
+
+    // 3. Update kartu member (kiri)
+    var avEl = document.getElementById('mcAvatar');
+    if (avEl) {
+      avEl.classList.add('has-photo');
+      avEl.innerHTML = '<img src="' + dataUrl + '" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;animation:none!important;transform:none!important;">';
+    }
+
+    // 4. Update navbar avatar (pojok kanan atas)
+    var navAv = document.getElementById('navAvatar');
+    if (navAv) {
+      navAv.textContent = '';
+      navAv.style.background = 'none';
+      navAv.style.padding = '0';
+      navAv.style.overflow = 'hidden';
+      var navImg = document.createElement('img');
+      navImg.src = dataUrl;
+      navImg.alt = 'Avatar';
+      navImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
+      navAv.appendChild(navImg);
+    }
+
+    // 5. Update kartu cetak
+    var pcaAv = document.getElementById('pcaAvatar');
+    if (pcaAv) {
+      pcaAv.innerHTML = '<img src="' + dataUrl + '" alt="Foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">';
+    }
+
+    showToast('✓ Foto profil berhasil disimpan permanen!', 'success');
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+/* ════════════════════════════════════════════════
+   CETAK KARTU ANGGOTA
+════════════════════════════════════════════════ */
+function cetakKartuAnggota() {
+  if (!currentUser) return;
+  var u = currentUser;
+
+  // Isi data kartu cetak
+  var pcaName = document.getElementById('pcaName'); if(pcaName) pcaName.textContent = u.name;
+  var pcaNis  = document.getElementById('pcaNis');  if(pcaNis)  pcaNis.textContent  = (u.id === 'siswa' ? 'NIS: ' : 'NIP: ') + u.nis;
+  var pcaRole = document.getElementById('pcaRole'); if(pcaRole) pcaRole.textContent = u.role;
+  var pcaNum  = document.getElementById('pcaBarcodeNum'); if(pcaNum) pcaNum.textContent = u.nis.replace(/\D/g,'').padEnd(12,'0').substring(0,12);
+
+  // Avatar
+  var pcaAv = document.getElementById('pcaAvatar');
+  if (pcaAv) {
+    if (u.avatarPhoto) {
+      pcaAv.innerHTML = '<img src="' + u.avatarPhoto + '" alt="Foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    } else {
+      pcaAv.innerHTML = u.avatar;
+      pcaAv.style.background = u.color;
+    }
+  }
+
+  // Barcode mini
+  var bcEl = document.getElementById('pcaBarcode');
+  if (bcEl) {
+    bcEl.innerHTML = '';
+    var ws = [2,1,3,1,2,1,1,2,3,1,2,1,3,2,1,2,1];
+    ws.forEach(function(w, i) {
+      var bar = document.createElement('div');
+      bar.className = 'pca-bar';
+      bar.style.width  = w + 'px';
+      bar.style.height = (i%2===0 ? 14 : 10) + 'px';
+      bcEl.appendChild(bar);
+    });
+  }
+
+  // Tampilkan area cetak lalu print
+  var area = document.getElementById('printCardArea');
+  if (area) area.style.display = 'block';
+  setTimeout(function() {
+    window.print();
+    setTimeout(function() {
+      if (area) area.style.display = 'none';
+    }, 500);
+  }, 150);
 }
 
 /* ════ MANAJEMEN BUKU ════ */
@@ -2197,7 +3070,6 @@ function updateHeroStats() {
   var tcK= document.getElementById('tcKoleksi'); if(tcK) tcK.textContent = BOOKS.length;
 }
 
-/* ════ ESC TO CLOSE MODALS ════ */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeBookForm(); }
 });
@@ -2239,5 +3111,43 @@ document.addEventListener('keydown', function(e) {
   </div>
 </div>
 
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
 </body>
 </html>
