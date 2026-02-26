@@ -775,6 +775,7 @@
   </style>
 </head>
 <body>
+<img src="Matematika.png" style="width:100px;border:2px solid red;">
 
 <!-- ══ PAGE 1: LOGIN ══ -->
 <div id="page-login" class="page active">
@@ -1347,28 +1348,27 @@ const ACCOUNTS = [
 ];
 
 const BOOKS = [
-{ id:1,  title:'Matematika Kelas X', author:'Kemendikbud', year:2022, cat:'Pelajaran', icon:'fas fa-square-root-alt', bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:4, pub:'Kemendikbud', pages:320, desc:'Buku teks Matematika Kelas X mencakup aljabar, fungsi, trigonometri, dan statistika dengan pendekatan kontekstual.' },
-{ id:2,  title:'Bahasa Indonesia Kelas XI', author:'Kemendikbud', year:2022, cat:'Pelajaran', icon:'fas fa-language', bg:'linear-gradient(140deg,#15803d,#166534)', stock:4, total:4, pub:'Kemendikbud', pages:280, desc:'Buku teks Bahasa Indonesia Kelas XI mencakup teks eksposisi, persuasi, cerpen, puisi, dan keterampilan berbahasa lainnya.' },
-  { id:3,  title:'Bumi',                                  author:'Tere Liye',                 year:2021, cat:'Fiksi',      icon:'fas fa-globe',           bg:'linear-gradient(140deg,#7c3aed,#6d28d9)', stock:1, total:3, pub:'Gramedia',         pages:440,  desc:'Novel petualangan fantasi Tere Liye tentang Raib yang bisa menghilang. Penuh imajinasi dan membawa ke dunia paralel yang menakjubkan.' },
-  { id:4,  title:'Laskar Pelangi',                        author:'Andrea Hirata',             year:2020, cat:'Fiksi',      icon:'fas fa-star',            bg:'linear-gradient(140deg,#d97706,#b45309)', stock:5, total:6, pub:'Bentang Pustaka',  pages:529,  desc:'Kisah sepuluh anak dari keluarga miskin di Belitung yang berjuang keras mendapatkan pendidikan. Novel paling berpengaruh di Indonesia.' },
-  { id:5,  title:'Sapiens: Riwayat Singkat Umat Manusia', author:'Yuval Noah Harari',        year:2019, cat:'Non-Fiksi',  icon:'fas fa-landmark',        bg:'linear-gradient(140deg,#111827,#1f2937)', stock:0, total:2, pub:'KPG',              pages:498,  desc:'Perjalanan umat manusia dari Zaman Batu hingga era modern. Menggabungkan sejarah, biologi, dan filsafat secara brilian.' },
-  { id:6,  title:'Kamus Besar Bahasa Indonesia',          author:'Badan Pengembangan Bahasa', year:2018, cat:'Referensi',  icon:'fas fa-book-open',       bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:3, total:3, pub:'Balai Pustaka',    pages:1800, desc:'Kamus resmi Bahasa Indonesia memuat lebih dari 100.000 entri kata dengan definisi, contoh penggunaan, dan asal-usul kata.' },
-  { id:7,  title:'Fisika untuk SMA/SMK Kelas XI',         author:'Marthen Kanginan',          year:2021, cat:'Pelajaran',  icon:'fas fa-bolt',            bg:'linear-gradient(140deg,#0891b2,#0e7490)', stock:2, total:5, pub:'Erlangga',         pages:410,  desc:'Buku teks Fisika Kelas XI membahas dinamika rotasi, fluida, gelombang, termodinamika, dan optika dengan pendekatan konseptual.' },
-  { id:8,  title:'Atomic Habits',                         author:'James Clear',               year:2022, cat:'Non-Fiksi',  icon:'fas fa-atom',            bg:'linear-gradient(140deg,#059669,#047857)', stock:3, total:4, pub:'Avery',            pages:320,  desc:'Panduan berbasis riset untuk membangun kebiasaan baik. Perubahan kecil 1% setiap hari menghasilkan transformasi besar.' },
-  { id:9,  title:'Kimia Dasar',                           author:'Raymond Chang',             year:2020, cat:'Pelajaran',  icon:'fas fa-flask',           bg:'linear-gradient(140deg,#7c3aed,#5b21b6)', stock:1, total:3, pub:'McGraw-Hill',      pages:850,  desc:'Buku teks kimia umum mencakup stoikiometri, termokimia, kesetimbangan kimia, elektrokimia, dan kimia organik dasar.' },
-  { id:10, title:'Python Crash Course',                   author:'Eric Matthes',              year:2022, cat:'Referensi',  icon:'fab fa-python',          bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:2, pub:'No Starch Press',  pages:544,  desc:'Pengenalan Python yang cepat dan praktis. Dari variabel dan perulangan hingga proyek game dan visualisasi data.' },
-  { id:11, title:'Negeri 5 Menara',                       author:'Ahmad Fuadi',               year:2020, cat:'Fiksi',      icon:'fas fa-mosque',          bg:'linear-gradient(140deg,#16a34a,#15803d)', stock:4, total:5, pub:'Gramedia',         pages:423,  desc:"Kisah Alif Fikri di pesantren Pondok Madani dan mantra 'Man Jadda Wajada' yang mengubah hidup jutaan pembaca." },
-  { id:12, title:'Biologi Kelas XII',                     author:'Irnaningtyas',              year:2021, cat:'Pelajaran',  icon:'fas fa-dna',             bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:2, total:4, pub:'Erlangga',         pages:390,  desc:'Buku teks Biologi Kelas XII mencakup pertumbuhan, metabolisme sel, genetika, evolusi, dan ekologi.' },
-  { id:13, title:'Sejarah Indonesia Kelas X',             author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-scroll',          bg:'linear-gradient(140deg,#b45309,#92400e)', stock:5, total:5, pub:'Kemendikbud',      pages:310,  desc:'Membahas prasejarah, kerajaan Hindu-Buddha, kerajaan Islam, hingga penjajahan dan perjuangan kemerdekaan.' },
-  { id:14, title:'The Art of War',                        author:'Sun Tzu',                   year:2019, cat:'Non-Fiksi',  icon:'fas fa-chess-king',      bg:'linear-gradient(140deg,#1f2937,#111827)', stock:2, total:3, pub:'Various',          pages:273,  desc:'Risalah strategi militer kuno yang relevan dalam kepemimpinan dan bisnis modern. 13 bab kebijaksanaan abadi.' },
-  { id:15, title:'Ensiklopedia Sains',                    author:'Tim DK',                    year:2020, cat:'Referensi',  icon:'fas fa-microscope',      bg:'linear-gradient(140deg,#0891b2,#155e75)', stock:0, total:2, pub:'DK Publishing',    pages:1200, desc:'Ensiklopedia sains bergambar komprehensif mencakup fisika, kimia, biologi, astronomi, geologi, dan teknologi.' },
-  { id:16, title:'Matematika Kelas XI',                   author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-square-root-alt', bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:5, pub:'Kemendikbud',      pages:340,  desc:'Membahas program linear, matriks, transformasi, barisan, dan peluang dengan pendekatan kontekstual.' },
-  { id:17, title:'Ekonomi Kelas X',                       author:'Alam S.',                   year:2021, cat:'Pelajaran',  icon:'fas fa-chart-line',      bg:'linear-gradient(140deg,#059669,#065f46)', stock:4, total:4, pub:'Esis',             pages:295,  desc:'Membahas konsep dasar ekonomi, permintaan dan penawaran, sistem ekonomi, dan APBN/APBD.' },
-  { id:18, title:'Thinking, Fast and Slow',               author:'Daniel Kahneman',           year:2018, cat:'Non-Fiksi',  icon:'fas fa-brain',           bg:'linear-gradient(140deg,#7c3aed,#4c1d95)', stock:1, total:2, pub:'Farrar Straus',    pages:499,  desc:'Pemenang Nobel menjelaskan dua sistem berpikir manusia. Revolusi pemahaman tentang cara pengambilan keputusan.' },
-  { id:19, title:'Bahasa Inggris Kelas XII',              author:'Kemendikbud',               year:2022, cat:'Pelajaran',  icon:'fas fa-comments',        bg:'linear-gradient(140deg,#0891b2,#0c4a6e)', stock:3, total:5, pub:'Kemendikbud',      pages:260,  desc:'Mencakup reading comprehension, grammar, writing skills, dan conversation practice untuk Kelas XII.' },
-  { id:20, title:'Dunia Sophie',                          author:'Jostein Gaarder',           year:2020, cat:'Fiksi',      icon:'fas fa-question-circle', bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:3, pub:'Gyldendal',        pages:512,  desc:'Novel filsafat tentang Sophie yang menjelajahi pemikiran filosof besar dari Socrates hingga Sartre.' },
-];
-
+  { id:1,  title:'Matematika Kelas X',                    author:'Kemendikbud',               year:2022, cat:'Pelajaran', icon:'fas fa-square-root-alt', bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:4, pub:'Kemendikbud',      pages:320,  img:'Matematika.png', isbn:'978-602-427-001-1', desc:'Buku teks Matematika Kelas X mencakup aljabar, fungsi, trigonometri, dan statistika.' },
+  { id:2,  title:'Bahasa Indonesia Kelas XI',             author:'Kemendikbud',               year:2022, cat:'Pelajaran', icon:'fas fa-language',         bg:'linear-gradient(140deg,#15803d,#166534)', stock:4, total:4, pub:'Kemendikbud',      pages:280,  img:'Indonesia_BG_KLS_XI_Rev_Cover.png', desc:'Buku teks Bahasa Indonesia Kelas XI mencakup teks eksposisi, persuasi, cerpen, dan puisi.' },
+  { id:3,  title:'Bumi',                                  author:'Tere Liye',                 year:2021, cat:'Fiksi',     icon:'fas fa-globe',            bg:'linear-gradient(140deg,#7c3aed,#6d28d9)', stock:1, total:3, pub:'Gramedia',         pages:440,  img:'Islam-BG-KLS-XI.png', desc:'Novel petualangan fantasi Tere Liye tentang Raib yang bisa menghilang.' },
+  { id:4,  title:'Laskar Pelangi',                        author:'Andrea Hirata',             year:2020, cat:'Fiksi',     icon:'fas fa-star',             bg:'linear-gradient(140deg,#d97706,#b45309)', stock:5, total:6, pub:'Bentang Pustaka',  pages:529,  img:'Kristen XI.png', desc:'Kisah sepuluh anak dari keluarga miskin di Belitung yang berjuang keras mendapatkan pendidikan.' },
+  { id:5,  title:'Sapiens',                               author:'Yuval Noah Harari',         year:2019, cat:'Non-Fiksi', icon:'fas fa-landmark',         bg:'linear-gradient(140deg,#111827,#1f2937)', stock:0, total:2, pub:'KPG',              pages:498,  img:'TIK.jpg', desc:'Perjalanan umat manusia dari Zaman Batu hingga era modern.' },
+  { id:6,  title:'Kamus Besar Bahasa Indonesia',          author:'Badan Pengembangan Bahasa', year:2018, cat:'Referensi', icon:'fas fa-book-open',        bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:3, total:3, pub:'Balai Pustaka',    pages:1800, img:'Kimia.jpg', desc:'Kamus resmi Bahasa Indonesia memuat lebih dari 100.000 entri kata.' },
+  { id:7,  title:'Fisika untuk SMA/SMK Kelas XI',         author:'Marthen Kanginan',          year:2021, cat:'Pelajaran', icon:'fas fa-bolt',             bg:'linear-gradient(140deg,#0891b2,#0e7490)', stock:2, total:5, pub:'Erlangga',         pages:410,  img:'Fisika.jpg', desc:'Buku teks Fisika Kelas XI membahas dinamika rotasi, fluida, dan gelombang.' },
+  { id:8,  title:'Atomic Habits',                         author:'James Clear',               year:2022, cat:'Non-Fiksi', icon:'fas fa-atom',             bg:'linear-gradient(140deg,#059669,#047857)', stock:3, total:4, pub:'Avery',            pages:320,  img:'Biologi.jpg', desc:'Panduan berbasis riset untuk membangun kebiasaan baik.' },
+  { id:9,  title:'Kimia Dasar',                           author:'Raymond Chang',             year:2020, cat:'Pelajaran', icon:'fas fa-flask',            bg:'linear-gradient(140deg,#7c3aed,#5b21b6)', stock:1, total:3, pub:'McGraw-Hill',      pages:850,  img:'Pendidikan Kewarganegaraan.jpg', desc:'Buku teks kimia umum mencakup stoikiometri dan termokimia.' },
+  { id:10, title:'Python Crash Course',                   author:'Eric Matthes',              year:2022, cat:'Referensi', icon:'fab fa-python',           bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:2, pub:'No Starch Press',  pages:544,  img:'Geografi.jpg', desc:'Pengenalan Python yang cepat dan praktis.' },
+  { id:11, title:'Negeri 5 Menara',                       author:'Ahmad Fuadi',               year:2020, cat:'Fiksi',     icon:'fas fa-mosque',           bg:'linear-gradient(140deg,#16a34a,#15803d)', stock:4, total:5, pub:'Gramedia',         pages:423,  img:'Sejarah.jpg', desc:"Kisah Alif Fikri di pesantren Pondok Madani." },
+  { id:12, title:'Biologi Kelas XII',                     author:'Irnaningtyas',              year:2021, cat:'Pelajaran', icon:'fas fa-dna',              bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:2, total:4, pub:'Erlangga',         pages:390,  img:'PJOK.png', desc:'Buku teks Biologi Kelas XII mencakup pertumbuhan dan genetika.' },
+  { id:13, title:'Sejarah Indonesia Kelas X',             author:'Kemendikbud',               year:2022, cat:'Pelajaran', icon:'fas fa-scroll',           bg:'linear-gradient(140deg,#b45309,#92400e)', stock:5, total:5, pub:'Kemendikbud',      pages:310,  img:'KKA.png', desc:'Membahas prasejarah, kerajaan Hindu-Buddha hingga perjuangan kemerdekaan.' },
+  { id:14, title:'The Art of War',                        author:'Sun Tzu',                   year:2019, cat:'Non-Fiksi', icon:'fas fa-chess-king',       bg:'linear-gradient(140deg,#1f2937,#111827)', stock:2, total:3, pub:'Various',          pages:273,  img:null, desc:'Risalah strategi militer kuno yang relevan dalam kepemimpinan modern.' },
+  { id:15, title:'Ensiklopedia Sains',                    author:'Tim DK',                    year:2020, cat:'Referensi', icon:'fas fa-microscope',       bg:'linear-gradient(140deg,#0891b2,#155e75)', stock:0, total:2, pub:'DK Publishing',    pages:1200, img:null, desc:'Ensiklopedia sains bergambar komprehensif mencakup fisika, kimia, biologi.' },
+  { id:16, title:'Matematika Kelas XI',                   author:'Kemendikbud',               year:2022, cat:'Pelajaran', icon:'fas fa-square-root-alt', bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:5, pub:'Kemendikbud',      pages:340,  img:null, desc:'Membahas program linear, matriks, transformasi, dan peluang.' },
+  { id:17, title:'Ekonomi Kelas X',                       author:'Alam S.',                   year:2021, cat:'Pelajaran', icon:'fas fa-chart-line',       bg:'linear-gradient(140deg,#059669,#065f46)', stock:4, total:4, pub:'Esis',             pages:295,  img:null, desc:'Membahas konsep dasar ekonomi, permintaan dan penawaran.' },
+  { id:18, title:'Thinking, Fast and Slow',               author:'Daniel Kahneman',           year:2018, cat:'Non-Fiksi', icon:'fas fa-brain',            bg:'linear-gradient(140deg,#7c3aed,#4c1d95)', stock:1, total:2, pub:'Farrar Straus',    pages:499,  img:null, desc:'Pemenang Nobel menjelaskan dua sistem berpikir manusia.' },
+  { id:19, title:'Bahasa Inggris Kelas XII',              author:'Kemendikbud',               year:2022, cat:'Pelajaran', icon:'fas fa-comments',         bg:'linear-gradient(140deg,#0891b2,#0c4a6e)', stock:3, total:5, pub:'Kemendikbud',      pages:260,  img:null, desc:'Mencakup reading comprehension, grammar, dan writing skills.' },
+  { id:20, title:'Dunia Sophie',                          author:'Jostein Gaarder',           year:2020, cat:'Fiksi',     icon:'fas fa-question-circle',  bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:3, pub:'Gyldendal',        pages:512,  img:null, desc:'Novel filsafat tentang Sophie yang menjelajahi pemikiran filosof besar.' },
+]
 const JB_KEY         = "$2a$10$WAEc7BsjDoeLvtCrWkBm5..cIBB6Whb/uKYNwWr5Lmwm1GMHehxXe";
 const JB_BIN_RIWAYAT = "699fb74aae596e708f4aaef3";
 const JB_BIN_PENDING = "699fb790ae596e708f4aaf8e";
@@ -1398,11 +1398,12 @@ async function fetchBin(binId) {
 
 async function putBin(binId, data) {
   try {
-    await fetch(`${JB_BASE}/${binId}`, {
+    const res = await fetch(`${JB_BASE}/${binId}`, {
       method : 'PUT',
       headers: jbHeaders(),
       body   : JSON.stringify(data)
     });
+    await res.json();
   } catch(e) { console.warn('JSONBin save error:', e); }
 }
 
@@ -1410,7 +1411,6 @@ async function saveRiwayat() { await putBin(JB_BIN_RIWAYAT, RIWAYAT); }
 async function savePending()  { await putBin(JB_BIN_PENDING, pendingRequests); }
 
 async function loadFromCloud() {
-  showToast('⏳ Memuat data dari cloud...', 'info');
   const [r, p] = await Promise.all([
     fetchBin(JB_BIN_RIWAYAT),
     fetchBin(JB_BIN_PENDING)
@@ -1431,47 +1431,8 @@ async function loadFromCloud() {
 }
 
 function startPolling() {
-  if (_pollInterval) return;
-  _pollInterval = setInterval(async () => {
-    if (_isSyncing) return;
-    _isSyncing = true;
-    const [r, p] = await Promise.all([
-      fetchBin(JB_BIN_RIWAYAT),
-      fetchBin(JB_BIN_PENDING)
-    ]);
-    if (r !== null && JSON.stringify(r) !== JSON.stringify(RIWAYAT)) {
-      RIWAYAT = r;
-      checkAndUpdateLateStatus();
-      renderRiwayat();
-      renderDenda();
-      showDueDateBanner();
-      updateHeroStats();
-      const tsDash = document.getElementById('tsDashboard');
-      if (tsDash && tsDash.classList.contains('on')) renderDashboard();
-    }
-    if (p !== null && JSON.stringify(p) !== JSON.stringify(pendingRequests)) {
-      const wasCount = pendingRequests.length;
-      pendingRequests = p;
-      if (p.length) {
-        const maxId = Math.max(...p.map(x => x.id || 0));
-        if (maxId > pendingIdCounter) pendingIdCounter = maxId;
-      }
-      if (currentUser && currentUser.id === 'admin') {
-        updateBellBadge();
-        if (p.length > wasCount) {
-          showToast(`🔔 Ada ${p.length - wasCount} permintaan baru!`, 'info');
-          const bell = document.getElementById('bellBtn');
-          if (bell) {
-            bell.style.transform = 'scale(1.3)';
-            setTimeout(() => { bell.style.transform = ''; }, 300);
-          }
-        }
-        const panel = document.getElementById('notifPanel');
-        if (panel && panel.classList.contains('open')) renderNotifPanel();
-      }
-    }
-    _isSyncing = false;
-  }, 5000);
+  // polling dinonaktifkan
+  return;
 }
 
 function stopPolling() {
@@ -1531,7 +1492,7 @@ function doLogin() {
   if (!valid) return;
   const btn = document.getElementById('loginBtn');
   btn.classList.add('loading');
-  setTimeout(() => {
+  setTimeout(async () => {
     btn.classList.remove('loading');
     const acc = ACCOUNTS.find(a => a.nis===nis && a.pass===pass);
     if (!acc) {
@@ -1545,8 +1506,11 @@ function doLogin() {
     loadUserToUI(acc);
     showPage('peminjaman');
    initPeminjaman();
-    loadFromCloud();   // ← TAMBAH
-    startPolling();    // ← TAMBAH
+   await loadFromCloud();
+pendingRequests = [];
+await savePending();
+updateBellBadge();
+
     // ══ BANNER JATUH TEMPO OTOMATIS SAAT LOGIN ══
     showDueDateBanner();
     showToast(`Selamat datang, ${acc.name}! 👋`, 'success');
@@ -1650,7 +1614,7 @@ function switchMainTab(name) {
   if (name === 'dashboard') renderDashboard();
   if (name === 'manajemen') renderManajemen();
   if (name === 'profil') renderProfil();
-  window.scrollTo({ top:62, behavior:'smooth' });
+  
 }
 
 /* ════ INIT ════ */
@@ -1733,8 +1697,11 @@ function renderBooks(list) {
     card.innerHTML = `
       <div class="bk-cover">
         <div class="bk-cover-inner" style="background:${b.bg};">
-          <div class="cover-lines"></div>
-          <div class="cover-ico"><i class="${b.icon}"></i></div>
+  <div class="cover-lines"></div>
+  ${b.img 
+    ? `<img src="${b.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
+    : `<div class="cover-ico"><i class="${b.icon}"></i></div>`
+  }
           <div class="cover-top">
             <span class="cat-badge">${b.cat}</span>
             <span class="status-badge ${sb}">${sl}</span>
@@ -1750,9 +1717,10 @@ function renderBooks(list) {
         <div class="bk-title">${b.title}</div>
         <div class="bk-author"><i class="fas fa-user" style="font-size:9px;"></i> ${b.author}</div>
         <div class="bk-footer">
-          <span class="bk-year"><i class="fas fa-calendar-alt" style="font-size:9px;"></i> ${b.year}</span>
-          <span class="bk-stock ${sc}">${st}</span>
-        </div>
+    <span class="bk-year"><i class="fas fa-calendar-alt" style="font-size:9px;"></i> ${b.year}</span>
+    <span class="bk-stock ${sc}">${st}</span>
+</div>
+${b.isbn ? `<div style="font-size:9.5px;color:#94a3b8;margin-top:6px;"><i class="fas fa-barcode" style="font-size:9px;"></i> ${b.isbn}</div>` : ''}
       </div>`;
     card.addEventListener('click', () => openModal(b.id));
     grid.insertBefore(card, empty);
@@ -1780,7 +1748,8 @@ function openModal(id) {
     <div class="mm-item"><div class="mm-label">Penerbit</div><div class="mm-val">${b.pub}</div></div>
     <div class="mm-item"><div class="mm-label">Tahun Terbit</div><div class="mm-val">${b.year}</div></div>
     <div class="mm-item"><div class="mm-label">Jumlah Halaman</div><div class="mm-val">${b.pages} hal.</div></div>
-    <div class="mm-item"><div class="mm-label">Ketersediaan</div><div class="mm-val">${st}</div></div>`;
+    <div class="mm-item"><div class="mm-label">Ketersediaan</div><div class="mm-val">${st}</div></div>
+    ${b.isbn ? `<div class="mm-item" style="grid-column:1/-1;"><div class="mm-label">ISBN</div><div class="mm-val"><i class="fas fa-barcode" style="font-size:11px;margin-right:5px;"></i>${b.isbn}</div></div>` : ''}`;
   const pb = document.getElementById('mPinjamBtn');
   pb.disabled = b.stock===0; pb.style.opacity = b.stock===0 ? '.4' : '1';
   pb.onclick  = () => { pilihBuku(b.id); closeModal(); };
@@ -2057,9 +2026,11 @@ function deleteRiwayat(rId) {
 
   if ((r.status === 'active' || r.status === 'borrow') && b) b.stock++;
 
-  const idx = RIWAYAT.findIndex(x => x.id === rId);
-  if (idx !== -1) RIWAYAT.splice(idx, 1);
-
+ const idx = RIWAYAT.findIndex(x => x.id === rId);
+if (idx !== -1) {
+    RIWAYAT.splice(idx, 1);
+    saveRiwayat();
+}
   const row = document.getElementById('riwayat-row-' + rId);
   if (row) {
     row.style.transition = '.3s';
@@ -2339,7 +2310,7 @@ function renderNotifPanel() {
   });
 }
 
-function approveRequest(reqId) {
+async function approveRequest(reqId) {
   const req = pendingRequests.find(r => r.id === reqId);
   if (!req) return;
 
@@ -2362,9 +2333,10 @@ function approveRequest(reqId) {
   });
 
  pendingRequests = pendingRequests.filter(r => r.id !== reqId);
-  savePending();   // ← TAMBAH
-  saveRiwayat();   // ← TAMBAH
-  savePending(); 
+stopPolling();
+await savePending();
+await saveRiwayat();
+setTimeout(() => startPolling(), 3000);
 
   const el = document.getElementById('req-' + reqId);
   if (el) { el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='.3s'; setTimeout(()=>el.remove(), 300); }
@@ -2382,7 +2354,7 @@ function approveRequest(reqId) {
   }
 }
 
-function rejectRequest(reqId) {
+async function rejectRequest(reqId) {
   const req = pendingRequests.find(r => r.id === reqId);
   if (!req) return;
 
@@ -2392,7 +2364,10 @@ function rejectRequest(reqId) {
     saveRiwayat();  // ← TAMBAH
   }
 
-  pendingRequests = pendingRequests.filter(r => r.id !== reqId);
+ pendingRequests = pendingRequests.filter(r => r.id !== reqId);
+stopPolling();
+await savePending();
+setTimeout(() => startPolling(), 3000);
 
   const el = document.getElementById('req-' + reqId);
   if (el) { el.style.opacity='0'; el.style.transform='translateX(-20px)'; el.style.transition='.3s'; setTimeout(()=>el.remove(), 300); }
