@@ -1431,8 +1431,25 @@ async function loadFromCloud() {
 }
 
 function startPolling() {
-  // polling dinonaktifkan
-  return;
+  if (_pollInterval) return;
+  _pollInterval = setInterval(async () => {
+    if (_isSyncing) return;
+    _isSyncing = true;
+    const p = await fetchBin(JB_BIN_PENDING);
+    if (p !== null && p.length !== pendingRequests.length) {
+      const wasCount = pendingRequests.length;
+      pendingRequests = p;
+      if (currentUser && currentUser.id === 'admin') {
+        updateBellBadge();
+        if (p.length > wasCount) {
+          showToast(`🔔 Ada ${p.length - wasCount} permintaan baru!`, 'info');
+        }
+        const panel = document.getElementById('notifPanel');
+        if (panel && panel.classList.contains('open')) renderNotifPanel();
+      }
+    }
+    _isSyncing = false;
+  }, 10000);
 }
 
 function stopPolling() {
@@ -3123,6 +3140,7 @@ document.addEventListener('keydown', function(e) {
 		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
 	}
 	// ]]>
+ 
 </script>
 </body>
 </html>
