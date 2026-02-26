@@ -1218,19 +1218,23 @@
     }, { threshold: 0.5 });
     counters.forEach(c => counterObs.observe(c));
 
-    /* ══ KOLEKSI BUKU ══ */
     const BUKU = [
-        { title:'Matematika Kelas X',      author:'Kemendikbud',       cat:'Pelajaran', icon:'fas fa-calculator',      bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:5, year:2022 },
-        { title:'Bahasa Indonesia XI',     author:'Kemendikbud',       cat:'Pelajaran', icon:'fas fa-language',        bg:'linear-gradient(140deg,#15803d,#166534)', stock:4, total:4, year:2022 },
-        { title:'Bumi',                    author:'Tere Liye',          cat:'Fiksi',     icon:'fas fa-globe',           bg:'linear-gradient(140deg,#7c3aed,#6d28d9)', stock:1, total:3, year:2021 },
-        { title:'Laskar Pelangi',          author:'Andrea Hirata',      cat:'Fiksi',     icon:'fas fa-star',            bg:'linear-gradient(140deg,#d97706,#b45309)', stock:5, total:6, year:2020 },
-        { title:'Sapiens',                 author:'Yuval Noah Harari',  cat:'Non-Fiksi', icon:'fas fa-landmark',        bg:'linear-gradient(140deg,#111827,#1f2937)', stock:0, total:2, year:2019 },
-        { title:'Kamus Besar BI',          author:'Badan Bahasa',       cat:'Referensi', icon:'fas fa-book-open',       bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:3, total:3, year:2018 },
-        { title:'Fisika Kelas XI',         author:'Marthen Kanginan',   cat:'Pelajaran', icon:'fas fa-bolt',            bg:'linear-gradient(140deg,#0891b2,#0e7490)', stock:2, total:5, year:2021 },
-        { title:'Atomic Habits',           author:'James Clear',        cat:'Non-Fiksi', icon:'fas fa-atom',            bg:'linear-gradient(140deg,#059669,#047857)', stock:3, total:4, year:2022 },
-        { title:'Negeri 5 Menara',         author:'Ahmad Fuadi',        cat:'Fiksi',     icon:'fas fa-mosque',          bg:'linear-gradient(140deg,#16a34a,#15803d)', stock:4, total:5, year:2020 },
-        { title:'Python Crash Course',     author:'Eric Matthes',       cat:'Referensi', icon:'fab fa-python',          bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:2, year:2022 },
-    ];
+    { title:'Matematika Kelas X',           author:'Kemendikbud',               cat:'Pelajaran', icon:'fas fa-calculator',      bg:'linear-gradient(140deg,#1d4ed8,#1e40af)', stock:3, total:5, year:2022, img:'Matematika.png', isbn:'978-602-427-001-1' },
+    { title:'Bahasa Indonesia XI',          author:'Kemendikbud',               cat:'Pelajaran', icon:'fas fa-language',        bg:'linear-gradient(140deg,#15803d,#166534)', stock:4, total:4, year:2022, img:'Indonesia_BG_KLS_XI_Rev_Cover.png' },
+    { title:'Bumi',                         author:'Tere Liye',                 cat:'Fiksi',     icon:'fas fa-globe',           bg:'linear-gradient(140deg,#7c3aed,#6d28d9)', stock:1, total:3, year:2021, img:'Islam-BG-KLS-XI.png' },
+    { title:'Laskar Pelangi',               author:'Andrea Hirata',             cat:'Fiksi',     icon:'fas fa-star',            bg:'linear-gradient(140deg,#d97706,#b45309)', stock:5, total:6, year:2020, img:'Kristen XI.png' },
+    { title:'Sapiens',                      author:'Yuval Noah Harari',         cat:'Non-Fiksi', icon:'fas fa-landmark',        bg:'linear-gradient(140deg,#111827,#1f2937)', stock:0, total:2, year:2019, img:'TIK.jpg' },
+    { title:'Kamus Besar BI',               author:'Badan Bahasa',              cat:'Referensi', icon:'fas fa-book-open',       bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:3, total:3, year:2018, img:'Kimia.jpg' },
+    { title:'Fisika Kelas XI',              author:'Marthen Kanginan',          cat:'Pelajaran', icon:'fas fa-bolt',            bg:'linear-gradient(140deg,#0891b2,#0e7490)', stock:2, total:5, year:2021, img:'Fisika.jpg' },
+    { title:'Atomic Habits',                author:'James Clear',               cat:'Non-Fiksi', icon:'fas fa-atom',            bg:'linear-gradient(140deg,#059669,#047857)', stock:3, total:4, year:2022, img:'Biologi-BG-KLS-XI-Cover.png' },
+    { title:'Negeri 5 Menara',              author:'Ahmad Fuadi',               cat:'Fiksi',     icon:'fas fa-mosque',          bg:'linear-gradient(140deg,#16a34a,#15803d)', stock:4, total:5, year:2020, img:'Pendidikan Kewarganegaraan.jpg'},
+    { title:'Python Crash Course',          author:'Eric Matthes',              cat:'Referensi', icon:'fab fa-python',          bg:'linear-gradient(140deg,#1d4ed8,#1e3a8a)', stock:2, total:2, year:2022, img:'Geografi.jpg' },
+    { title:'PJOK Kelas X',                 author:'Kemendikbud',               cat:'Pelajaran', icon:'fas fa-running',         bg:'linear-gradient(140deg,#dc2626,#b91c1c)', stock:3, total:4, year:2022, img:'PJOK.png' },
+    { title:'Sejarah Indonesia Kelas X',    author:'Kemendikbud',               cat:'Pelajaran', icon:'fas fa-scroll',          bg:'linear-gradient(140deg,#b45309,#92400e)', stock:4, total:5, year:2022, img:'Sejarah.jpg' },
+    { title:'Koding dan Kecerdasan Artifisial ',                             author:'',                          cat:'Pelajaran', icon:'fas fa-book',            bg:'linear-gradient(140deg,#0891b2,#0e7490)', stock:0, total:0, year:2024, img:'KKA.png' },
+    { title:'Kuliner',                             author:'',                          cat:'Pelajaran', icon:'fas fa-book',            bg:'linear-gradient(140deg,#7c3aed,#6d28d9)', stock:0, total:0, year:2024, img:'Kuliner.png' },
+    { title:'Pendidikan Pancasila dan Kewarganegaraan ',    author:'Pusat Perbukuan',    cat:'Pelajaran', icon:'fas fa-book',            bg:'linear-gradient(140deg,#059669,#047857)', stock:5, total:5, year:2024, img:'PPKN.png' },
+];
 
     let activeKCat = 'semua';
 
@@ -1245,17 +1249,21 @@
             card.className = 'kol-card';
             card.style.animationDelay = `${i * 40}ms`;
             card.innerHTML = `
-                <div class="kol-cover" style="background:${b.bg};">
-                    <i class="${b.icon}"></i>
-                    <span class="kol-cat-b">${b.cat}</span>
-                </div>
+               <div class="kol-cover" style="background:${b.bg};">
+      ${b.img 
+        ? `<img src="${b.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
+        : `<i class="${b.icon}"></i>`
+             }
+            <span class="kol-cat-b">${b.cat}</span>
+            </div>
                 <div class="kol-body">
                     <div class="kol-title">${b.title}</div>
                     <div class="kol-author"><i class="fas fa-user" style="font-size:9px;"></i> ${b.author}</div>
                     <div class="kol-footer">
-                        <span class="${sc}">${stxt}</span>
-                        <span class="kol-year">${b.year}</span>
-                    </div>
+    <span class="${sc}">${stxt}</span>
+    <span class="kol-year">${b.year}</span>
+</div>
+${b.isbn ? `<div style="font-size:9.5px;color:#94a3b8;margin-top:6px;"><i class="fas fa-barcode" style="font-size:9px;"></i> ${b.isbn}</div>` : ''}
                 </div>`;
             card.onclick = () => window.location.href = 'Peminjaman.html';
             grid.appendChild(card);
