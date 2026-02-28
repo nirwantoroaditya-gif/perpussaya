@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
 <head>
@@ -74,6 +75,41 @@
     [data-theme="dark"] .user-type-tabs{background:var(--bg2);border-color:var(--border);}
     [data-theme="dark"] .utt.on{background:var(--navy3);color:var(--text);}
     [data-theme="dark"] .modal{background:var(--card-bg);}
+    /* ── SKELETON LOADING ── */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.bk-skeleton {
+  background: #fff;
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+}
+.sk-cover {
+  height: 170px;
+  background: linear-gradient(90deg, var(--bg2) 25%, var(--bg) 50%, var(--bg2) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.sk-body { padding: 13px; }
+.sk-line {
+  height: 10px;
+  border-radius: 20px;
+  margin-bottom: 9px;
+  background: linear-gradient(90deg, var(--bg2) 25%, var(--bg) 50%, var(--bg2) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.sk-line-short { width: 40%; }
+.sk-line-long  { width: 90%; }
+.sk-line-med   { width: 65%; }
+[data-theme="dark"] .bk-skeleton { background: var(--card-bg); border-color: var(--border); }
+[data-theme="dark"] .sk-cover,
+[data-theme="dark"] .sk-line {
+  background: linear-gradient(90deg, var(--bg2) 25%, var(--border) 50%, var(--bg2) 75%);
+  background-size: 400px 100%;
+}
     [data-theme="dark"] .notif-panel{background:var(--card-bg);}
     [data-theme="dark"] .riwayat-table thead tr{background:var(--bg2);}
     [data-theme="dark"] .riwayat-table td{border-color:var(--border);color:var(--text);}
@@ -117,7 +153,27 @@
     /* PROFIL */
     .profil-layout{display:grid;grid-template-columns:285px 1fr;gap:20px;align-items:start;}
     .member-card{background:linear-gradient(135deg,var(--navy3),var(--navy));border-radius:18px;padding:22px;color:#fff;position:relative;overflow:hidden;}
-    .member-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 80% 20%,rgba(59,124,244,.25),transparent);pointer-events:none;}
+   .member-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -75%;
+  width: 50%; height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,.07) 50%,
+    transparent 100%
+  );
+  animation: cardShimmer 3s 1s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+.member-card .mc-bg-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 80% 20%, rgba(59,124,244,.25), transparent);
+  pointer-events: none;
+}
     .member-card::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 20px);pointer-events:none;}
     .mc-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;position:relative;z-index:1;}
     .mc-logo{width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;}
@@ -572,8 +628,6 @@
   transition: box-shadow .2s, opacity .2s;
   position: relative;
   z-index: 1;
-  animation: none !important;
-  transform: none !important;
 }
 .avatar-upload-wrap:hover .mc-avatar-big {
   opacity: .85;
@@ -627,18 +681,42 @@
     }
     .cetak-btn-real:hover { background:var(--blue); color:#fff; }
 
-    @media print {
-      body > * { display:none !important; }
-      #printCardArea { display:block !important; position:fixed; inset:0; z-index:99999; background:#fff; }
-    }
-    #printCardArea {
-      display:none;
-      width:86mm; height:54mm;
-      background:linear-gradient(135deg,#0f1b35 0%,#1c2d55 55%,#3b7cf4 100%);
-      border-radius:8px; padding:0; overflow:hidden;
-      font-family:'Plus Jakarta Sans',sans-serif; color:#fff;
-      box-shadow:0 8px 32px rgba(0,0,0,.35);
-    }
+  @media print {
+  @page {
+    size: 86mm 54mm;
+    margin: 0;
+  }
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 86mm !important;
+    height: 54mm !important;
+    overflow: hidden !important;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  #printCardArea {
+    visibility: visible !important;
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 86mm !important;
+    height: 54mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 999999 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  #printCardArea * {
+    visibility: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
     .pca-header {
       display:flex; align-items:center; gap:8px;
       padding:7px 10px 5px; border-bottom:1px solid rgba(255,255,255,.15);
@@ -770,12 +848,246 @@
     [data-theme="dark"] .denda-card{background:var(--card-bg);border-color:var(--border);}
     [data-theme="dark"] .mgmt-table th{background:var(--bg2);}
     [data-theme="dark"] .mgmt-table td{border-color:var(--border);color:var(--text);}
+    /* ══ TRANSISI HALAMAN ══ */
+.page.entering {
+  display: block;
+  animation: pageEnter 0.45s cubic-bezier(0.23,1,0.32,1) both;
+}
+.page.exiting {
+  display: block;
+  animation: pageExit 0.3s cubic-bezier(0.55,0,1,0.45) both;
+  pointer-events: none;
+}
+@keyframes pageEnter {
+  from { opacity:0; transform:translateY(22px) scale(0.985); filter:blur(4px); }
+  to   { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+}
+@keyframes pageExit {
+  from { opacity:1; transform:translateY(0) scale(1); }
+  to   { opacity:0; transform:translateY(-12px) scale(1.01); }
+}
+
+/* ══ TRANSISI TAB ══ */
+.tab-section.tab-exit {
+  display: block;
+  animation: tabExit 0.22s cubic-bezier(0.55,0,1,0.45) both;
+  pointer-events: none;
+}
+.tab-section.on {
+  animation: tabEnter 0.38s cubic-bezier(0.23,1,0.32,1) both;
+}
+@keyframes tabEnter {
+  from { opacity:0; transform:translateX(18px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+@keyframes tabExit {
+  from { opacity:1; transform:translateX(0); }
+  to   { opacity:0; transform:translateX(-14px); }
+}
+
+/* ══ CURTAIN LOGIN ══ */
+.page-curtain {
+  position:fixed; inset:0; z-index:9999; pointer-events:none;
+}
+.page-curtain .curtain-panel {
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,#0f1b35,#1c2d55);
+  transform:scaleY(0); transform-origin:bottom center;
+  display:flex; align-items:center; justify-content:center;
+}
+.page-curtain.sweep-in .curtain-panel {
+  animation:curtainIn 0.65s cubic-bezier(0.77,0,0.18,1) both;
+  pointer-events:all;
+}
+.page-curtain.sweep-out .curtain-panel {
+  animation:curtainOut 0.55s 0.1s cubic-bezier(0.77,0,0.18,1) both;
+}
+@keyframes curtainIn {
+  from { transform:scaleY(0); transform-origin:bottom center; }
+  to   { transform:scaleY(1); transform-origin:bottom center; }
+}
+@keyframes curtainOut {
+  from { transform:scaleY(1); transform-origin:top center; }
+  to   { transform:scaleY(0); transform-origin:top center; }
+}
+
+/* ══ PROGRESS BAR ══ */
+.transition-progress {
+  position:fixed; top:0; left:0; height:3px; width:0%;
+  background:linear-gradient(90deg,#3b7cf4,#5b9cf6,#3b7cf4);
+  background-size:200% 100%; z-index:10000;
+  border-radius:0 2px 2px 0;
+  box-shadow:0 0 10px rgba(59,124,244,.6);
+  transition:width 0.3s ease;
+  animation:progressShimmer 1.5s linear infinite;
+}
+@keyframes progressShimmer {
+  to { background-position:200% 0%; }
+}
+
+/* ══ STAGGER ITEMS ══ */
+.stagger-item {
+  opacity:0; transform:translateY(16px);
+  animation:staggerIn 0.4s cubic-bezier(0.23,1,0.32,1) both;
+}
+@keyframes staggerIn {
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* ══ LOGOUT OVERLAY ══ */
+.logout-overlay {
+  position:fixed; inset:0; background:#0f1b35;
+  z-index:9998; opacity:0; pointer-events:none;
+  transition:opacity 0.35s ease;
+}
+.logout-overlay.visible {
+  opacity:1; pointer-events:all;
+}
+
+/* ─── Kartu Flip 3D ─── */
+.member-card-wrapper {
+  perspective: 1000px;
+}
+.member-card {
+  animation: cardFlipIn 0.7s cubic-bezier(0.23,1,0.32,1) both;
+  transform-style: preserve-3d;
+}
+@keyframes cardFlipIn {
+  from {
+    opacity: 0;
+    transform: rotateY(-35deg) translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(0deg) translateY(0) scale(1);
+  }
+}
+
+/* ─── Avatar zoom + glow ─── */
+.mc-avatar-big {
+  animation: avatarPop 0.6s 0.3s cubic-bezier(0.23,1,0.32,1) both;
+}
+@keyframes avatarPop {
+  0%   { opacity:0; transform:scale(0.4); box-shadow:0 0 0 0 rgba(59,124,244,0); }
+  60%  { transform:scale(1.15); box-shadow:0 0 0 12px rgba(59,124,244,.2); }
+  80%  { transform:scale(0.95); box-shadow:0 0 0 6px rgba(59,124,244,.1); }
+  100% { opacity:1; transform:scale(1); box-shadow:0 4px 18px rgba(0,0,0,.35), 0 0 0 5px rgba(255,255,255,.08); }
+}
+
+/* ─── Shimmer di kartu anggota ─── */
+.member-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -75%;
+  width: 50%; height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,.07) 50%,
+    transparent 100%
+  );
+  animation: cardShimmer 3s 1s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+@keyframes cardShimmer {
+  0%   { left: -75%; }
+  40%,100% { left: 130%; }
+}
+
+/* ─── Stagger form fields ─── */
+.profil-form-field {
+  opacity: 0;
+  transform: translateX(-14px);
+  animation: fieldSlideIn 0.35s cubic-bezier(0.23,1,0.32,1) both;
+}
+@keyframes fieldSlideIn {
+  to { opacity:1; transform:translateX(0); }
+}
+
+/* ─── Stats count-up wrapper ─── */
+.ps-val {
+  transition: color 0.3s ease;
+}
+.ps-item {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: statPop 0.45s cubic-bezier(0.23,1,0.32,1) both;
+}
+@keyframes statPop {
+  to { opacity:1; transform:translateY(0); }
+}
+/* ══ AREA PRINT KARTU ══ */
+#printCardArea {
+  display: none;
+  width: 86mm;
+  min-height: 54mm;
+  background: linear-gradient(135deg, #1c2d55, #0f1b35);
+  border-radius: 12px;
+  overflow: hidden;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  position: relative;
+}
+#printCardArea .pca-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px 5px;
+  border-bottom: 1px solid rgba(255,255,255,.15);
+}
+#printCardArea .pca-body {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  padding: 7px 10px;
+}
+#printCardArea .pca-footer {
+  padding: 4px 10px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,.12);
+}
+#printCardArea .pca-barcode-wrap {
+  display: flex;
+  gap: 1px;
+  align-items: flex-end;
+}
+/* ─── Kartu cetak: slide dari bawah ─── */
+.cetak-btn-real {
+  position: relative;
+  overflow: hidden;
+}
+.cetak-btn-real::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
+  animation: btnShimmer 2s 0.5s ease-in-out infinite;
+}
+@keyframes btnShimmer {
+  0%   { left: -100%; }
+  50%,100% { left: 100%; }
+}
+
+/* ─── Print card slide in ─── */
+@keyframes printCardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
     [data-theme="dark"] .modal,[data-theme="dark"] .notif-panel,[data-theme="dark"] .user-dropdown{background:var(--card-bg);border-color:var(--border);}
 
   </style>
 </head>
 <body>
-<img src="Matematika.png" style="width:100px;border:2px solid red;">
 
 <!-- ══ PAGE 1: LOGIN ══ -->
 <div id="page-login" class="page active">
@@ -1111,14 +1423,16 @@
     </div>
 
   </div>
-</div>
     <!-- TAB: PROFIL & KARTU ANGGOTA -->
     <div class="tab-section" id="tsProfil">
       <div class="profil-layout">
         <div>
+         <div class="member-card-wrapper">
           <div class="member-card">
             <div class="mc-header">
-              <div class="mc-logo"><i class="fas fa-book-open"></i></div>
+              <div class="mc-logo">
+              <img src="logo smkn bulat.jpg" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">
+              </div>
               <div class="mc-school">Perpustakaan<br>SMKN 1 Ketapang</div>
             </div>
             <div class="avatar-upload-wrap">
@@ -1142,6 +1456,7 @@
             </div>
             <div style="text-align:center;"><span class="mc-status-badge"><i class="fas fa-check-circle" style="font-size:9px;"></i> Anggota Aktif</span></div>
           </div>
+          </div>
           <div style="margin-top:10px;">
             <button onclick="cetakKartuAnggota()" class="cetak-btn-real"><i class="fas fa-print"></i> Cetak Kartu Anggota</button>
           </div>
@@ -1154,13 +1469,30 @@
           </div>
           <div class="card-box" style="margin-bottom:14px;">
             <div class="card-box-title"><i class="fas fa-user-edit"></i> Edit Informasi Akun</div>
-            <div class="form-grid">
-              <div class="fg"><label>Nama Lengkap</label><input type="text" id="profNama" placeholder="Nama lengkap"></div>
-              <div class="fg"><label>NIS / NIP</label><input type="text" id="profNis" placeholder="—" readonly style="cursor:not-allowed;opacity:.7;"></div>
-              <div class="fg"><label>Kelas / Jabatan</label><input type="text" id="profKelas" placeholder="XI RPL 1"></div>
-              <div class="fg"><label>No. HP</label><input type="text" id="profHp" placeholder="08xxxxxxxxxx"></div>
-              <div class="fg" style="grid-column:1/-1;"><label>Email</label><input type="text" id="profEmail" placeholder="email@smkn1ketapang.sch.id"></div>
-            </div>
+            <div class="fg profil-form-field" style="animation-delay:0ms;">
+  <label>Nama Lengkap</label>
+  <input type="text" id="profNama" placeholder="Nama lengkap">
+</div>
+
+<div class="fg profil-form-field" style="animation-delay:80ms;">
+  <label>NIS / NIP</label>
+  <input type="text" id="profNis" placeholder="—" readonly style="cursor:not-allowed;opacity:.7;">
+</div>
+
+<div class="fg profil-form-field" style="animation-delay:160ms;">
+  <label>Kelas / Jabatan</label>
+  <input type="text" id="profKelas" placeholder="XI RPL 1">
+</div>
+
+<div class="fg profil-form-field" style="animation-delay:240ms;">
+  <label>No. HP</label>
+  <input type="text" id="profHp" placeholder="08xxxxxxxxxx">
+</div>
+
+<div class="fg profil-form-field" style="animation-delay:320ms;grid-column:1/-1;">
+  <label>Email</label>
+  <input type="text" id="profEmail" placeholder="email@smkn1ketapang.sch.id">
+</div>
             <button onclick="saveProfil()" style="margin-top:12px;padding:11px 20px;border-radius:var(--r-sm);background:var(--navy);color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;transition:.2s;" onmouseover="this.style.background='var(--blue)'" onmouseout="this.style.background='var(--navy)'"><i class="fas fa-save"></i> Simpan Perubahan</button>
           </div>
           <div class="card-box">
@@ -1248,7 +1580,9 @@
 <!-- AREA CETAK KARTU (hanya tampil saat print) -->
 <div id="printCardArea">
   <div class="pca-header">
-    <div class="pca-logo"><i class="fas fa-book-open" style="font-size:10px;"></i></div>
+    <div class="pca-logo">
+      <img src="logo smkn bulat.jpg" style="width:100%;height:100%;object-fit:contain;border-radius:4px;">
+    </div>
     <div class="pca-school">Perpustakaan<span>SMKN 1 Ketapang</span></div>
     <div class="pca-type">KARTU ANGGOTA</div>
   </div>
@@ -1337,10 +1671,78 @@
 </div>
 
 <!-- TOAST -->
+ <!-- Curtain login -->
+<div class="page-curtain" id="pageCurtain">
+  <div class="curtain-panel">
+    <div style="text-align:center;color:#fff;">
+      <div style="width:56px;height:56px;border-radius:50%;border:3px solid rgba(255,255,255,.2);border-top-color:#3b7cf4;margin:0 auto 12px;animation:spin .9s linear infinite;"></div>
+      <div style="font-size:12px;font-weight:700;opacity:.6;letter-spacing:1px;">Memuat...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Progress bar -->
+<div class="transition-progress" id="transitionProgress" style="display:none;"></div>
+
+<!-- Logout overlay -->
+<div class="logout-overlay" id="logoutOverlay"></div>
 <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
 
 
 <script>
+  /* ─── COUNT-UP ANIMASI ANGKA ─── */
+function animateCountUp(elId, target, delay) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  el.textContent = '0';
+  if (target === 0) return;
+  var duration = 800;
+  var startTime = null;
+  setTimeout(function() {
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      // Easing out cubic
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target);
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = target;
+      }
+    }
+    requestAnimationFrame(step);
+  }, delay || 0);
+}
+  function showProgress() {
+  var bar = document.getElementById('transitionProgress');
+  if (!bar) return;
+  bar.style.display = 'block';
+  bar.style.width = '0%';
+  setTimeout(() => { bar.style.width = '80%'; }, 30);
+}
+
+function hideProgress() {
+  var bar = document.getElementById('transitionProgress');
+  if (!bar) return;
+  bar.style.width = '100%';
+  setTimeout(() => {
+    bar.style.display = 'none';
+    bar.style.width = '0%';
+  }, 400);
+}
+
+function applyStagger(tabId) {
+  var tab = document.getElementById(tabId);
+  if (!tab) return;
+  var items = tab.querySelectorAll('.card-box, .dash-stat, .denda-card, .profil-stats .ps-item');
+  items.forEach((el, i) => {
+    el.style.animationDelay = (i * 55) + 'ms';
+    el.classList.remove('stagger-item');
+    void el.offsetWidth;
+    el.classList.add('stagger-item');
+  });
+}
 const ACCOUNTS = [
   { id:'siswa', nis:'12282008',           pass:'aditya1228', name:'Aditya Nirwantoro',  role:'Siswa',         email:'NIS: 12282008',            avatar:'AN', color:'#3b7cf4' },
   { id:'guru',  nis:'197805012005012001', pass:'guru123',    name:'Korawati, S.Pd',     role:'Guru',          email:'NIP: 197805012005012001',   avatar:'KR', color:'#16a34a' },
@@ -1519,17 +1921,28 @@ function doLogin() {
       document.getElementById('loginPass').classList.add('error');
       return;
     }
-    currentUser = acc;
-    loadUserToUI(acc);
-    showPage('peminjaman');
-   initPeminjaman();
-   await loadFromCloud();
-startPolling();
-    // ══ BANNER JATUH TEMPO OTOMATIS SAAT LOGIN ══
+currentUser = acc;
+loadUserToUI(acc);
+var curtain = document.getElementById('pageCurtain');
+if (curtain) {
+  curtain.classList.add('sweep-in');
+  setTimeout(async () => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-peminjaman').classList.add('active');
+    initPeminjaman();
+    await loadFromCloud();
+    startPolling();
     showDueDateBanner();
-    showToast(`Selamat datang, ${acc.name}! 👋`, 'success');
-  }, 1200);
-}
+    curtain.classList.remove('sweep-in');
+    curtain.classList.add('sweep-out');
+    setTimeout(() => {
+      curtain.classList.remove('sweep-out');
+      showToast(`Selamat datang, ${acc.name}! 👋`, 'success');
+   }, 650);        // ← tutup setTimeout dalam
+      }, 700);          // ← tutup setTimeout curtain
+    }                   // ← tutup if (curtain)
+  }, 1200);             // ← tutup setTimeout loading
+}                       // ← tutup function doLogin
 
 function loadUserToUI(acc) {
   // LOAD foto dari localStorage jika ada
@@ -1583,21 +1996,42 @@ function loadUserToUI(acc) {
 }
 
 function doLogout() {
- if (!confirm('Yakin ingin keluar?')) return;
-  stopPolling();  
-  currentUser = null; selectedBook = null;
-  document.getElementById('notifPanel').classList.remove('open');
-  document.getElementById('loginNis').value  = '';
-  document.getElementById('loginPass').value = '';
-  hideAlert();
-  showPage('login');
-  showToast('Anda telah keluar.', 'info');
+  if (!confirm('Yakin ingin keluar?')) return;
+  var overlay = document.getElementById('logoutOverlay');
+  if (overlay) {
+    overlay.classList.add('visible');
+    setTimeout(() => {
+      stopPolling();
+      currentUser = null; selectedBook = null;
+      document.getElementById('notifPanel').classList.remove('open');
+      document.getElementById('loginNis').value  = '';
+      document.getElementById('loginPass').value = '';
+      hideAlert();
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-login').classList.add('active','entering');
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        document.getElementById('page-login').classList.remove('entering');
+      }, 450);
+      overlay.classList.remove('visible');
+      showToast('Anda telah keluar.', 'info');
+    }, 380);
+  }
 }
 
-/* ════ ROUTING ════ */
 function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+  var current = document.querySelector('.page.active');
+  var next = document.getElementById('page-' + name);
+  if (!next || current === next) return;
+  if (current) {
+    current.classList.add('exiting');
+    setTimeout(() => { current.classList.remove('active','exiting'); }, 280);
+  }
+  next.classList.add('entering');
+  setTimeout(() => {
+    next.classList.add('active');
+    next.classList.remove('entering');
+  }, 50);
   window.scrollTo(0, 0);
 }
 
@@ -1616,19 +2050,26 @@ function navGo(section) {
   if (urls[section]) window.location.href = urls[section];
 }
 
-/* ════ TABS ════ */
 function switchMainTab(name) {
   const map = { koleksi:'Koleksi', pinjam:'Pinjam', riwayat:'Riwayat', denda:'Denda', profil:'Profil', dashboard:'Dashboard', manajemen:'Manajemen' };
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('on'); });
-  var tabBtn = document.getElementById('tabBtn'+map[name]);
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  var tabBtn = document.getElementById('tabBtn' + map[name]);
   if (tabBtn) tabBtn.classList.add('on');
-  document.querySelectorAll('.tab-section').forEach(function(sec){ sec.classList.remove('on'); });
-  var tabSec = document.getElementById('ts'+map[name]);
-  if (tabSec) tabSec.classList.add('on');
-  if (name === 'dashboard') renderDashboard();
-  if (name === 'manajemen') renderManajemen();
-  if (name === 'profil') renderProfil();
-  
+  var current = document.querySelector('.tab-section.on');
+  if (current) {
+    current.classList.add('tab-exit');
+    setTimeout(() => { current.classList.remove('on','tab-exit'); }, 200);
+  }
+  showProgress();
+  setTimeout(() => {
+    var next = document.getElementById('ts' + map[name]);
+    if (next) next.classList.add('on');
+    hideProgress();
+    applyStagger('ts' + map[name]);
+    if (name === 'dashboard') renderDashboard();
+    if (name === 'manajemen') renderManajemen();
+    if (name === 'profil') renderProfil();
+  }, 180);
 }
 
 /* ════ INIT ════ */
@@ -1696,55 +2137,76 @@ function renderBooks(list) {
   const grid  = document.getElementById('booksGrid');
   const empty = document.getElementById('bookEmpty');
   grid.querySelectorAll('.bk').forEach(c => c.remove());
-  document.getElementById('bookCount').innerHTML   = `<strong>${list.length}</strong> buku ditampilkan`;
-  document.getElementById('tcKoleksi').textContent = list.length;
-  if (!list.length) { empty.classList.add('show'); return; }
-  empty.classList.remove('show');
-  list.forEach((b, i) => {
-    const sc = b.stock===0 ? 'stock-out' : b.stock<=1 ? 'stock-low' : 'stock-ok';
-    const st = b.stock===0 ? 'Habis' : `${b.stock}/${b.total} stok`;
-    const sb = b.stock===0 ? 'sb-borrow' : b.stock<=1 ? 'sb-limit' : 'sb-avail';
-    const sl = b.stock===0 ? 'Dipinjam' : b.stock<=1 ? 'Terbatas' : 'Tersedia';
-    const card = document.createElement('div');
-    card.className = 'bk';
-    card.style.transitionDelay = `${i*30}ms`;
-    card.innerHTML = `
-      <div class="bk-cover">
-        <div class="bk-cover-inner" style="background:${b.bg};">
-  <div class="cover-lines"></div>
-  ${b.img 
-    ? `<img src="${b.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
-    : `<div class="cover-ico"><i class="${b.icon}"></i></div>`
+  grid.querySelectorAll('.bk-skeleton').forEach(c => c.remove());
+
+  // Tampilkan skeleton dulu
+  for (let i = 0; i < 8; i++) {
+    const sk = document.createElement('div');
+    sk.className = 'bk-skeleton';
+    sk.innerHTML = `
+      <div class="sk-cover"></div>
+      <div class="sk-body">
+        <div class="sk-line sk-line-short"></div>
+        <div class="sk-line sk-line-long"></div>
+        <div class="sk-line sk-line-med"></div>
+      </div>`;
+    grid.insertBefore(sk, empty);
   }
-          <div class="cover-top">
-            <span class="cat-badge">${b.cat}</span>
-            <span class="status-badge ${sb}">${sl}</span>
-          </div>
-          <div class="cover-actions">
-            <button class="ca" onclick="event.stopPropagation();openModal(${b.id})" title="Detail"><i class="fas fa-eye"></i></button>
-            <button class="ca" onclick="event.stopPropagation();pilihBuku(${b.id})" title="Pinjam"><i class="fas fa-bookmark"></i></button>
+
+  // Hapus skeleton setelah 400ms lalu tampilkan buku
+  setTimeout(() => {
+    grid.querySelectorAll('.bk-skeleton').forEach(c => c.remove());
+    document.getElementById('bookCount').innerHTML = `<strong>${list.length}</strong> buku ditampilkan`;
+    document.getElementById('tcKoleksi').textContent = list.length;
+    if (!list.length) { empty.classList.add('show'); return; }
+    empty.classList.remove('show');
+
+    list.forEach((b, i) => {
+      const sc = b.stock===0 ? 'stock-out' : b.stock<=1 ? 'stock-low' : 'stock-ok';
+      const st = b.stock===0 ? 'Habis' : `${b.stock}/${b.total} stok`;
+      const sb = b.stock===0 ? 'sb-borrow' : b.stock<=1 ? 'sb-limit' : 'sb-avail';
+      const sl = b.stock===0 ? 'Dipinjam' : b.stock<=1 ? 'Terbatas' : 'Tersedia';
+      const card = document.createElement('div');
+      card.className = 'bk';
+      card.style.transitionDelay = `${i*30}ms`;
+      card.innerHTML = `
+        <div class="bk-cover">
+          <div class="bk-cover-inner" style="background:${b.bg};">
+            <div class="cover-lines"></div>
+            ${b.img 
+              ? `<img src="${b.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
+              : `<div class="cover-ico"><i class="${b.icon}"></i></div>`
+            }
+            <div class="cover-top">
+              <span class="cat-badge">${b.cat}</span>
+              <span class="status-badge ${sb}">${sl}</span>
+            </div>
+            <div class="cover-actions">
+              <button class="ca" onclick="event.stopPropagation();openModal(${b.id})" title="Detail"><i class="fas fa-eye"></i></button>
+              <button class="ca" onclick="event.stopPropagation();pilihBuku(${b.id})" title="Pinjam"><i class="fas fa-bookmark"></i></button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="bk-body">
-        <div class="bk-cat">${b.cat}</div>
-        <div class="bk-title">${b.title}</div>
-        <div class="bk-author"><i class="fas fa-user" style="font-size:9px;"></i> ${b.author}</div>
-        <div class="bk-footer">
-    <span class="bk-year"><i class="fas fa-calendar-alt" style="font-size:9px;"></i> ${b.year}</span>
-    <span class="bk-stock ${sc}">${st}</span>
-</div>
-${b.isbn ? `<div style="font-size:9.5px;color:#94a3b8;margin-top:6px;"><i class="fas fa-barcode" style="font-size:9px;"></i> ${b.isbn}</div>` : ''}
-      </div>`;
-    card.addEventListener('click', () => openModal(b.id));
-    grid.insertBefore(card, empty);
-    setTimeout(() => {
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
-      }, { threshold:.08 });
-      obs.observe(card);
-    }, 30);
-  });
+        <div class="bk-body">
+          <div class="bk-cat">${b.cat}</div>
+          <div class="bk-title">${b.title}</div>
+          <div class="bk-author"><i class="fas fa-user" style="font-size:9px;"></i> ${b.author}</div>
+          <div class="bk-footer">
+            <span class="bk-year"><i class="fas fa-calendar-alt" style="font-size:9px;"></i> ${b.year}</span>
+            <span class="bk-stock ${sc}">${st}</span>
+          </div>
+          ${b.isbn ? `<div style="font-size:9.5px;color:#94a3b8;margin-top:6px;"><i class="fas fa-barcode" style="font-size:9px;"></i> ${b.isbn}</div>` : ''}
+        </div>`;
+      card.addEventListener('click', () => openModal(b.id));
+      grid.insertBefore(card, empty);
+      setTimeout(() => {
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+        }, { threshold:.08 });
+        obs.observe(card);
+      }, 30);
+    });
+  }, 400);
 }
 
 /* ════ MODAL ════ */
@@ -2492,10 +2954,17 @@ function renderProfil() {
   var myRiwayat = RIWAYAT.filter(function(r){ return r.nis === u.nis; });
   var myActive  = myRiwayat.filter(function(r){ return r.status==='active'||r.status==='borrow'; });
   var myDenda   = myRiwayat.filter(function(r){ return r.denda > 0; });
-  var psT = document.getElementById('psTotal');  if(psT) psT.textContent = myRiwayat.length;
-  var psA = document.getElementById('psActive'); if(psA) psA.textContent = myActive.length;
-  var psD = document.getElementById('psDenda');  if(psD) psD.textContent = myDenda.length;
+  // Stats dengan animasi count-up
+animateCountUp('psTotal',  myRiwayat.length, 0);
+animateCountUp('psActive', myActive.length,  120);
+animateCountUp('psDenda',  myDenda.length,   240);
 
+// Stagger delay untuk ps-item
+document.querySelectorAll('.ps-item').forEach(function(el, i) {
+  el.style.animationDelay = (i * 120) + 'ms';
+  el.classList.remove('statPop');
+  void el.offsetWidth;
+});
 } // ← TUTUP renderProfil di SINI
 
 function saveProfil() {
@@ -2895,9 +3364,9 @@ function cetakKartuAnggota() {
   if (!currentUser) return;
   var u = currentUser;
 
-  // Isi data kartu cetak
+  // Isi data
   var pcaName = document.getElementById('pcaName'); if(pcaName) pcaName.textContent = u.name;
-  var pcaNis  = document.getElementById('pcaNis');  if(pcaNis)  pcaNis.textContent  = (u.id === 'siswa' ? 'NIS: ' : 'NIP: ') + u.nis;
+  var pcaNis  = document.getElementById('pcaNis');  if(pcaNis)  pcaNis.textContent  = (u.id==='siswa'?'NIS: ':'NIP: ') + u.nis;
   var pcaRole = document.getElementById('pcaRole'); if(pcaRole) pcaRole.textContent = u.role;
   var pcaNum  = document.getElementById('pcaBarcodeNum'); if(pcaNum) pcaNum.textContent = u.nis.replace(/\D/g,'').padEnd(12,'0').substring(0,12);
 
@@ -2905,36 +3374,37 @@ function cetakKartuAnggota() {
   var pcaAv = document.getElementById('pcaAvatar');
   if (pcaAv) {
     if (u.avatarPhoto) {
-      pcaAv.innerHTML = '<img src="' + u.avatarPhoto + '" alt="Foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      pcaAv.innerHTML = '<img src="'+u.avatarPhoto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
     } else {
-      pcaAv.innerHTML = u.avatar;
+      pcaAv.textContent = u.avatar;
       pcaAv.style.background = u.color;
     }
   }
 
-  // Barcode mini
+  // Barcode
   var bcEl = document.getElementById('pcaBarcode');
   if (bcEl) {
     bcEl.innerHTML = '';
-    var ws = [2,1,3,1,2,1,1,2,3,1,2,1,3,2,1,2,1];
-    ws.forEach(function(w, i) {
+    [2,1,3,1,2,1,1,2,3,1,2,1,3,2,1,2,1].forEach(function(w,i){
       var bar = document.createElement('div');
       bar.className = 'pca-bar';
-      bar.style.width  = w + 'px';
-      bar.style.height = (i%2===0 ? 14 : 10) + 'px';
+      bar.style.width = w+'px';
+      bar.style.height = (i%2===0?14:10)+'px';
       bcEl.appendChild(bar);
     });
   }
 
-  // Tampilkan area cetak lalu print
+  // Tampilkan area cetak
   var area = document.getElementById('printCardArea');
   if (area) area.style.display = 'block';
+
+  // Tunggu render lalu print
   setTimeout(function() {
     window.print();
     setTimeout(function() {
       if (area) area.style.display = 'none';
-    }, 500);
-  }, 150);
+    }, 1000);
+  }, 300);
 }
 
 /* ════ MANAJEMEN BUKU ════ */
