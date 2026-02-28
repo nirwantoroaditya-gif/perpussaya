@@ -1524,10 +1524,7 @@ function doLogin() {
     showPage('peminjaman');
    initPeminjaman();
    await loadFromCloud();
-pendingRequests = [];
-await savePending();
-updateBellBadge();
-
+startPolling();
     // ══ BANNER JATUH TEMPO OTOMATIS SAAT LOGIN ══
     showDueDateBanner();
     showToast(`Selamat datang, ${acc.name}! 👋`, 'success');
