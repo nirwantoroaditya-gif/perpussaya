@@ -1090,7 +1090,7 @@
 <body>
 
 <!-- ══ PAGE 1: LOGIN ══ -->
-<div id="page-login" class="page active">
+<div id="page-login" class="page">
 
   <div class="orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(59,124,244,.12),transparent);top:-80px;right:-60px;animation-duration:8s;"></div>
   <div class="orb" style="width:200px;height:200px;background:radial-gradient(circle,rgba(26,107,107,.1),transparent);bottom:60px;left:-40px;animation-duration:11s;animation-delay:2s;"></div>
@@ -1231,10 +1231,17 @@
         </div>
       </div>
 
-      <button class="nav-icon-btn" onclick="showToast('Fitur pencarian global segera hadir!','info')" title="Cari">
+    <button class="nav-icon-btn" onclick="showToast('Fitur pencarian global segera hadir!','info')" title="Cari">
         <i class="fas fa-search"></i>
       </button>
-      <div class="user-pill" tabindex="0">
+
+      <!-- Tombol Masuk: tampil saat belum login -->
+      <button id="navLoginBtn" onclick="openLoginModal()" style="padding:8px 18px;border-radius:50px;background:var(--blue);color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;transition:.2s;box-shadow:0 4px 14px rgba(59,124,244,.35);" onmouseover="this.style.background='#5b9cf6'" onmouseout="this.style.background='var(--blue)'">
+        <i class="fas fa-sign-in-alt"></i> Masuk
+      </button>
+
+      <!-- User pill: tampil setelah login -->
+      <div class="user-pill" id="navUserPill" style="display:none;" tabindex="0">
         <div class="user-avatar" id="navAvatar" style="background:var(--blue);">A</div>
         <div>
           <div class="user-name" id="navName">Pengguna</div>
@@ -1277,10 +1284,10 @@
 
   <div class="tabs-bar">
     <button class="tab-btn on" id="tabBtnKoleksi" onclick="switchMainTab('koleksi')"><i class="fas fa-book"></i> Koleksi Buku <span class="tab-count" id="tcKoleksi">20</span></button>
-    <button class="tab-btn" id="tabBtnPinjam"   onclick="switchMainTab('pinjam')"><i class="fas fa-hand-holding-heart"></i> Form Peminjaman</button>
-    <button class="tab-btn" id="tabBtnRiwayat"  onclick="switchMainTab('riwayat')"><i class="fas fa-history"></i> Riwayat <span class="tab-count" id="tcRiwayat">0</span></button>
-    <button class="tab-btn" id="tabBtnDenda"    onclick="switchMainTab('denda')"><i class="fas fa-receipt"></i> Denda <span class="tab-count" id="tcDenda">0</span></button>
-    <button class="tab-btn" id="tabBtnProfil" onclick="switchMainTab('profil')"><i class="fas fa-id-card"></i> Profil</button>
+   <button class="tab-btn" id="tabBtnPinjam"   onclick="requireLogin('pinjam')"><i class="fas fa-hand-holding-heart"></i> Form Peminjaman</button>
+<button class="tab-btn" id="tabBtnRiwayat"  onclick="requireLogin('riwayat')"><i class="fas fa-history"></i> Riwayat <span class="tab-count" id="tcRiwayat">0</span></button>
+<button class="tab-btn" id="tabBtnDenda"    onclick="requireLogin('denda')"><i class="fas fa-receipt"></i> Denda <span class="tab-count" id="tcDenda">0</span></button>
+<button class="tab-btn" id="tabBtnProfil"   onclick="requireLogin('profil')"><i class="fas fa-id-card"></i> Profil</button>
     <button class="tab-btn admin-tab" id="tabBtnDashboard" onclick="switchMainTab('dashboard')" style="display:none;"><i class="fas fa-chart-bar"></i> Dashboard</button>
     <button class="tab-btn admin-tab" id="tabBtnManajemen" onclick="switchMainTab('manajemen')" style="display:none;"><i class="fas fa-cog"></i> Manajemen Buku</button>
   </div>
@@ -1607,6 +1614,60 @@
     <div class="pca-status-badge">✓ Anggota Aktif</div>
   </div>
 </div>
+<!-- ══ MODAL LOGIN POPUP ══ -->
+<div class="modal-backdrop" id="loginModalBg" onclick="if(event.target===this)closeLoginModal()">
+  <div class="modal" style="max-width:430px;">
+    <div style="background:linear-gradient(135deg,var(--navy3),var(--navy));padding:20px 24px 16px;position:relative;">
+      <button onclick="closeLoginModal()" style="position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-times"></i></button>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:42px;height:42px;border-radius:11px;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.1);">
+          <img src="logo smkn bulat.jpg" style="width:100%;height:100%;object-fit:contain;">
+        </div>
+        <div>
+          <div style="font-size:.95rem;font-weight:800;color:#fff;">Masuk ke Akun</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:1px;">Perpustakaan SMKN 1 Ketapang</div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:20px 24px 24px;">
+      <div id="loginModalAlert" style="display:none;background:var(--red-bg);border:1px solid rgba(220,38,38,.2);border-radius:8px;padding:10px 13px;margin-bottom:14px;font-size:12.5px;color:var(--red);align-items:center;gap:7px;">
+        <i class="fas fa-exclamation-circle"></i><span id="loginModalAlertMsg"></span>
+      </div>
+      <div id="mRoleTabs" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:18px;">
+        <button class="utt on" id="mUttSiswa" onclick="setModalRole('siswa',this)"><i class="fas fa-user-graduate" style="font-size:10px;"></i> Siswa</button>
+        <button class="utt" id="mUttGuru"  onclick="setModalRole('guru',this)"><i class="fas fa-chalkboard-teacher" style="font-size:10px;"></i> Guru</button>
+        <button class="utt" id="mUttAdmin" onclick="setModalRole('admin',this)"><i class="fas fa-user-shield" style="font-size:10px;"></i> Admin</button>
+      </div>
+      <div style="margin-bottom:13px;">
+        <label id="mNisLabel" style="display:block;font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:6px;">NIS (Nomor Induk Siswa)</label>
+        <div style="position:relative;">
+          <i class="fas fa-id-card" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none;"></i>
+          <input type="text" id="mLoginNis" class="lf-input" placeholder="Masukkan NIS Anda" style="padding-left:40px;" onkeydown="if(event.key==='Enter')doModalLogin()">
+        </div>
+      </div>
+      <div style="margin-bottom:18px;">
+        <label style="display:block;font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:6px;">Kata Sandi</label>
+        <div style="position:relative;">
+          <i class="fas fa-lock" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none;"></i>
+          <input type="password" id="mLoginPass" class="lf-input" placeholder="••••••••" style="padding-left:40px;" onkeydown="if(event.key==='Enter')doModalLogin()">
+          <button onclick="toggleModalEye()" type="button" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:4px;"><i class="fas fa-eye" id="mEyeIcon"></i></button>
+        </div>
+      </div>
+      <button onclick="doModalLogin()" style="width:100%;padding:13px;border-radius:10px;background:linear-gradient(135deg,var(--navy3),var(--navy));color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;transition:.25s;margin-bottom:16px;">
+        <span id="mBtnText"><i class="fas fa-sign-in-alt"></i> Masuk Sekarang</span>
+        <div id="mSpinner" style="display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;"></div>
+      </button>
+      <div style="border-top:1px solid var(--border);padding-top:14px;">
+        <div style="font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);text-align:center;margin-bottom:10px;">✦ Demo — Klik untuk isi otomatis</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="demo-acc" onclick="fillModalDemo('siswa')"><div class="da-left"><div class="da-icon" style="background:var(--blue);"><i class="fas fa-user-graduate"></i></div><div><div class="da-name">Aditya — Siswa</div><div class="da-role">NIS: 12282008</div></div></div><span class="da-use">Gunakan →</span></div>
+          <div class="demo-acc" onclick="fillModalDemo('guru')"><div class="da-left"><div class="da-icon" style="background:var(--green);"><i class="fas fa-chalkboard-teacher"></i></div><div><div class="da-name">Korawati — Guru</div><div class="da-role">NIP: 197805012005012001</div></div></div><span class="da-use">Gunakan →</span></div>
+          <div class="demo-acc" onclick="fillModalDemo('admin')"><div class="da-left"><div class="da-icon" style="background:var(--gold);"><i class="fas fa-user-shield"></i></div><div><div class="da-name">Admin Perpustakaan</div><div class="da-role">ID: admin</div></div></div><span class="da-use">Gunakan →</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL DETAIL BUKU -->
 <div class="modal-backdrop" id="modalBg">
@@ -1670,13 +1731,18 @@
   </div>
 </div>
 
-<!-- TOAST -->
- <!-- Curtain login -->
 <div class="page-curtain" id="pageCurtain">
   <div class="curtain-panel">
     <div style="text-align:center;color:#fff;">
-      <div style="width:56px;height:56px;border-radius:50%;border:3px solid rgba(255,255,255,.2);border-top-color:#3b7cf4;margin:0 auto 12px;animation:spin .9s linear infinite;"></div>
-      <div style="font-size:12px;font-weight:700;opacity:.6;letter-spacing:1px;">Memuat...</div>
+      <img src="logo smkn bulat.jpg" style="width:72px;height:72px;border-radius:50%;margin:0 auto 16px;display:block;box-shadow:0 8px 24px rgba(0,0,0,.3);">
+      <div style="font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px;">Perpustakaan SMKN 1 Ketapang</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;">
+        <div style="width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:#3b7cf4;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;"></div>
+        <span style="font-size:12px;color:rgba(255,255,255,.6);font-weight:600;">Memuat halaman, mohon tunggu...</span>
+      </div>
+      <div style="width:160px;height:3px;background:rgba(255,255,255,.1);border-radius:10px;margin:0 auto;overflow:hidden;">
+        <div style="height:100%;width:60%;background:linear-gradient(90deg,#3b7cf4,#5b9cf6);border-radius:10px;animation:progressShimmer 1.5s linear infinite;background-size:200% 100%;"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1943,7 +2009,152 @@ if (curtain) {
     }                   // ← tutup if (curtain)
   }, 1200);             // ← tutup setTimeout loading
 }                       // ← tutup function doLogin
+var _pendingTabAfterLogin = null;
+var _bukuDipilihSetelahLogin = null; 
 
+function initGuestMode() {
+  currentUser = null;
+  var loginBtn = document.getElementById('navLoginBtn');
+  var userPill = document.getElementById('navUserPill');
+  if (loginBtn) loginBtn.style.display = 'flex';
+  if (userPill) userPill.style.display = 'none';
+  ['tabBtnPinjam','tabBtnRiwayat','tabBtnDenda','tabBtnProfil'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) { el.style.opacity = '.45'; el.title = 'Login diperlukan'; }
+  });
+  document.querySelectorAll('.admin-tab').forEach(function(t){ t.style.display = 'none'; });
+  renderBooks(getFiltered());
+  updateHeroStats();
+}
+
+function requireLogin(tabName) {
+  if (currentUser) { switchMainTab(tabName); return; }
+  showToast('Silakan masuk terlebih dahulu.', 'error');
+  openLoginModal(tabName);
+}
+
+function openLoginModal(afterTab) {
+  _pendingTabAfterLogin = afterTab || null;
+  var mNis = document.getElementById('mLoginNis');
+  var mPass = document.getElementById('mLoginPass');
+  if (mNis) mNis.value = '';
+  if (mPass) mPass.value = '';
+  var alertEl = document.getElementById('loginModalAlert');
+  if (alertEl) alertEl.style.display = 'none';
+  setModalRole('siswa', document.getElementById('mUttSiswa'));
+  document.getElementById('loginModalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(function(){ if (mNis) mNis.focus(); }, 250);
+}
+
+function closeLoginModal() {
+  var bg = document.getElementById('loginModalBg');
+  if (bg) bg.classList.remove('open');
+  document.body.style.overflow = '';
+  _pendingTabAfterLogin = null;
+}
+
+var _mRole = 'siswa';
+function setModalRole(role, el) {
+  _mRole = role;
+  document.querySelectorAll('#mRoleTabs button').forEach(function(b){
+    b.classList.remove('on');
+    b.style.background = 'transparent';
+    b.style.color = 'var(--text3)';
+    b.style.boxShadow = 'none';
+  });
+  if (el) {
+    el.classList.add('on');
+    el.style.background = '#fff';
+    el.style.color = 'var(--navy)';
+    el.style.boxShadow = '0 1px 4px rgba(15,27,53,.1)';
+  }
+  var lbl = { siswa:'NIS (Nomor Induk Siswa)', guru:'NIP (Nomor Induk Pegawai)', admin:'ID Admin' };
+  var ph  = { siswa:'Masukkan NIS Anda', guru:'Masukkan NIP Anda', admin:'Masukkan ID Admin' };
+  var lbEl = document.getElementById('mNisLabel');
+  var nisEl = document.getElementById('mLoginNis');
+  if (lbEl) lbEl.textContent = lbl[role] || lbl.siswa;
+  if (nisEl) nisEl.placeholder = ph[role] || ph.siswa;
+}
+
+function fillModalDemo(role) {
+  var a = ACCOUNTS.find(function(x){ return x.id === role; });
+  if (!a) return;
+  var map = { siswa:'mUttSiswa', guru:'mUttGuru', admin:'mUttAdmin' };
+  setModalRole(role, document.getElementById(map[role]));
+  var mNis = document.getElementById('mLoginNis');
+  var mPass = document.getElementById('mLoginPass');
+  if (mNis) mNis.value = a.nis;
+  if (mPass) mPass.value = a.pass;
+  var alertEl = document.getElementById('loginModalAlert');
+  if (alertEl) alertEl.style.display = 'none';
+}
+
+function toggleModalEye() {
+  var inp = document.getElementById('mLoginPass');
+  var ico = document.getElementById('mEyeIcon');
+  if (!inp) return;
+  if (inp.type === 'password') { inp.type = 'text'; if (ico) ico.className = 'fas fa-eye-slash'; }
+  else { inp.type = 'password'; if (ico) ico.className = 'fas fa-eye'; }
+}
+
+function doModalLogin() {
+  var nis  = (document.getElementById('mLoginNis').value || '').trim();
+  var pass = (document.getElementById('mLoginPass').value || '').trim();
+  var alertEl  = document.getElementById('loginModalAlert');
+  var alertMsg = document.getElementById('loginModalAlertMsg');
+  if (!nis || !pass) {
+    alertEl.style.display = 'flex';
+    alertMsg.textContent = 'NIS/NIP dan kata sandi wajib diisi.';
+    return;
+  }
+  document.getElementById('mBtnText').style.display = 'none';
+  document.getElementById('mSpinner').style.display = 'block';
+  alertEl.style.display = 'none';
+  setTimeout(async function() {
+    document.getElementById('mBtnText').style.display = 'flex';
+    document.getElementById('mSpinner').style.display = 'none';
+    var acc = ACCOUNTS.find(function(a){ return a.nis === nis && a.pass === pass; });
+    if (!acc) {
+      alertEl.style.display = 'flex';
+      alertMsg.textContent = 'NIS/NIP atau kata sandi salah. Coba lagi.';
+      return;
+    }
+    currentUser = acc;
+    closeLoginModal();
+    var loginBtn = document.getElementById('navLoginBtn');
+    var userPill = document.getElementById('navUserPill');
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (userPill) userPill.style.display = 'flex';
+    ['tabBtnPinjam','tabBtnRiwayat','tabBtnDenda','tabBtnProfil'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) { el.style.opacity = '1'; el.title = ''; }
+    });
+    document.querySelectorAll('.admin-tab').forEach(function(t){
+      t.style.display = acc.id === 'admin' ? 'flex' : 'none';
+      t.style.opacity = '1';
+    });
+    loadUserToUI(acc);
+    await loadFromCloud();
+    startPolling();
+    showDueDateBanner();
+  showToast('Selamat datang, ' + acc.name.split(' ')[0] + '! 👋', 'success');
+    if (typeof _bukuDipilihSetelahLogin !== 'undefined' && _bukuDipilihSetelahLogin) {
+      var bukuId = _bukuDipilihSetelahLogin;
+      _bukuDipilihSetelahLogin = null;
+      setTimeout(function(){
+        switchMainTab('pinjam');
+        selectBook(bukuId);
+      }, 500);
+    }
+
+    if (_pendingTabAfterLogin) {
+      var tab = _pendingTabAfterLogin;
+      _pendingTabAfterLogin = null;
+      setTimeout(function(){ switchMainTab(tab); }, 400);
+    }
+  }, 900);
+}
 function loadUserToUI(acc) {
   // LOAD foto dari localStorage jika ada
   var savedPhoto = localStorage.getItem('avatarPhoto_' + acc.nis);
@@ -2007,12 +2218,9 @@ function doLogout() {
       document.getElementById('loginNis').value  = '';
       document.getElementById('loginPass').value = '';
       hideAlert();
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-login').classList.add('active','entering');
-      window.scrollTo(0, 0);
-      setTimeout(() => {
-        document.getElementById('page-login').classList.remove('entering');
-      }, 450);
+      currentUser = null;
+      initGuestMode();
+      switchMainTab('koleksi');
       overlay.classList.remove('visible');
       showToast('Anda telah keluar.', 'info');
     }, 380);
@@ -2228,7 +2436,7 @@ function openModal(id) {
     ${b.isbn ? `<div class="mm-item" style="grid-column:1/-1;"><div class="mm-label">ISBN</div><div class="mm-val"><i class="fas fa-barcode" style="font-size:11px;margin-right:5px;"></i>${b.isbn}</div></div>` : ''}`;
   const pb = document.getElementById('mPinjamBtn');
   pb.disabled = b.stock===0; pb.style.opacity = b.stock===0 ? '.4' : '1';
-  pb.onclick  = () => { pilihBuku(b.id); closeModal(); };
+  pb.onclick  = () => { closeModal(); requireLogin('pinjam'); selectedBook = b; };
   document.getElementById('modalBg').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -2284,6 +2492,19 @@ function clearSelectedBook() {
 }
 
 function pilihBuku(id) {
+  if (!currentUser) {
+    showToast('Silakan masuk terlebih dahulu.', 'error');
+    openLoginModal('pinjam');
+    // Simpan buku yang dipilih untuk setelah login
+    _bukuDipilihSetelahLogin = id;
+    return;
+  }
+  if (!currentUser) {
+    showToast('Silakan masuk terlebih dahulu.', 'error');
+    _bukuDipilihSetelahLogin = id;
+    openLoginModal('pinjam');
+    return;
+  }
   switchMainTab('pinjam');
   selectBook(id);
   setTimeout(() => document.getElementById('fNama').focus(), 250);
@@ -3607,7 +3828,22 @@ document.addEventListener('keydown', function(e) {
 		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
 	}
 	// ]]>
- 
+  (function() {
+  // Sembunyikan semua page
+  document.querySelectorAll('.page').forEach(function(p){ 
+    p.classList.remove('active'); 
+    p.style.display = 'none';
+  });
+  // Paksa tampilkan page-peminjaman
+  var pem = document.getElementById('page-peminjaman');
+  pem.classList.add('active');
+  pem.style.display = 'block';
+  // Sembunyikan page-login
+  var login = document.getElementById('page-login');
+  login.style.display = 'none';
+  initGuestMode();
+  initPeminjaman();
+})();
 </script>
 </body>
 </html>
