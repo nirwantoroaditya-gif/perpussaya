@@ -587,6 +587,9 @@
         @media(max-width: 550px) {
             .footer-top { grid-template-columns: 1fr; }
         }
+        @keyframes spin {
+  to { transform: rotate(360deg); }
+}
     </style>
 </head>
 <body>
@@ -595,7 +598,10 @@
 <div id="splash">
     <img class="splash-logo" src="logo smkn bulat.jpg" alt="Logo SMKN 1 Ketapang">
     <div class="splash-title">Perpustakaan SMKN 1 Ketapang</div>
-    <div class="splash-sub">Memuat halaman, mohon tunggu...</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+  <div style="width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#3b7cf4;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;"></div>
+  <span style="color:#fff;">Memuat halaman, mohon tunggu...</span>
+</div>
     <div class="splash-bar"><div class="splash-fill"></div></div>
 </div>
 
@@ -621,7 +627,7 @@
             <li><a href="#layanan">Layanan</a></li>
             <li><a href="#kontak">Kontak</a></li>
             <!-- ✅ LINK KE PEMINJAMAN — sesuaikan path jika perlu -->
-            <li><a href="Peminjaman.html" class="nav-pinjam">🔖 Peminjaman</a></li>
+            <li><a href="javascript:void(0)" class="nav-pinjam" onclick="goToPeminjaman()">🔖 Peminjaman</a></li>
         </ul>
     </nav>
 </header>
@@ -639,7 +645,7 @@
             </div>
         </div>
         <div class="hero-cta">
-            <a href="Peminjaman.html" class="btn-cta-primary"><i class="fas fa-book-open"></i> Pinjam Buku Sekarang</a>
+           <a href="javascript:void(0)" class="btn-cta-primary" onclick="goToPeminjaman()"><i class="fas fa-book-open"></i> Pinjam Buku Sekarang</a>
             <a href="#koleksi" class="btn-cta-secondary"><i class="fas fa-search"></i> Lihat Koleksi</a>
         </div>
     </div>
@@ -935,7 +941,7 @@
     </div>
     <div class="koleksi-grid" id="koleksiGrid"></div>
     <div class="koleksi-cta">
-        <a href="Peminjaman.html" class="btn-lihat-semua"><i class="fas fa-book-open"></i> Lihat Semua &amp; Pinjam Buku</a>
+        <a href="javascript:void(0)" class="btn-lihat-semua" onclick="goToPeminjaman()"><i class="fas fa-book-open"></i> Lihat Semua &amp; Pinjam Buku</a>
     </div>
 </section>
 
@@ -1091,7 +1097,7 @@
                 <li><a href="#koleksi">Koleksi Buku</a></li>
                 <li><a href="#layanan">Layanan Perpustakaan</a></li>
                 <!-- ✅ LINK FOOTER KE PEMINJAMAN -->
-                <li><a href="Peminjaman.html">Peminjaman Buku</a></li>
+                <li><a href="javascript:void(0)" onclick="goToPeminjaman()">Peminjaman Buku</a></li>
                 <li><a href="#kontak">Kotak Saran</a></li>
             </ul>
         </div>
@@ -1265,7 +1271,17 @@
 </div>
 ${b.isbn ? `<div style="font-size:9.5px;color:#94a3b8;margin-top:6px;"><i class="fas fa-barcode" style="font-size:9px;"></i> ${b.isbn}</div>` : ''}
                 </div>`;
-            card.onclick = () => window.location.href = 'Peminjaman.html';
+ card.onclick = () => {
+  var splash = document.getElementById('splash');
+  if (splash) {
+    splash.style.display = 'flex';
+    setTimeout(function(){
+      window.location.href = 'Peminjaman.html';
+    }, 1800);
+  } else {
+    window.location.href = 'Peminjaman.html';
+  }
+};
             grid.appendChild(card);
         });
     }
@@ -1427,6 +1443,17 @@ ${b.isbn ? `<div style="font-size:9.5px;color:#94a3b8;margin-top:6px;"><i class=
             } else { alert('❌ Akses Ditolak!'); }
         }
     };
+    function goToPeminjaman() {
+  var splash = document.getElementById('splash');
+  splash.style.display = 'flex';
+  splash.classList.remove('hide');
+  // Reset animasi splash
+  var fill = splash.querySelector('.splash-fill');
+  if (fill) { fill.style.animation = 'none'; fill.offsetHeight; fill.style.animation = 'splashLoad 1.8s ease forwards'; }
+  setTimeout(function(){
+    window.location.href = 'Peminjaman.html';
+  }, 1800);
+}
 
     function escapeHtml(text) {
         const div = document.createElement('div');
