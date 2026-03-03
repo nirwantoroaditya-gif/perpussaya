@@ -55,7 +55,40 @@
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
-
+    /* SMOOTH DARK MODE TRANSITION */
+    html.theme-transitioning,
+    html.theme-transitioning *,
+    html.theme-transitioning *::before,
+    html.theme-transitioning *::after {
+      transition:
+        background-color 0.45s cubic-bezier(0.4,0,0.2,1),
+        background 0.45s cubic-bezier(0.4,0,0.2,1),
+        border-color 0.4s cubic-bezier(0.4,0,0.2,1),
+        color 0.4s cubic-bezier(0.4,0,0.2,1),
+        box-shadow 0.4s cubic-bezier(0.4,0,0.2,1) !important;
+    }
+    #themeBtn { position:relative; overflow:hidden; }
+    #themeBtn.theme-popping { animation:themeBtnPop 0.45s cubic-bezier(0.34,1.56,0.64,1) !important; }
+    @keyframes themeBtnPop {
+      0%   { transform:scale(1) rotate(0deg); }
+      25%  { transform:scale(0.78) rotate(-20deg); }
+      65%  { transform:scale(1.22) rotate(15deg); }
+      100% { transform:scale(1) rotate(0deg); }
+    }
+    #themeIcon { display:inline-block; }
+    #themeIcon.icon-switching { animation:iconFlip 0.45s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes iconFlip {
+      0%   { transform:rotate(0deg) scale(1); opacity:1; }
+      35%  { transform:rotate(-200deg) scale(0.3); opacity:0; }
+      36%  { transform:rotate(160deg) scale(0.3); opacity:0; }
+      100% { transform:rotate(0deg) scale(1); opacity:1; }
+    }
+    #themeFlash { position:fixed; inset:0; pointer-events:none; z-index:99998; opacity:0; }
+    #themeFlash.flashing { animation:themeWave 0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
+    @keyframes themeWave {
+      0%   { opacity:0.22; }
+      100% { opacity:0; }
+    }
     .page        { display: none; }
     .page.active { display: block; }
     .sect        { display: none; }
@@ -370,9 +403,13 @@
     .np-empty { padding:36px 20px; text-align:center; color:var(--text3); font-size:13px; }
     .np-empty i { font-size:2rem; display:block; margin-bottom:8px; opacity:.35; }
     .np-item {
-      padding:14px 18px; border-bottom:1px solid var(--bg2);
-      animation:fadeUpIn .3s ease both;
-    }
+  padding:14px 18px; border-bottom:1px solid var(--bg2);
+  opacity:0; transform:translateY(12px);
+  animation:npItemIn .35s cubic-bezier(0.23,1,0.32,1) both;
+}
+@keyframes npItemIn {
+  to { opacity:1; transform:translateY(0); }
+}
     .np-item:last-child { border-bottom:none; }
     .np-item-top { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
     .np-thumb { width:34px; height:44px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.7); font-size:.85rem; flex-shrink:0; }
@@ -424,6 +461,16 @@
     .tab-btn.on { color:#fff; border-bottom-color:var(--blue); }
     .tab-count { background:rgba(59,124,244,.3); color:var(--blue-l); font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; }
     .tab-btn.on .tab-count { background:var(--blue); color:#fff; }
+    /*SETELAH*/
+    .tab-btn { position:relative; overflow:hidden; }
+.ripple-effect {
+  position:absolute; border-radius:50%;
+  background:rgba(255,255,255,.25);
+  transform:scale(0); animation:rippleAnim .5s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes rippleAnim { to { transform:scale(4); opacity:0; } }
+.submit-btn { position:relative; overflow:hidden; }
 
     /* ── MAIN ── */
     .main { max-width:1200px; margin:0 auto; padding:26px 32px 80px; }
@@ -499,6 +546,12 @@
     .fg { display:flex; flex-direction:column; gap:5px; }
     .fg label { font-size:11.5px; font-weight:700; color:var(--text2); letter-spacing:.3px; }
     .fg input, .fg select, .fg textarea { padding:9px 13px; border-radius:var(--r-sm); border:1.5px solid var(--border); font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; color:var(--text); background:#fff; outline:none; transition:.2s; }
+    .fg input, .fg select, .fg textarea {
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+}
+.fg input:focus, .fg select:focus, .fg textarea:focus {
+  transform: translateY(-1px);
+}
     .fg input:focus, .fg select:focus, .fg textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(59,124,244,.1); }
     .fg textarea { resize:vertical; min-height:70px; }
     .book-search-result { margin-top:7px; border:1.5px solid var(--border); border-radius:var(--r-sm); overflow:hidden; display:none; }
@@ -1085,11 +1138,71 @@
     transform: translateY(0) scale(1);
   }
 }
+/* ── LOADING SCREEN ── */
+#loadingScreen {
+  position:fixed; inset:0; z-index:99999;
+  background:linear-gradient(135deg,#0a1020 0%,#0d1b3e 50%,#0a1020 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:opacity .6s ease, visibility .6s ease;
+}
+#loadingScreen.hide { opacity:0; visibility:hidden; pointer-events:none; }
+.ls-orb { position:absolute; border-radius:50%; animation:lsOrbFloat 6s ease-in-out infinite; }
+@keyframes lsOrbFloat { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-30px) scale(1.08);} }
+.ls-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; animation:lsFadeIn .8s ease both; }
+@keyframes lsFadeIn { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
+.ls-logo-wrap { position:relative; margin-bottom:28px; }
+.ls-logo-ring {
+  width:110px; height:110px; border-radius:50%;
+  border:2px solid rgba(59,124,244,.25);
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  animation:lsRingSpin 3s linear infinite;
+}
+.ls-logo-ring::before {
+  content:''; position:absolute; top:-3px; left:50%;
+  width:6px; height:6px; border-radius:50%;
+  background:#3b7cf4; box-shadow:0 0 12px 3px #3b7cf4; transform:translateX(-50%);
+}
+@keyframes lsRingSpin { from{transform:translate(-50%,-50%) rotate(0deg);} to{transform:translate(-50%,-50%) rotate(360deg);} }
+.ls-logo-ring2 {
+  width:130px; height:130px; border-radius:50%;
+  border:1px solid rgba(59,124,244,.12);
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  animation:lsRingSpin 5s linear infinite reverse;
+}
+.ls-logo-img { width:80px; height:80px; border-radius:50%; object-fit:contain; box-shadow:0 8px 40px rgba(59,124,244,.35); display:block; }
+.ls-school-name { font-size:1.25rem; font-weight:800; color:#fff; text-align:center; margin-bottom:4px; }
+.ls-school-sub { font-size:.8rem; color:rgba(255,255,255,.45); letter-spacing:2px; text-transform:uppercase; text-align:center; margin-bottom:32px; }
+.ls-app-name { font-size:.85rem; font-weight:600; color:rgba(59,124,244,.9); letter-spacing:3px; text-transform:uppercase; margin-bottom:40px; text-align:center; }
+.ls-bar-wrap { width:200px; height:3px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; margin-bottom:16px; }
+.ls-bar { height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,#3b7cf4,#1a6b6b); animation:lsBarFill 1.8s cubic-bezier(0.4,0,0.2,1) forwards; animation-delay:.3s; }
+@keyframes lsBarFill { 0%{width:0%;} 60%{width:75%;} 85%{width:92%;} 100%{width:100%;} }
+.ls-label { font-size:11px; color:rgba(255,255,255,.3); letter-spacing:1.5px; text-transform:uppercase; animation:lsDot 1.4s ease infinite; }
+@keyframes lsDot { 0%,100%{opacity:.3;} 50%{opacity:.8;} }
+.navbar { animation:navbarSlideIn .5s cubic-bezier(0.23,1,0.32,1) both; animation-delay:.1s; }
+@keyframes navbarSlideIn { from{transform:translateY(-100%);opacity:0;} to{transform:translateY(0);opacity:1;} }
     [data-theme="dark"] .modal,[data-theme="dark"] .notif-panel,[data-theme="dark"] .user-dropdown{background:var(--card-bg);border-color:var(--border);}
 
   </style>
 </head>
 <body>
+  <div id="loadingScreen">
+  <div style="position:absolute;inset:0;overflow:hidden;">
+    <div class="ls-orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(59,124,244,.08),transparent);top:-100px;right:-80px;animation-duration:8s;"></div>
+    <div class="ls-orb" style="width:250px;height:250px;background:radial-gradient(circle,rgba(26,107,107,.07),transparent);bottom:80px;left:-60px;animation-duration:11s;animation-delay:2s;"></div>
+  </div>
+  <div class="ls-content">
+    <div class="ls-logo-wrap">
+      <div class="ls-logo-ring"></div>
+      <div class="ls-logo-ring2"></div>
+      <img src="logo smkn bulat.jpg" class="ls-logo-img" alt="Logo SMKN 1 Ketapang">
+    </div>
+    <div class="ls-school-name">SMKN 1 Ketapang</div>
+    <div class="ls-school-sub">Kalimantan Barat</div>
+    <div class="ls-app-name">Sistem Perpustakaan</div>
+    <div class="ls-bar-wrap"><div class="ls-bar"></div></div>
+    <div class="ls-label">Memuat sistem...</div>
+  </div>
+</div>
 
 <!-- ══ PAGE 1: LOGIN ══ -->
 <div id="page-login" class="page">
@@ -3047,7 +3160,7 @@ function renderNotifPanel() {
     return;
   }
   body.innerHTML = '';
-  pendingRequests.forEach(req => {
+  pendingRequests.forEach((req, idx) => {
     const item = document.createElement('div');
     item.className = 'np-item';
     item.id = 'req-' + req.id;
@@ -3070,6 +3183,7 @@ function renderNotifPanel() {
           <i class="fas fa-times"></i> Tolak
         </button>
       </div>`;
+    item.style.animationDelay = (idx * 75) + 'ms';
     body.appendChild(item);
   });
 }
@@ -3161,14 +3275,75 @@ function showToast(msg, type='success') {
 document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 document.getElementById('loginNis').addEventListener('keydown',  e => { if(e.key==='Enter') doLogin(); });
 
+// ── LOADING SCREEN ──
+(function(){
+  function hideLoader() {
+    var ls = document.getElementById('loadingScreen');
+    if (!ls) return;
+    setTimeout(function(){
+      ls.classList.add('hide');
+      setTimeout(function(){ ls.style.display='none'; }, 650);
+    }, 2000);
+  }
+  if (document.readyState === 'complete') hideLoader();
+  else window.addEventListener('load', hideLoader);
+})();
 
-/* ════ DARK MODE ════ */
+// ── RIPPLE ──
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.tab-btn, .submit-btn, .fmodal-btn, .login-btn');
+  if (!btn) return;
+  var r = document.createElement('span');
+  r.className = 'ripple-effect';
+  var size = Math.max(btn.offsetWidth, btn.offsetHeight);
+  var rect = btn.getBoundingClientRect();
+  r.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px;';
+  btn.appendChild(r);
+  r.addEventListener('animationend', function(){ r.remove(); });
+});
+
+
 var isDark = false;
 function toggleTheme() {
   isDark = !isDark;
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  var btn = document.getElementById('themeBtn');
   var ico = document.getElementById('themeIcon');
-  if (ico) ico.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+  var flash = document.getElementById('themeFlash');
+
+  if (btn && flash) {
+    var rect = btn.getBoundingClientRect();
+    var cx = ((rect.left + rect.width/2) / window.innerWidth * 100).toFixed(1) + '%';
+    var cy = ((rect.top + rect.height/2) / window.innerHeight * 100).toFixed(1) + '%';
+    flash.style.background = isDark
+      ? 'radial-gradient(circle at '+cx+' '+cy+', rgba(10,16,32,0.3) 0%, transparent 65%)'
+      : 'radial-gradient(circle at '+cx+' '+cy+', rgba(255,255,255,0.32) 0%, transparent 65%)';
+    flash.classList.remove('flashing');
+    void flash.offsetWidth;
+    flash.classList.add('flashing');
+    flash.addEventListener('animationend', function(){ flash.classList.remove('flashing'); }, { once:true });
+  }
+
+  if (btn) {
+    btn.classList.remove('theme-popping');
+    void btn.offsetWidth;
+    btn.classList.add('theme-popping');
+    btn.addEventListener('animationend', function(){ btn.classList.remove('theme-popping'); }, { once:true });
+  }
+
+  if (ico) {
+    ico.classList.remove('icon-switching');
+    void ico.offsetWidth;
+    ico.classList.add('icon-switching');
+    setTimeout(function(){
+      ico.className = 'icon-switching ' + (isDark ? 'fas fa-sun' : 'fas fa-moon');
+    }, 157);
+    ico.addEventListener('animationend', function(){ ico.classList.remove('icon-switching'); }, { once:true });
+  }
+
+  var html = document.documentElement;
+  html.classList.add('theme-transitioning');
+  html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  setTimeout(function(){ html.classList.remove('theme-transitioning'); }, 500);
 }
 
 /* ════ REMINDER BANNER (legacy, masih dipakai di beberapa tempat) ════ */
@@ -3717,7 +3892,16 @@ function renderManajemen() {
         '<button class="tbl-btn edit" onclick="openEditBook(' + b.id + ')" title="Edit"><i class="fas fa-edit"></i></button>' +
         '<button class="tbl-btn del" onclick="deleteBook(' + b.id + ')" title="Hapus"><i class="fas fa-trash"></i></button>' +
       '</div></td>';
-    tbody.appendChild(tr);
+    tr.style.opacity = '0';
+tr.style.transform = 'translateY(10px)';
+tr.style.transition = 'opacity .3s ease, transform .3s ease';
+tbody.appendChild(tr);
+(function(el, i){
+  setTimeout(function(){
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }, i * 60);
+})(tr, tbody.children.length - 1);
   });
   if (!list.length) {
     tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text3);">Tidak ada buku ditemukan.</td></tr>';
@@ -3810,11 +3994,19 @@ function deleteBook(id) {
 }
 
 function updateHeroStats() {
-  var sT = document.getElementById('sTotal'); if(sT) sT.textContent = BOOKS.length;
-  var sA = document.getElementById('sAvail'); if(sA) sA.textContent = BOOKS.filter(function(b){ return b.stock>0; }).length;
-  var sC = document.getElementById('sCat');   if(sC) sC.textContent = [...new Set(BOOKS.map(function(b){ return b.cat; }))].length;
-  var sAc= document.getElementById('sActive'); if(sAc) sAc.textContent = RIWAYAT.filter(function(r){ return r.status==='active'||r.status==='borrow'; }).length;
-  var tcK= document.getElementById('tcKoleksi'); if(tcK) tcK.textContent = BOOKS.length;
+  var sT = document.getElementById('sTotal');
+  var sA = document.getElementById('sAvail');
+  var sC = document.getElementById('sCat');
+  var tcK= document.getElementById('tcKoleksi');
+  var totalVal = BOOKS.length;
+  var availVal = BOOKS.filter(function(b){ return b.stock>0; }).length;
+  var catVal   = [...new Set(BOOKS.map(function(b){ return b.cat; }))].length;
+  if(tcK) tcK.textContent = totalVal;
+  animateCountUp('sTotal', totalVal, 0);
+  animateCountUp('sAvail', availVal, 100);
+  animateCountUp('sCat',   catVal,   200);
+  var sAc = document.getElementById('sActive');
+  if(sAc) sAc.textContent = RIWAYAT.filter(function(r){ return r.status==='active'||r.status==='borrow'; }).length;
 }
 
 document.addEventListener('keydown', function(e) {
@@ -3857,7 +4049,7 @@ document.addEventListener('keydown', function(e) {
     </div>
   </div>
 </div>
-
+<div id="themeFlash"></div>
 <!-- Code injected by live-server -->
 <script>
 	// <![CDATA[  <-- For SVG support
