@@ -13,6 +13,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
 
     :root {
@@ -1162,7 +1164,14 @@
         <span class="btn-text"><i class="fas fa-sign-in-alt"></i> Masuk Sekarang</span>
         <div class="spinner"></div>
       </button>
-
+<!-- Divider Google -->
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+  <div style="flex:1;height:1px;background:var(--border);"></div>
+  <span style="font-size:11.5px;color:var(--text3);font-weight:600;">atau masuk dengan</span>
+  <div style="flex:1;height:1px;background:var(--border);"></div>
+</div>
+<!-- Tombol Google -->
+<div id="googleBtnLogin" style="display:flex;justify-content:center;margin-bottom:16px;min-height:44px;"></div>
       <div class="demo-section">
         <div class="demo-label">✦ Akun Demo — Klik untuk Isi Otomatis</div>
         <div class="demo-accounts">
@@ -1615,12 +1624,13 @@
   </div>
 </div>
 <!-- ══ MODAL LOGIN POPUP ══ -->
+<!-- ══ MODAL LOGIN POPUP ══ -->
 <div class="modal-backdrop" id="loginModalBg" onclick="if(event.target===this)closeLoginModal()">
   <div class="modal" style="max-width:430px;">
     <div style="background:linear-gradient(135deg,var(--navy3),var(--navy));padding:20px 24px 16px;position:relative;">
       <button onclick="closeLoginModal()" style="position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-times"></i></button>
       <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:42px;height:42px;border-radius:11px;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.1);">
+        <div onclick="handleLogoTap()" style="width:42px;height:42px;border-radius:11px;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.1);cursor:pointer;">
           <img src="logo smkn bulat.jpg" style="width:100%;height:100%;object-fit:contain;">
         </div>
         <div>
@@ -1630,14 +1640,29 @@
       </div>
     </div>
     <div style="padding:20px 24px 24px;">
+
+      <!-- Alert -->
       <div id="loginModalAlert" style="display:none;background:var(--red-bg);border:1px solid rgba(220,38,38,.2);border-radius:8px;padding:10px 13px;margin-bottom:14px;font-size:12.5px;color:var(--red);align-items:center;gap:7px;">
         <i class="fas fa-exclamation-circle"></i><span id="loginModalAlertMsg"></span>
       </div>
-      <div id="mRoleTabs" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:18px;">
-        <button class="utt on" id="mUttSiswa" onclick="setModalRole('siswa',this)"><i class="fas fa-user-graduate" style="font-size:10px;"></i> Siswa</button>
-        <button class="utt" id="mUttGuru"  onclick="setModalRole('guru',this)"><i class="fas fa-chalkboard-teacher" style="font-size:10px;"></i> Guru</button>
-        <button class="utt" id="mUttAdmin" onclick="setModalRole('admin',this)"><i class="fas fa-user-shield" style="font-size:10px;"></i> Admin</button>
+
+      <!-- Tombol Google -->
+      <div id="googleBtnModal" style="display:flex;justify-content:center;margin-bottom:10px;min-height:44px;"></div>
+
+      <!-- Divider -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+        <span style="font-size:11px;color:var(--text3);font-weight:600;white-space:nowrap;">atau masuk dengan NIS/NIP</span>
+        <div style="flex:1;height:1px;background:var(--border);"></div>
       </div>
+
+      <!-- Role Tabs Siswa & Guru -->
+      <div id="mRoleTabs" style="display:grid;grid-template-columns:1fr 1fr;gap:5px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:18px;">
+        <button class="utt on" id="mUttSiswa" onclick="setModalRole('siswa',this)"><i class="fas fa-user-graduate" style="font-size:10px;"></i> Siswa</button>
+        <button class="utt" id="mUttGuru" onclick="setModalRole('guru',this)"><i class="fas fa-chalkboard-teacher" style="font-size:10px;"></i> Guru</button>
+      </div>
+
+      <!-- Input NIS -->
       <div style="margin-bottom:13px;">
         <label id="mNisLabel" style="display:block;font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:6px;">NIS (Nomor Induk Siswa)</label>
         <div style="position:relative;">
@@ -1645,6 +1670,8 @@
           <input type="text" id="mLoginNis" class="lf-input" placeholder="Masukkan NIS Anda" style="padding-left:40px;" onkeydown="if(event.key==='Enter')doModalLogin()">
         </div>
       </div>
+
+      <!-- Input Password -->
       <div style="margin-bottom:18px;">
         <label style="display:block;font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:6px;">Kata Sandi</label>
         <div style="position:relative;">
@@ -1653,23 +1680,38 @@
           <button onclick="toggleModalEye()" type="button" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:4px;"><i class="fas fa-eye" id="mEyeIcon"></i></button>
         </div>
       </div>
+
+      <!-- Tombol Masuk -->
       <button onclick="doModalLogin()" style="width:100%;padding:13px;border-radius:10px;background:linear-gradient(135deg,var(--navy3),var(--navy));color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;transition:.25s;margin-bottom:16px;">
         <span id="mBtnText"><i class="fas fa-sign-in-alt"></i> Masuk Sekarang</span>
         <div id="mSpinner" style="display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;"></div>
       </button>
-      <div style="border-top:1px solid var(--border);padding-top:14px;">
-        <div style="font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);text-align:center;margin-bottom:10px;">✦ Demo — Klik untuk isi otomatis</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
+
+      <!-- Demo Accounts Toggle -->
+      <div style="border-top:1px solid var(--border);padding-top:12px;">
+        <button onclick="toggleDemoAccounts()" style="width:100%;background:none;border:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 0;">
+          <i class="fas fa-chevron-down" id="demoChevron" style="font-size:9px;transition:.3s;"></i>
+          AKUN DEMO
+          <i class="fas fa-chevron-down" id="demoChevron2" style="font-size:9px;transition:.3s;"></i>
+        </button>
+        <div id="demoAccountsWrap" style="display:none;flex-direction:column;gap:6px;margin-top:10px;">
           <div class="demo-acc" onclick="fillModalDemo('siswa')"><div class="da-left"><div class="da-icon" style="background:var(--blue);"><i class="fas fa-user-graduate"></i></div><div><div class="da-name">Aditya — Siswa</div><div class="da-role">NIS: 12282008</div></div></div><span class="da-use">Gunakan →</span></div>
           <div class="demo-acc" onclick="fillModalDemo('guru')"><div class="da-left"><div class="da-icon" style="background:var(--green);"><i class="fas fa-chalkboard-teacher"></i></div><div><div class="da-name">Korawati — Guru</div><div class="da-role">NIP: 197805012005012001</div></div></div><span class="da-use">Gunakan →</span></div>
-          <div class="demo-acc" onclick="fillModalDemo('admin')"><div class="da-left"><div class="da-icon" style="background:var(--gold);"><i class="fas fa-user-shield"></i></div><div><div class="da-name">Admin Perpustakaan</div><div class="da-role">ID: admin</div></div></div><span class="da-use">Gunakan →</span></div>
         </div>
       </div>
+
+      <!-- Admin Secret (ketuk logo 5x) -->
+      <div id="adminSecretArea" style="display:none;margin-top:12px;padding:12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;">
+        <div style="font-size:11px;font-weight:700;color:var(--gold);text-align:center;margin-bottom:10px;"><i class="fas fa-shield-alt"></i> AKSES ADMINISTRATOR</div>
+        <div class="demo-acc" onclick="fillModalDemo('admin')" style="border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.05);">
+          <div class="da-left"><div class="da-icon" style="background:var(--gold);"><i class="fas fa-user-shield"></i></div><div><div class="da-name">Admin Perpustakaan</div><div class="da-role">ID: admin</div></div></div>
+          <span class="da-use" style="color:var(--gold);">Gunakan →</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-
-<!-- MODAL DETAIL BUKU -->
 <div class="modal-backdrop" id="modalBg">
   <div class="modal" style="position:relative;">
     <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
@@ -1756,6 +1798,31 @@
 
 
 <script>
+  function toggleDemoAccounts() {
+  var wrap = document.getElementById('demoAccountsWrap');
+  var c1 = document.getElementById('demoChevron');
+  var c2 = document.getElementById('demoChevron2');
+  var isOpen = wrap.style.display === 'flex';
+  wrap.style.display = isOpen ? 'none' : 'flex';
+  if (c1) c1.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+  if (c2) c2.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+var _adminTapCount = 0, _adminTapTimer = null;
+function handleLogoTap() {
+  _adminTapCount++;
+  clearTimeout(_adminTapTimer);
+  _adminTapTimer = setTimeout(function(){ _adminTapCount = 0; }, 2000);
+  if (_adminTapCount >= 5) {
+    _adminTapCount = 0;
+    var area = document.getElementById('adminSecretArea');
+    if (area) {
+      var hidden = area.style.display === 'none';
+      area.style.display = hidden ? 'block' : 'none';
+      if (hidden) showToast('🔐 Mode Admin!', 'info');
+    }
+  }
+}
   /* ─── COUNT-UP ANIMASI ANGKA ─── */
 function animateCountUp(elId, target, delay) {
   var el = document.getElementById(elId);
@@ -3844,6 +3911,17 @@ document.addEventListener('keydown', function(e) {
   initGuestMode();
   initPeminjaman();
 })();
+</script>
+<script src="google-oauth-additions.js"></script>
+<script>
+  window.addEventListener('load', function() {
+    initGoogleAuth();
+    setTimeout(function() {
+
+  renderGoogleBtn('googleBtnLogin', 'outline', 'large', 'signin_with');
+  renderGoogleBtn('googleBtnModal', 'outline', 'large', 'continue_with');
+}, 800);
+  });
 </script>
 </body>
 </html>
