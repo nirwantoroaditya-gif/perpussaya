@@ -89,8 +89,8 @@ if (!matchedAcc && ADMIN_EMAILS.includes(googleEmail.toLowerCase())) {
     });
 
     document.querySelectorAll('.admin-tab').forEach(function(t){
-      t.style.display = 'none';
-    });
+  t.style.display = user.id === 'admin' ? 'flex' : 'none';
+});
 
     loadUserToUI(user);
     loadFromCloud().then(function() {
