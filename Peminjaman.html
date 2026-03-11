@@ -2,6 +2,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
 <head>
@@ -209,6 +211,36 @@
   background: radial-gradient(ellipse 80% 60% at 80% 20%, rgba(59,124,244,.25), transparent);
   pointer-events: none;
 }
+/*css coba*/
+.rekap-card {
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+.rekap-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.rekap-val {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+.rekap-label {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 3px;
+}
+/*css coba*/
+
     .member-card::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 20px);pointer-events:none;}
     .mc-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;position:relative;z-index:1;}
     .mc-logo{width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;}
@@ -1182,6 +1214,594 @@
 @keyframes navbarSlideIn { from{transform:translateY(-100%);opacity:0;} to{transform:translateY(0);opacity:1;} }
     [data-theme="dark"] .modal,[data-theme="dark"] .notif-panel,[data-theme="dark"] .user-dropdown{background:var(--card-bg);border-color:var(--border);}
 
+/* ══ JADWAL KUNJUNGAN KELAS ══ */
+.jadwal-sidebar {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 20px;
+}
+[data-theme="dark"] .jadwal-sidebar { background: var(--card-bg); }
+
+.js-header {
+  background: linear-gradient(135deg, var(--navy3), var(--navy));
+  padding: 14px 16px;
+}
+.js-header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.js-title {
+  font-size: 12px; font-weight: 800; color: #fff;
+  display: flex; align-items: center; gap: 7px;
+}
+.js-live-dot {
+  width: 8px; height: 8px; background: #4ade80;
+  border-radius: 50%; flex-shrink: 0;
+  animation: jsPulse 1.5s ease-in-out infinite;
+}
+@keyframes jsPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(74,222,128,.7); }
+  50%      { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
+}
+.js-clock {
+  font-size: 18px; font-weight: 800; color: #fff;
+  font-variant-numeric: tabular-nums; letter-spacing: 1px;
+  text-shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+.js-date {
+  font-size: 10.5px; color: rgba(255,255,255,.55);
+  margin-top: 2px; font-weight: 600;
+}
+
+.js-status-bar {
+  padding: 11px 14px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.js-status-bar.occupied { background: rgba(220,38,38,.07); border-bottom-color: rgba(220,38,38,.2); }
+.js-status-bar.free     { background: rgba(22,163,74,.07);  border-bottom-color: rgba(22,163,74,.15); }
+.js-status-bar.soon     { background: rgba(245,158,11,.07); border-bottom-color: rgba(245,158,11,.2); }
+.js-status-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .95rem; flex-shrink: 0;
+}
+.occupied .js-status-icon { background: rgba(220,38,38,.12); color: var(--red); }
+.free     .js-status-icon { background: rgba(22,163,74,.12);  color: var(--green); }
+.soon     .js-status-icon { background: rgba(245,158,11,.12); color: var(--gold); }
+.js-status-kelas { font-size: 12.5px; font-weight: 800; line-height: 1.2; }
+.occupied .js-status-kelas { color: var(--red); }
+.free     .js-status-kelas { color: var(--green); }
+.soon     .js-status-kelas { color: var(--gold); }
+.js-status-sub { font-size: 10.5px; color: var(--text3); margin-top: 2px; }
+
+.js-body { padding: 10px 12px; max-height: 320px; overflow-y: auto; }
+.js-slot {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 8px; margin-bottom: 5px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  font-size: 11.5px; transition: .2s; position: relative;
+}
+[data-theme="dark"] .js-slot { background: var(--bg2); }
+.js-slot.active-slot {
+  background: rgba(220,38,38,.05);
+  border-color: rgba(220,38,38,.25);
+  animation: slotPulse 2s ease-in-out infinite;
+}
+@keyframes slotPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.15); }
+  50%      { box-shadow: 0 0 0 4px rgba(220,38,38,.0); }
+}
+.js-slot.done-slot { opacity: .45; }
+.js-slot-left { flex: 1; min-width: 0; }
+.js-slot-kelas { font-size: 12px; font-weight: 800; color: var(--text); }
+.js-slot-time  { font-size: 10px; color: var(--text3); margin-top: 1px; font-weight: 600; }
+.js-slot-guru  { font-size: 10px; color: var(--text3); }
+.js-slot-badge {
+  font-size: 9px; font-weight: 800; padding: 2px 8px;
+  border-radius: 20px; flex-shrink: 0; white-space: nowrap;
+}
+.badge-now  { background: var(--red);   color: #fff; }
+.badge-soon { background: var(--gold);  color: #fff; }
+.badge-wait { background: var(--blue-pale); color: var(--blue); border: 1px solid rgba(59,124,244,.2); }
+.badge-done { background: var(--bg2);   color: var(--text3); }
+
+.js-empty {
+  text-align: center; padding: 24px 12px;
+  color: var(--text3); font-size: 12px;
+}
+.js-empty i { font-size: 1.8rem; display: block; opacity: .25; margin-bottom: 8px; }
+
+.js-footer {
+  padding: 10px 14px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.js-footer-count { font-size: 10.5px; color: var(--text3); }
+.js-see-all {
+  font-size: 11.5px; font-weight: 700; color: var(--blue);
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; display: flex; align-items: center; gap: 4px;
+  transition: .2s; padding: 0;
+}
+.js-see-all:hover { color: var(--navy); }
+.js-admin-add {
+  width: 26px; height: 26px; border-radius: 7px;
+  border: 1.5px solid rgba(59,124,244,.3);
+  background: var(--blue-pale); color: var(--blue);
+  cursor: pointer; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  transition: .2s;
+}
+.js-admin-add:hover { background: var(--blue); color: #fff; }
+
+/* ── TAB JADWAL PENUH ── */
+.jadwal-full-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+/* ── Kolom hari ── */
+.jfg-col {
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: box-shadow .2s, transform .2s;
+}
+.jfg-col.jfg-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.jfg-col:hover {
+  box-shadow: 0 6px 24px rgba(59,124,244,.10);
+}
+.jfg-col.jfg-today {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(59,124,244,.08);
+}
+
+/* ── Header kolom ── */
+.jfg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 13px 8px;
+  background: #f8fafc;
+  border-bottom: 1.5px solid #e2e8f0;
+}
+.jfg-today .jfg-head {
+  background: linear-gradient(90deg,#3b7cf4 0%,#6fa3ff 100%);
+  border-bottom-color: transparent;
+}
+.jfg-hari {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  color: var(--text2);
+  text-transform: uppercase;
+}
+.jfg-today .jfg-hari { color: #fff; }
+.jfg-count {
+  font-size: 11px;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: var(--text2);
+  border-radius: 20px;
+  padding: 1px 8px;
+}
+.jfg-today .jfg-count { background: rgba(255,255,255,.25); color: #fff; }
+
+/* ── Body kolom ── */
+.jfg-body { padding: 8px; display: flex; flex-direction: column; gap: 7px; }
+
+/* ── Kartu slot ── */
+.jfg-slot {
+  border-radius: 10px;
+  padding: 10px 11px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  position: relative;
+  transition: box-shadow .18s, border-color .18s;
+}
+.jfg-slot:hover { box-shadow: 0 3px 12px rgba(0,0,0,.07); }
+
+/* Status warna kiri */
+.jfg-slot::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px; bottom: 8px;
+  width: 3.5px;
+  border-radius: 4px;
+}
+.jfg-slot.s-active { border-color: #fca5a5; background: #fff5f5; }
+.jfg-slot.s-active::before { background: #ef4444; }
+.jfg-slot.s-soon  { border-color: #fcd34d; background: #fffbeb; }
+.jfg-slot.s-soon::before  { background: #f59e0b; }
+.jfg-slot.s-wait  { border-color: #bfdbfe; background: #eff6ff; }
+.jfg-slot.s-wait::before  { background: #3b82f6; }
+.jfg-slot.s-done  { border-color: #e2e8f0; background: #f8fafc; opacity: .65; }
+.jfg-slot.s-done::before  { background: #94a3b8; }
+
+/* Konten kartu */
+.jfg-slot-time {
+  font-size: 10px;
+  color: var(--text3);
+  margin-bottom: 3px;
+  padding-left: 10px;
+}
+.jfg-slot-kelas {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text);
+  padding-left: 10px;
+  margin-bottom: 2px;
+}
+.jfg-slot-guru {
+  font-size: 10.5px;
+  color: var(--text3);
+  padding-left: 10px;
+  margin-bottom: 3px;
+}
+
+/* Tujuan icon badge */
+.jfg-slot-tujuan {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 8px;
+  margin-top: 3px;
+  background: #f1f5f9;
+  color: var(--text2);
+}
+
+/* Status badge */
+.jfg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+  margin-left: 8px;
+  margin-top: 4px;
+  letter-spacing: .3px;
+}
+.jfg-badge.b-active {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.jfg-badge.b-soon {
+  background: #fef3c7;
+  color: #b45309;
+}
+.jfg-badge.b-done {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+.jfg-badge.b-wait {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+/* Pulse animasi untuk yang aktif */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .4; transform: scale(.7); }
+}
+.pulse-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+/* Progress bar waktu */
+.jfg-progress-wrap {
+  margin: 6px 10px 2px;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.jfg-progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #3b7cf4, #6fa3ff);
+  transition: width .5s ease;
+}
+.s-active .jfg-progress-bar { background: linear-gradient(90deg,#ef4444,#f87171); }
+.s-done   .jfg-progress-bar { background: #cbd5e1; }
+
+/* Kapasitas */
+.jfg-kapasitas {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-left: 10px;
+  margin-top: 5px;
+  font-size: 10px;
+  color: var(--text3);
+}
+.jfg-kap-dots {
+  display: flex;
+  gap: 2px;
+}
+.jfg-kap-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #bfdbfe;
+}
+.jfg-kap-dot.filled { background: #3b7cf4; }
+
+/* Tombol aksi admin */
+.jfg-slot-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 7px;
+  padding-left: 8px;
+}
+.jfg-edit-btn, .jfg-del-btn {
+  border: none;
+  border-radius: 7px;
+  padding: 4px 9px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.jfg-edit-btn { background: #dbeafe; color: #2563eb; }
+.jfg-del-btn  { background: #fee2e2; color: #dc2626; }
+.jfg-edit-btn:hover, .jfg-del-btn:hover { opacity: .75; }
+
+/* Tambah per kolom */
+.jfg-add-btn {
+  width: 100%;
+  border: 1.5px dashed #cbd5e1;
+  background: transparent;
+  border-radius: 9px;
+  padding: 7px;
+  font-size: 11px;
+  color: var(--text3);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+  margin-top: 2px;
+}
+.jfg-add-btn:hover { border-color: var(--blue); color: var(--blue); }
+/* ── Tombol aksi hover only ── */
+.jfg-slot-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 7px;
+  padding-left: 8px;
+  opacity: 0;
+  transition: opacity .18s;
+}
+.jfg-slot:hover .jfg-slot-actions { opacity: 1; }
+
+.jfg-edit-btn, .jfg-del-btn {
+  border: none;
+  border-radius: 7px;
+  padding: 5px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: opacity .15s, transform .15s;
+  line-height: 1;
+}
+.jfg-edit-btn { background: #dbeafe; color: #2563eb; }
+.jfg-del-btn  { background: #fee2e2; color: #dc2626; }
+.jfg-edit-btn:hover { opacity: .8; transform: scale(1.1); }
+.jfg-del-btn:hover  { opacity: .8; transform: scale(1.1); }
+
+/* ── Empty kolom ilustrasi ── */
+.jfg-empty-premium {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 10px;
+  gap: 8px;
+}
+.jfg-empty-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#f1f5f9,#e2e8f0);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: #94a3b8;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.jfg-empty-text {
+  font-size: 11.5px; font-weight: 700;
+  color: var(--text2); text-align: center;
+}
+.jfg-empty-sub {
+  font-size: 10px; color: var(--text3);
+  text-align: center; line-height: 1.5;
+}
+
+/* ── Digital Clock ── */
+.jadwal-clock-wrap {
+  background: linear-gradient(135deg,#0f172a,#1a2e50);
+  border-radius: 14px;
+  padding: 14px 24px;
+  text-align: center;
+  min-width: 200px;
+  box-shadow: 0 6px 20px rgba(15,23,42,.25), inset 0 1px 0 rgba(255,255,255,.06);
+  position: relative;
+  overflow: hidden;
+}
+.jadwal-clock-wrap::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(59,124,244,.15);
+}
+.jadwal-clock-digits {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  font-variant-numeric: tabular-nums;
+  font-family: 'Courier New', monospace;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(111,163,255,.6);
+  line-height: 1;
+}
+.jadwal-clock-seconds {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(111,163,255,.8);
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+}
+.jadwal-clock-date {
+  font-size: 10px;
+  color: rgba(255,255,255,.4);
+  margin-top: 5px;
+  letter-spacing: .5px;
+}
+.jadwal-clock-divider {
+  color: rgba(111,163,255,.7);
+  animation: blink-colon 1s step-end infinite;
+}
+@keyframes blink-colon {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .2; }
+}
+
+/* Kosong */
+.jfg-empty {
+  text-align: center;
+  padding: 20px 8px;
+  font-size: 11px;
+  color: var(--text3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.jfg-empty i { font-size: 1.3rem; opacity: .3; }
+
+/* Stagger animasi */
+@keyframes jfg-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .jadwal-full-grid { grid-template-columns: repeat(3,1fr); }
+}
+@media (max-width: 540px) {
+  .jadwal-full-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media(max-width:900px){ .jadwal-full-grid { grid-template-columns:1fr 1fr; } }
+.jfg-col {
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+}
+[data-theme="dark"] .jfg-col { background: var(--card-bg); }
+.jfg-col.jfg-today { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,124,244,.1); }
+.jfg-head {
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.jfg-hari { font-size: 11px; font-weight: 800; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+.jfg-today .jfg-hari { color: var(--blue); }
+.jfg-count { font-size: 10px; color: var(--text3); }
+.jfg-body { padding: 8px; }
+.jfg-slot {
+  padding: 8px 9px; border-radius: 7px; margin-bottom: 5px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  position: relative; overflow: hidden;
+}
+[data-theme="dark"] .jfg-slot { background: var(--bg2); }
+.jfg-slot::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+}
+.jfg-slot.s-active::before { background: var(--red); }
+.jfg-slot.s-done::before   { background: var(--text3); opacity: .4; }
+.jfg-slot.s-soon::before   { background: var(--gold); }
+.jfg-slot.s-wait::before   { background: var(--blue); }
+.jfg-slot.s-done { opacity: .5; }
+.jfg-slot-time  { font-size: 9.5px; color: var(--text3); font-weight: 700; margin-bottom: 2px; }
+.jfg-slot-kelas { font-size: 12px; font-weight: 800; color: var(--text); }
+.jfg-slot-guru  { font-size: 10px; color: var(--text3); margin-top: 1px; }
+.jfg-slot-tujuan { font-size: 9.5px; color: var(--blue); margin-top: 2px; font-weight: 600; }
+.jfg-slot-actions { display: flex; gap: 4px; margin-top: 6px; }
+.jfg-edit-btn, .jfg-del-btn {
+  width: 22px; height: 22px; border-radius: 5px;
+  border: none; cursor: pointer; font-size: 9px;
+  display: flex; align-items: center; justify-content: center; transition: .15s;
+}
+.jfg-edit-btn { background: rgba(59,124,244,.1); color: var(--blue); }
+.jfg-edit-btn:hover { background: var(--blue); color: #fff; }
+.jfg-del-btn  { background: var(--red-bg); color: var(--red); }
+.jfg-del-btn:hover  { background: var(--red); color: #fff; }
+.jfg-empty {
+  padding: 20px 8px; text-align: center;
+  color: var(--text3); font-size: 11px;
+}
+.jfg-empty i { font-size: 1.3rem; display: block; opacity: .25; margin-bottom: 5px; }
+.jfg-add-btn {
+  width: 100%; padding: 7px; border-radius: 7px;
+  border: 1.5px dashed var(--border); background: transparent;
+  color: var(--text3); cursor: pointer; font-family: inherit;
+  font-size: 10.5px; font-weight: 700; transition: .18s;
+  display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 4px;
+}
+.jfg-add-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-pale); }
+
+/* Jadwal Now Box */
+.jadwal-now-box {
+  background: rgba(254,242,242,.4);
+  border: 1.5px solid rgba(220,38,38,.25);
+  border-radius: var(--r); padding: 16px; margin-bottom: 20px;
+}
+[data-theme="dark"] .jadwal-now-box { background: rgba(220,38,38,.06); }
+.jadwal-now-title {
+  font-size: 12px; font-weight: 800; color: var(--red);
+  display: flex; align-items: center; gap: 7px; margin-bottom: 12px;
+}
+.jadwal-now-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 13px; background: #fff;
+  border-radius: 10px; border: 1px solid rgba(220,38,38,.15);
+  margin-bottom: 8px;
+}
+[data-theme="dark"] .jadwal-now-item { background: var(--card-bg); }
+.jadwal-now-item:last-child { margin-bottom: 0; }
+.jni-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: rgba(220,38,38,.1); color: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.jni-kelas { font-size: 14px; font-weight: 800; color: var(--text); }
+.jni-detail { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* Legend */
+.jadwal-legend {
+  display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;
+}
+.jl-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11.5px; color: var(--text2); font-weight: 600;
+}
+.jl-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -1407,6 +2027,10 @@
   <div class="tabs-bar">
     <button class="tab-btn on" id="tabBtnKoleksi" onclick="switchMainTab('koleksi')"><i class="fas fa-book"></i> Koleksi Buku <span class="tab-count" id="tcKoleksi">20</span></button>
    <button class="tab-btn" id="tabBtnPinjam"   onclick="requireLogin('pinjam')"><i class="fas fa-hand-holding-heart"></i> Form Peminjaman</button>
+   <button class="tab-btn" id="tabBtnJadwal" onclick="requireLogin('jadwal')">
+  <i class="fas fa-calendar-alt"></i> Jadwal Kelas
+  <span class="tab-count" id="tcJadwal">0</span>
+</button>
 <button class="tab-btn" id="tabBtnRiwayat"  onclick="requireLogin('riwayat')"><i class="fas fa-history"></i> Riwayat <span class="tab-count" id="tcRiwayat">0</span></button>
 <button class="tab-btn" id="tabBtnDenda"    onclick="requireLogin('denda')"><i class="fas fa-receipt"></i> Denda <span class="tab-count" id="tcDenda">0</span></button>
 <button class="tab-btn" id="tabBtnProfil"   onclick="requireLogin('profil')"><i class="fas fa-id-card"></i> Profil</button>
@@ -1454,9 +2078,11 @@
       </div>
     </div>
 
-    <!-- Tab Form Peminjaman -->
-    <div class="tab-section" id="tsPinjam">
-      <div class="pinjam-layout">
+   <div class="tab-section" id="tsPinjam">
+  <div style="display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start;">
+    <!-- KONTEN FORM -->
+    <div>
+    <div class="pinjam-layout" style="display:block;">
         <div>
           <div class="card-box" style="margin-bottom:18px;">
             <div class="card-box-title"><i class="fas fa-user-circle"></i> Data Peminjam</div>
@@ -1512,6 +2138,12 @@
         </div>
       </div>
     </div>
+    <!-- SIDEBAR JADWAL -->
+    <div>
+      <div class="jadwal-sidebar" id="jadwalSidebarPinjam"></div>
+    </div>
+  </div>
+</div>
 
     <!-- Tab Riwayat -->
     <div class="tab-section" id="tsRiwayat">
@@ -1552,6 +2184,70 @@
     </div>
 
   </div>
+  <!-- TAB: JADWAL KUNJUNGAN KELAS -->
+<div class="tab-section" id="tsJadwal">
+ <!-- Header Premium -->
+<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px;background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:18px 22px;box-shadow:0 2px 12px rgba(59,124,244,.06);">
+  <!-- Kiri: Icon + Judul -->
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#3b7cf4,#6fa3ff);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(59,124,244,.3);flex-shrink:0;">
+      <i class="fas fa-calendar-alt" style="color:#fff;font-size:1.1rem;"></i>
+    </div>
+    <div>
+      <div style="font-size:1.1rem;font-weight:800;color:var(--text);letter-spacing:-.2px;">Jadwal Kunjungan Kelas</div>
+      <div style="font-size:11.5px;color:var(--text3);margin-top:3px;display:flex;align-items:center;gap:6px;">
+        <i class="fas fa-circle" style="font-size:5px;color:#22c55e;"></i>
+        Jadwal kelas yang berkunjung ke perpustakaan setiap minggunya
+      </div>
+    </div>
+  </div>
+  <!-- Kanan: Jam + Tombol -->
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <div class="jadwal-clock-wrap">
+  <div style="display:flex;align-items:baseline;justify-content:center;gap:2px;">
+    <span id="jadwalClockHM" class="jadwal-clock-digits"></span>
+    <span id="jadwalClockS" class="jadwal-clock-seconds"></span>
+  </div>
+  <div id="jadwalBigDate" class="jadwal-clock-date"></div>
+  <div id="jadwalBigClock" style="display:none;"></div>
+</div>
+    <button id="addJadwalBtn" onclick="openJadwalForm(null)" style="display:none;align-items:center;gap:7px;padding:10px 18px;background:linear-gradient(135deg,#3b7cf4,#6fa3ff);color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,124,244,.3);transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+      <i class="fas fa-plus"></i> Tambah Jadwal
+    </button>
+  </div>
+</div>
+
+  <!-- Sedang Ada di Perpustakaan -->
+  <div class="jadwal-now-box" id="jadwalNowBox" style="display:none;">
+    <div class="jadwal-now-title">
+      <i class="fas fa-door-open"></i> Sedang Ada di Perpustakaan Sekarang
+    </div>
+    <div id="jadwalNowContent"></div>
+  </div>
+
+ <!-- Legenda -->
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+  <span style="font-size:11px;font-weight:600;color:var(--text3);margin-right:4px;text-transform:uppercase;letter-spacing:.5px;">Keterangan:</span>
+  <span style="display:inline-flex;align-items:center;gap:5px;background:#fff5f5;border:1px solid #fca5a5;color:#dc2626;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;">
+    <span style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block;"></span> Berlangsung
+  </span>
+  <span style="display:inline-flex;align-items:center;gap:5px;background:#fffbeb;border:1px solid #fcd34d;color:#b45309;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;">
+    <span style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block;"></span> Dalam 30 menit
+  </span>
+  <span style="display:inline-flex;align-items:center;gap:5px;background:#eff6ff;border:1px solid #bfdbfe;color:#2563eb;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;">
+    <span style="width:7px;height:7px;border-radius:50%;background:#3b82f6;display:inline-block;"></span> Terjadwal
+  </span>
+  <span style="display:inline-flex;align-items:center;gap:5px;background:#f8fafc;border:1px solid #e2e8f0;color:#94a3b8;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;">
+    <span style="width:7px;height:7px;border-radius:50%;background:#94a3b8;display:inline-block;"></span> Selesai
+  </span>
+</div>
+
+  <!-- Grid Mingguan -->
+<div class="jadwal-full-grid" id="jadwalFullGrid"></div>
+
+<!-- Rekap Mingguan -->
+<div id="jadwalRekap" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;"></div>
+</div>
     <!-- TAB: PROFIL & KARTU ANGGOTA -->
     <div class="tab-section" id="tsProfil">
       <div class="profil-layout">
@@ -2439,7 +3135,7 @@ function navGo(section) {
 }
 
 function switchMainTab(name) {
-  const map = { koleksi:'Koleksi', pinjam:'Pinjam', riwayat:'Riwayat', denda:'Denda', profil:'Profil', dashboard:'Dashboard', manajemen:'Manajemen' };
+  const map = { koleksi:'Koleksi', pinjam:'Pinjam', jadwal:'Jadwal', riwayat:'Riwayat', denda:'Denda', profil:'Profil', dashboard:'Dashboard', manajemen:'Manajemen' };
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
   var tabBtn = document.getElementById('tabBtn' + map[name]);
   if (tabBtn) tabBtn.classList.add('on');
@@ -4015,22 +4711,97 @@ document.addEventListener('keydown', function(e) {
 
 </script>
 
+<!-- MODAL JADWAL -->
+<div class="modal-backdrop" id="jadwalFormBg" onclick="if(event.target===this)closeJadwalForm()">
+  <div class="modal fmodal" style="max-width:440px;">
+    <div class="fmodal-header">
+      <div class="fmodal-title" id="jadwalFormTitle">
+        <i class="fas fa-calendar-plus" style="color:var(--blue);"></i> Tambah Jadwal
+      </div>
+      <button class="fmodal-close" onclick="closeJadwalForm()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="fmodal-body">
+      <input type="hidden" id="jfId">
+      <div class="form-grid">
+        <div class="fg" style="grid-column:1/-1;">
+          <label>Nama Kelas *</label>
+          <input type="text" id="jfKelas" placeholder="Contoh: XI TKJ 1, X RPL 2">
+        </div>
+        <div class="fg">
+          <label>Hari *</label>
+          <select id="jfHari">
+            <option>Senin</option><option>Selasa</option><option>Rabu</option>
+            <option>Kamis</option><option>Jumat</option><option>Sabtu</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Guru Pembimbing</label>
+          <input type="text" id="jfGuru" placeholder="Nama guru (opsional)">
+        </div>
+        <div class="fg">
+          <label>Jam Mulai *</label>
+          <input type="time" id="jfMulai" value="08:00">
+        </div>
+        <div class="fg">
+          <label>Jam Selesai *</label>
+          <input type="time" id="jfSelesai" value="09:30">
+        </div>
+        <div class="fg" style="grid-column:1/-1;">
+          <label>Tujuan Kunjungan</label>
+          <select id="jfTujuan">
+            <option>Baca Buku</option>
+            <option>Pinjam Buku</option>
+            <option>Belajar Mandiri</option>
+            <option>Diskusi Kelompok</option>
+            <option>Program Literasi</option>
+            <option>Lainnya</option>
+          </select>
+        </div>
+       <div class="fg">
+  <label>Jumlah Siswa</label>
+  <input type="number" id="jfSiswa" placeholder="Contoh: 28" min="1" max="50">
+</div>
+<div class="fg">
+  <label>Kapasitas Maks</label>
+  <input type="number" id="jfKapasitas" placeholder="Contoh: 30" min="1" max="50" value="30">
+</div>
+<div class="fg" style="grid-column:1/-1;">
+  <label>Catatan</label>
+  <textarea id="jfCatatan" placeholder="Keterangan tambahan..."></textarea>
+</div>
+      </div>
+    </div>
+    <div class="fmodal-footer">
+      <button class="fmodal-btn cancel" onclick="closeJadwalForm()">Batal</button>
+      <button class="fmodal-btn save" onclick="saveJadwal()">
+        <i class="fas fa-save"></i> Simpan Jadwal
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL TAMBAH/EDIT BUKU -->
 <div class="modal-backdrop" id="bookFormBg" onclick="if(event.target===this)closeBookForm()">
   <div class="modal fmodal">
     <div class="fmodal-header">
-      <div class="fmodal-title" id="bookFormTitle"><i class="fas fa-book"></i> Tambah Buku Baru</div>
+      <div class="fmodal-title" id="bookFormTitle">
+        <i class="fas fa-book"></i> Tambah Buku Baru
+      </div>
       <button class="fmodal-close" onclick="closeBookForm()"><i class="fas fa-times"></i></button>
     </div>
     <div class="fmodal-body">
       <input type="hidden" id="bfId" value="">
       <div class="form-grid">
-        <div class="fg" style="grid-column:1/-1;"><label>Judul Buku *</label><input type="text" id="bfTitle" placeholder="Masukkan judul lengkap buku"></div>
+        <div class="fg" style="grid-column:1/-1;">
+          <label>Judul Buku *</label>
+          <input type="text" id="bfTitle" placeholder="Masukkan judul lengkap buku">
+        </div>
         <div class="fg"><label>Pengarang *</label><input type="text" id="bfAuthor" placeholder="Nama pengarang"></div>
         <div class="fg"><label>Penerbit</label><input type="text" id="bfPub" placeholder="Nama penerbit"></div>
         <div class="fg"><label>Tahun Terbit</label><input type="number" id="bfYear" placeholder="2024" min="1900" max="2099"></div>
         <div class="fg"><label>Jumlah Halaman</label><input type="number" id="bfPages" placeholder="200" min="1"></div>
-        <div class="fg"><label>Kategori *</label>
+        <div class="fg">
+          <label>Kategori *</label>
           <select id="bfCat">
             <option value="Pelajaran">Pelajaran</option>
             <option value="Fiksi">Fiksi</option>
@@ -4040,15 +4811,22 @@ document.addEventListener('keydown', function(e) {
         </div>
         <div class="fg"><label>Stok Tersedia *</label><input type="number" id="bfStock" placeholder="5" min="0"></div>
         <div class="fg"><label>Total Eksemplar</label><input type="number" id="bfTotal" placeholder="5" min="0"></div>
-        <div class="fg" style="grid-column:1/-1;"><label>Deskripsi</label><textarea id="bfDesc" placeholder="Deskripsi singkat buku..."></textarea></div>
+        <div class="fg" style="grid-column:1/-1;">
+          <label>Deskripsi</label>
+          <textarea id="bfDesc" placeholder="Deskripsi singkat buku..."></textarea>
+        </div>
       </div>
     </div>
     <div class="fmodal-footer">
       <button class="fmodal-btn cancel" onclick="closeBookForm()">Batal</button>
-      <button class="fmodal-btn save" onclick="saveBook()"><i class="fas fa-save"></i> Simpan Buku</button>
+      <button class="fmodal-btn save" onclick="saveBook()">
+        <i class="fas fa-save"></i> Simpan Buku
+      </button>
     </div>
   </div>
 </div>
+
+
 <div id="themeFlash"></div>
 <!-- Code injected by live-server -->
 <script>
@@ -4087,7 +4865,552 @@ document.addEventListener('keydown', function(e) {
 		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
 	}
 	// ]]>
-  (function() {
+  /* ═══════════════════════════════════════════
+   SISTEM JADWAL KUNJUNGAN KELAS — FIXED
+/* ═══════════════════════════════════════════
+   SISTEM JADWAL KUNJUNGAN KELAS — FIXED
+   - Admin: bisa tambah/edit/hapus
+   - Siswa/Guru: hanya bisa lihat (harus login)
+   - Guest: tidak bisa akses
+═══════════════════════════════════════════ */
+
+var JADWAL_LS_KEY = 'perpus_jadwal_v1';
+var JADWAL = [];
+var _jIdCounter = 50;
+var HARI_LIST = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+
+var JADWAL_DEFAULT = [
+  {id:1,kelas:'XI TKJ 1',  hari:'Senin',  mulai:'07:30',selesai:'09:00',guru:'Pak Budi',    tujuan:'Baca Buku',        catatan:''},
+  {id:2,kelas:'X RPL 2',   hari:'Senin',  mulai:'09:30',selesai:'11:00',guru:'Bu Sari',     tujuan:'Pinjam Buku',      catatan:''},
+  {id:3,kelas:'XII AKL 1', hari:'Selasa', mulai:'08:00',selesai:'09:30',guru:'Bu Korawati', tujuan:'Program Literasi', catatan:''},
+  {id:4,kelas:'X TKRO 1',  hari:'Rabu',   mulai:'10:00',selesai:'11:30',guru:'Pak Hendra',  tujuan:'Belajar Mandiri',  catatan:''},
+  {id:5,kelas:'XI RPL 1',  hari:'Kamis',  mulai:'07:30',selesai:'09:00',guru:'',            tujuan:'Diskusi Kelompok', catatan:'Persiapan presentasi'},
+  {id:6,kelas:'XII TKJ 2', hari:'Jumat',  mulai:'09:00',selesai:'10:30',guru:'Bu Maya',     tujuan:'Pinjam Buku',      catatan:''},
+  {id:7,kelas:'X AKL 1',   hari:'Sabtu',  mulai:'08:00',selesai:'09:30',guru:'Pak Dodi',    tujuan:'Baca Buku',        catatan:''},
+];
+
+function loadJadwal() {
+  try {
+    var saved = localStorage.getItem(JADWAL_LS_KEY);
+    if (saved) {
+      JADWAL = JSON.parse(saved);
+      if (JADWAL.length) {
+        _jIdCounter = Math.max.apply(null, JADWAL.map(function(j){ return j.id||0; })) + 1;
+        return;
+      }
+    }
+  } catch(e) {}
+  JADWAL = JSON.parse(JSON.stringify(JADWAL_DEFAULT));
+  saveJadwalLocal();
+}
+
+function saveJadwalLocal() {
+  try { localStorage.setItem(JADWAL_LS_KEY, JSON.stringify(JADWAL)); } catch(e) {}
+}
+
+function getTodayName() {
+  return ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][new Date().getDay()];
+}
+
+function timeToMin(t) {
+  if (!t) return 0;
+  var p = t.split(':');
+  return parseInt(p[0]) * 60 + parseInt(p[1]);
+}
+
+function getSlotStatus(slot) {
+  var now    = new Date();
+  var nowMin = now.getHours() * 60 + now.getMinutes();
+  var mulai  = timeToMin(slot.mulai);
+  var sel    = timeToMin(slot.selesai);
+  var today  = getTodayName();
+  if (slot.hari !== today) return 'other';
+  if (nowMin >= mulai && nowMin < sel)      return 'active';
+  if (nowMin < mulai && mulai - nowMin <= 30) return 'soon';
+  if (nowMin >= sel)                          return 'done';
+  return 'wait';
+}
+
+function updateJadwalClock() {
+  var now = new Date();
+  var h = now.getHours().toString().padStart(2,'0');
+  var m = now.getMinutes().toString().padStart(2,'0');
+  var s = now.getSeconds().toString().padStart(2,'0');
+  var HARI_ID  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  var BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
+                  'Agustus','September','Oktober','November','Desember'];
+  var dateStr = HARI_ID[now.getDay()] + ', ' + now.getDate() + ' ' +
+                BULAN_ID[now.getMonth()] + ' ' + now.getFullYear();
+
+  // Digital clock — jam:menit berkedip, detik kecil
+  var hm = document.getElementById('jadwalClockHM');
+  var sc = document.getElementById('jadwalClockS');
+  if (hm) hm.innerHTML = h + '<span class="jadwal-clock-divider">:</span>' + m;
+  if (sc) sc.textContent = ':' + s;
+
+  var bd = document.getElementById('jadwalBigDate');
+  if (bd) bd.textContent = dateStr;
+
+  // Sidebar
+  var st = document.getElementById('jsSidebarTime'); if (st) st.textContent = h+':'+m;
+  var sd = document.getElementById('jsSidebarDate'); if (sd) sd.textContent = dateStr;
+}
+/* ── SIDEBAR (di tab Form Pinjam) ── */
+function renderJadwalSidebar() {
+  var el = document.getElementById('jadwalSidebarPinjam');
+  if (!el) return;
+
+  // Sidebar hanya tampil jika sudah login
+  if (!currentUser) {
+    el.innerHTML =
+      '<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px;">' +
+      '<i class="fas fa-lock" style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:.3;"></i>' +
+      'Login untuk melihat jadwal kunjungan kelas</div>';
+    return;
+  }
+
+  var today = getTodayName();
+  var todaySlots = JADWAL
+    .filter(function(j){ return j.hari === today; })
+    .sort(function(a,b){ return timeToMin(a.mulai) - timeToMin(b.mulai); });
+
+  var activeSlot = null, soonSlot = null;
+  todaySlots.forEach(function(s) {
+    var st = getSlotStatus(s);
+    if (st === 'active' && !activeSlot) activeSlot = s;
+    if (st === 'soon'   && !soonSlot)   soonSlot   = s;
+  });
+
+  var statusCls, statusIco, statusKelas, statusSub;
+  if (activeSlot) {
+    statusCls   = 'occupied';
+    statusIco   = 'fas fa-users';
+    statusKelas = activeSlot.kelas + ' di dalam';
+    statusSub   = 'Sampai ' + activeSlot.selesai + (activeSlot.guru ? ' · ' + activeSlot.guru : '');
+  } else if (soonSlot) {
+    statusCls   = 'soon';
+    statusIco   = 'fas fa-clock';
+    statusKelas = soonSlot.kelas + ' (segera masuk)';
+    statusSub   = 'Mulai ' + soonSlot.mulai + ' – ' + soonSlot.selesai;
+  } else if (todaySlots.length) {
+    statusCls   = 'free';
+    statusIco   = 'fas fa-door-open';
+    statusKelas = 'Perpustakaan Bebas';
+    statusSub   = 'Tidak ada kelas masuk saat ini';
+  } else {
+    statusCls   = 'free';
+    statusIco   = 'fas fa-check-circle';
+    statusKelas = 'Tidak Ada Jadwal';
+    statusSub   = 'Hari ini tidak ada kelas terjadwal';
+  }
+
+  var slotHtml = '';
+  if (todaySlots.length) {
+    todaySlots.forEach(function(s) {
+      var st = getSlotStatus(s);
+      var badgeCls = st==='active'?'badge-now':st==='soon'?'badge-soon':st==='done'?'badge-done':'badge-wait';
+      var badgeLbl = st==='active'?'SEKARANG':st==='soon'?'SEGERA':st==='done'?'Selesai':'Menunggu';
+      slotHtml +=
+        '<div class="js-slot'+(st==='active'?' active-slot':st==='done'?' done-slot':'')+'">' +
+        '<div class="js-slot-left">' +
+          '<div class="js-slot-kelas">'+s.kelas+'</div>' +
+          '<div class="js-slot-time"><i class="fas fa-clock" style="font-size:8px;"></i> '+s.mulai+' – '+s.selesai+'</div>' +
+          (s.guru?'<div class="js-slot-guru"><i class="fas fa-user" style="font-size:8px;"></i> '+s.guru+'</div>':'') +
+        '</div>' +
+        '<span class="js-slot-badge '+badgeCls+'">'+badgeLbl+'</span>' +
+        '</div>';
+    });
+  } else {
+    slotHtml = '<div class="js-empty"><i class="fas fa-calendar-times"></i>Tidak ada jadwal hari ini</div>';
+  }
+
+  // Tombol tambah hanya untuk admin
+  var isAdmin = currentUser && currentUser.id === 'admin';
+  var adminBtn = isAdmin
+    ? '<button class="js-admin-add" onclick="openJadwalForm(null)" title="Tambah jadwal"><i class="fas fa-plus"></i></button>'
+    : '';
+
+  el.innerHTML =
+    '<div class="js-header">' +
+      '<div class="js-header-top">' +
+        '<div class="js-title"><div class="js-live-dot"></div><i class="fas fa-calendar-alt"></i> Jadwal Hari Ini</div>' +
+        adminBtn +
+      '</div>' +
+      '<div class="js-clock" id="jsSidebarTime">--:--</div>' +
+      '<div class="js-date" id="jsSidebarDate">Memuat...</div>' +
+    '</div>' +
+    '<div class="js-status-bar '+statusCls+'">' +
+      '<div class="js-status-icon"><i class="'+statusIco+'"></i></div>' +
+      '<div><div class="js-status-kelas">'+statusKelas+'</div><div class="js-status-sub">'+statusSub+'</div></div>' +
+    '</div>' +
+    '<div class="js-body">'+slotHtml+'</div>' +
+    '<div class="js-footer">' +
+      '<span class="js-footer-count">'+todaySlots.length+' jadwal hari ini</span>' +
+      '<button class="js-see-all" onclick="requireLogin(\'jadwal\')">Jadwal Penuh <i class="fas fa-arrow-right" style="font-size:9px;"></i></button>' +
+    '</div>';
+
+  updateJadwalClock();
+}
+
+function renderJadwalGrid() {
+  var grid = document.getElementById('jadwalFullGrid');
+  if (!grid) return;
+
+  if (!currentUser) {
+    grid.innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;">' +
+      '<div style="width:64px;height:64px;background:#f1f5f9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;color:#94a3b8;">' +
+      '<i class="fas fa-lock"></i></div>' +
+      '<div style="font-size:1rem;font-weight:700;color:var(--text2);margin-bottom:6px;">Login Diperlukan</div>' +
+      '<div style="font-size:13px;color:var(--text3);margin-bottom:18px;">Silakan masuk untuk melihat jadwal kunjungan kelas.</div>' +
+      '<button onclick="openLoginModal(\'jadwal\')" style="padding:10px 24px;border-radius:50px;background:var(--blue);color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700;">' +
+      '<i class="fas fa-sign-in-alt"></i> Masuk Sekarang</button></div>';
+    return;
+  }
+
+  var today   = getTodayName();
+  var isAdmin = currentUser && currentUser.id === 'admin';
+
+  var addBtn = document.getElementById('addJadwalBtn');
+  if (addBtn) addBtn.style.display = isAdmin ? 'flex' : 'none';
+
+  // Fungsi icon tujuan
+  function tujuanIcon(t) {
+    var map = {
+      'Baca Buku':'fa-book-open','Pinjam Buku':'fa-book',
+      'Belajar Mandiri':'fa-user-graduate','Diskusi Kelompok':'fa-users',
+      'Program Literasi':'fa-star','Lainnya':'fa-tag'
+    };
+    return map[t] || 'fa-tag';
+  }
+
+  // Fungsi progress bar
+  function progressPct(slot) {
+    var now    = new Date();
+    var nowMin = now.getHours()*60 + now.getMinutes();
+    var mulai  = timeToMin(slot.mulai);
+    var sel    = timeToMin(slot.selesai);
+    var total  = sel - mulai;
+    if (total <= 0) return 0;
+    if (nowMin <= mulai) return 0;
+    if (nowMin >= sel)   return 100;
+    return Math.round((nowMin - mulai) / total * 100);
+  }
+
+ function kapasitasDots(slot) {
+  var isi  = slot.siswa     || 0;
+  var maks = slot.kapasitas || 30;
+  var dots = '';
+  for (var i=0; i<10; i++) {
+    var filled = i < Math.round(isi/maks*10) ? ' filled' : '';
+    dots += '<div class="jfg-kap-dot'+filled+'"></div>';
+  }
+  return { dots: dots, isi: isi, maks: maks };
+}
+
+  grid.innerHTML = '';
+
+  HARI_LIST.forEach(function(hari, hIdx) {
+    var isToday = hari === today;
+    var slots   = JADWAL
+      .filter(function(j){ return j.hari === hari; })
+      .sort(function(a,b){ return timeToMin(a.mulai) - timeToMin(b.mulai); });
+
+    var col = document.createElement('div');
+    col.className = 'jfg-col' + (isToday ? ' jfg-today' : '');
+
+    // Stagger animasi masuk
+    col.style.animation = 'jfg-in .35s ease both';
+    col.style.animationDelay = (hIdx * 60) + 'ms';
+
+    // Header
+    var headHtml =
+      '<div class="jfg-head">' +
+        '<div class="jfg-hari">' + hari + (isToday ? ' ●' : '') + '</div>' +
+        '<div class="jfg-count">' + slots.length + '</div>' +
+      '</div>';
+
+    // Body
+    var bodyHtml = '<div class="jfg-body">';
+
+    if (!slots.length) {
+      bodyHtml +=
+  '<div class="jfg-empty-premium">' +
+    '<div class="jfg-empty-icon"><i class="fas fa-moon"></i></div>' +
+    '<div class="jfg-empty-text">Hari Libur</div>' +
+    '<div class="jfg-empty-sub">Tidak ada kelas<br>terjadwal hari ini</div>' +
+  '</div>';
+    } else {
+      slots.forEach(function(s) {
+        var st   = isToday ? getSlotStatus(s) : 'wait';
+        var sCls = 's-' + (st === 'other' ? 'wait' : st);
+
+        // Badge label & class
+        var badgeCls, badgeLbl, badgeIcon;
+        if (st === 'active') {
+          badgeCls = 'b-active';
+          badgeLbl = 'Berlangsung';
+          badgeIcon = '<span class="pulse-dot"></span>';
+        } else if (st === 'soon') {
+          badgeCls = 'b-soon';
+          badgeLbl = 'Segera';
+          badgeIcon = '<i class="fas fa-clock" style="font-size:7px;"></i>';
+        } else if (st === 'done') {
+          badgeCls = 'b-done';
+          badgeLbl = 'Selesai';
+          badgeIcon = '<i class="fas fa-check" style="font-size:7px;"></i>';
+        } else {
+          badgeCls = 'b-wait';
+          badgeLbl = 'Terjadwal';
+          badgeIcon = '<i class="fas fa-circle" style="font-size:6px;"></i>';
+        }
+
+        // Progress bar (hanya hari ini)
+        var progressHtml = '';
+        if (isToday && (st === 'active' || st === 'done' || st === 'soon')) {
+          var pct = progressPct(s);
+          progressHtml =
+            '<div class="jfg-progress-wrap">' +
+              '<div class="jfg-progress-bar" style="width:' + pct + '%"></div>' +
+            '</div>';
+        }
+
+        // Kapasitas
+        var kap = kapasitasDots(s);
+        var kapHtml = kap.isi > 0
+  ? '<div class="jfg-kapasitas">' +
+      '<div class="jfg-kap-dots">' + kap.dots + '</div>' +
+      '<span>' + kap.isi + '/' + kap.maks + ' siswa</span>' +
+    '</div>'
+  : '<div class="jfg-kapasitas" style="color:#cbd5e1;font-style:italic;">' +
+      '<i class="fas fa-user-slash" style="font-size:9px;"></i> Belum diisi' +
+    '</div>';
+
+        // Admin actions
+        var adminHtml = isAdmin
+  ? '<div class="jfg-slot-actions">' +
+      '<button class="jfg-edit-btn" onclick="openJadwalForm('+s.id+')" title="Edit"><i class="fas fa-pencil-alt"></i></button>' +
+      '<button class="jfg-del-btn"  onclick="deleteJadwal('+s.id+')" title="Hapus"><i class="fas fa-trash"></i></button>' +
+    '</div>'
+  : '';
+
+        bodyHtml +=
+          '<div class="jfg-slot ' + sCls + '">' +
+            '<div class="jfg-slot-time"><i class="fas fa-clock" style="font-size:8px;"></i> ' + s.mulai + ' – ' + s.selesai + '</div>' +
+            '<div class="jfg-slot-kelas">' + s.kelas + '</div>' +
+            (s.guru ? '<div class="jfg-slot-guru"><i class="fas fa-user" style="font-size:8px;"></i> ' + s.guru + '</div>' : '') +
+            progressHtml +
+            '<div>' +
+              '<span class="jfg-slot-tujuan"><i class="fas ' + tujuanIcon(s.tujuan) + '" style="font-size:9px;"></i> ' + s.tujuan + '</span>' +
+              '<span class="jfg-badge ' + badgeCls + '">' + badgeIcon + ' ' + badgeLbl + '</span>' +
+            '</div>' +
+            kapHtml +
+            adminHtml +
+          '</div>';
+      });
+    }
+
+    // Tombol tambah per kolom (admin)
+    if (isAdmin) {
+      bodyHtml += '<button class="jfg-add-btn" onclick="openJadwalFormHari(\'' + hari + '\')"><i class="fas fa-plus"></i> Tambah</button>';
+    }
+    bodyHtml += '</div>';
+
+    col.innerHTML = headHtml + bodyHtml;
+    grid.appendChild(col);
+  });
+
+  // Box "Sedang ada di perpustakaan"
+  var nowBox  = document.getElementById('jadwalNowBox');
+  var nowCont = document.getElementById('jadwalNowContent');
+  var actives = JADWAL.filter(function(s){ return getSlotStatus(s) === 'active'; });
+  if (nowBox) {
+    if (actives.length) {
+      nowBox.style.display = 'block';
+      nowCont.innerHTML = actives.map(function(s){
+        return '<div class="jadwal-now-item">' +
+          '<div class="jni-icon"><i class="fas fa-users"></i></div>' +
+          '<div><div class="jni-kelas">' + s.kelas + '</div>' +
+          '<div class="jni-detail">' + (s.guru ? s.guru + ' &nbsp;·&nbsp; ' : '') +
+          s.mulai + ' – ' + s.selesai + ' &nbsp;·&nbsp; ' + s.tujuan + '</div></div>' +
+          '<span class="status-pill sp-late" style="margin-left:auto;font-size:9.5px;"><span class="pulse-dot" style="width:6px;height:6px;"></span> Berlangsung</span>' +
+          '</div>';
+      }).join('');
+    } else {
+      nowBox.style.display = 'none';
+    }
+  }
+
+  // Badge count tab
+  var today2 = getTodayName();
+  var todayCount = JADWAL.filter(function(j){ return j.hari === today2; }).length;
+  var tc = document.getElementById('tcJadwal');
+  if (tc) tc.textContent = todayCount;
+  // Rekap mingguan
+var rekapEl = document.getElementById('jadwalRekap');
+if (rekapEl) {
+  var totalJadwal  = JADWAL.length;
+  var totalSiswa   = JADWAL.reduce(function(a,j){ return a + (j.siswa||0); }, 0);
+  var hariAktif    = HARI_LIST.filter(function(h){
+    return JADWAL.some(function(j){ return j.hari===h; });
+  }).length;
+  var jadwalHariIni = JADWAL.filter(function(j){ return j.hari===today; }).length;
+
+  rekapEl.innerHTML =
+    '<div class="rekap-card">' +
+      '<div class="rekap-icon" style="background:#eff6ff;color:#3b7cf4;"><i class="fas fa-calendar-check"></i></div>' +
+      '<div><div class="rekap-val">' + totalJadwal + '</div><div class="rekap-label">Total Jadwal Minggu Ini</div></div>' +
+    '</div>' +
+    '<div class="rekap-card">' +
+      '<div class="rekap-icon" style="background:#f0fdf4;color:#22c55e;"><i class="fas fa-users"></i></div>' +
+      '<div><div class="rekap-val">' + (totalSiswa > 0 ? totalSiswa : '—') + '</div><div class="rekap-label">Total Siswa Terjadwal</div></div>' +
+    '</div>' +
+    '<div class="rekap-card">' +
+      '<div class="rekap-icon" style="background:#fefce8;color:#f59e0b;"><i class="fas fa-calendar-alt"></i></div>' +
+      '<div><div class="rekap-val">' + hariAktif + ' <span style="font-size:.9rem;font-weight:600;color:var(--text3);">hari</span></div><div class="rekap-label">Hari dengan Jadwal</div></div>' +
+    '</div>' +
+    '<div class="rekap-card">' +
+      '<div class="rekap-icon" style="background:#fff5f5;color:#ef4444;"><i class="fas fa-clock"></i></div>' +
+      '<div><div class="rekap-val">' + jadwalHariIni + '</div><div class="rekap-label">Jadwal Hari Ini</div></div>' +
+    '</div>';
+}
+}
+
+/* ── FORM TAMBAH/EDIT (hanya admin) ── */
+function openJadwalForm(id) {
+  if (!currentUser || currentUser.id !== 'admin') {
+    showToast('Hanya admin yang dapat mengatur jadwal.', 'error');
+    return;
+  }
+  var titleEl = document.getElementById('jadwalFormTitle');
+  document.getElementById('jfId').value      = '';
+  document.getElementById('jfKelas').value   = '';
+  document.getElementById('jfHari').value    = getTodayName();
+  document.getElementById('jfGuru').value    = '';
+  document.getElementById('jfMulai').value   = '08:00';
+  document.getElementById('jfSelesai').value = '09:30';
+  document.getElementById('jfTujuan').value  = 'Baca Buku';
+  document.getElementById('jfCatatan').value = '';
+  document.getElementById('jfSiswa').value    = '';
+  document.getElementById('jfKapasitas').value = '30';
+
+  if (id) {
+    var j = JADWAL.find(function(x){ return x.id === id; });
+    if (!j) return;
+    if (titleEl) titleEl.innerHTML = '<i class="fas fa-edit" style="color:var(--blue);"></i> Edit Jadwal';
+    document.getElementById('jfId').value      = j.id;
+    document.getElementById('jfKelas').value   = j.kelas;
+    document.getElementById('jfHari').value    = j.hari;
+    document.getElementById('jfGuru').value    = j.guru || '';
+    document.getElementById('jfMulai').value   = j.mulai;
+    document.getElementById('jfSelesai').value = j.selesai;
+    document.getElementById('jfTujuan').value  = j.tujuan;
+    document.getElementById('jfCatatan').value = j.catatan || '';
+    document.getElementById('jfSiswa').value    = j.siswa    || '';
+    document.getElementById('jfKapasitas').value = j.kapasitas || '30';
+  } else {
+    if (titleEl) titleEl.innerHTML = '<i class="fas fa-calendar-plus" style="color:var(--blue);"></i> Tambah Jadwal';
+  }
+  document.getElementById('jadwalFormBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openJadwalFormHari(hari) {
+  openJadwalForm(null);
+  document.getElementById('jfHari').value = hari;
+}
+
+function closeJadwalForm() {
+  document.getElementById('jadwalFormBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function saveJadwal() {
+  if (!currentUser || currentUser.id !== 'admin') {
+    showToast('Hanya admin yang dapat menyimpan jadwal.', 'error');
+    return;
+  }
+  var kelas   = document.getElementById('jfKelas').value.trim();
+  var hari    = document.getElementById('jfHari').value;
+  var mulai   = document.getElementById('jfMulai').value;
+  var selesai = document.getElementById('jfSelesai').value;
+
+  if (!kelas)  { showToast('Nama kelas wajib diisi.','error'); return; }
+  if (!mulai || !selesai) { showToast('Jam mulai & selesai wajib diisi.','error'); return; }
+  if (timeToMin(selesai) <= timeToMin(mulai)) { showToast('Jam selesai harus setelah jam mulai.','error'); return; }
+
+  var existingId = parseInt(document.getElementById('jfId').value) || 0;
+
+  // Cek bentrok jadwal
+  var conflict = JADWAL.find(function(j) {
+    if (j.hari !== hari || j.id === existingId) return false;
+    var jM=timeToMin(j.mulai), jS=timeToMin(j.selesai);
+    var nM=timeToMin(mulai),   nS=timeToMin(selesai);
+    return nM < jS && nS > jM;
+  });
+  if (conflict) {
+    showToast('⚠️ Bentrok dengan '+conflict.kelas+' ('+conflict.mulai+'–'+conflict.selesai+')!','error');
+    return;
+  }
+
+ var obj = {
+  id:        existingId || ++_jIdCounter,
+  kelas:     kelas,
+  hari:      hari,
+  guru:      document.getElementById('jfGuru').value.trim(),
+  mulai:     mulai,
+  selesai:   selesai,
+  tujuan:    document.getElementById('jfTujuan').value,
+  catatan:   document.getElementById('jfCatatan').value.trim(),
+  siswa:     parseInt(document.getElementById('jfSiswa').value)    || 0,
+  kapasitas: parseInt(document.getElementById('jfKapasitas').value) || 30,
+};
+
+  if (existingId) {
+    var idx = JADWAL.findIndex(function(x){ return x.id === existingId; });
+    if (idx !== -1) JADWAL[idx] = obj;
+    showToast('✓ Jadwal '+kelas+' diperbarui!','success');
+  } else {
+    JADWAL.push(obj);
+    showToast('✓ Jadwal '+kelas+' ditambahkan!','success');
+  }
+
+  saveJadwalLocal();
+  closeJadwalForm();
+  refreshAllJadwal();
+}
+
+function deleteJadwal(id) {
+  if (!currentUser || currentUser.id !== 'admin') {
+    showToast('Hanya admin yang dapat menghapus jadwal.','error');
+    return;
+  }
+  var j = JADWAL.find(function(x){ return x.id === id; });
+  if (!j || !confirm('Hapus jadwal "'+j.kelas+'"?')) return;
+  JADWAL = JADWAL.filter(function(x){ return x.id !== id; });
+  saveJadwalLocal();
+  showToast('Jadwal '+j.kelas+' dihapus.','success');
+  refreshAllJadwal();
+}
+
+function refreshAllJadwal() {
+  renderJadwalSidebar();
+  renderJadwalGrid();
+}
+
+/* ── PATCH switchMainTab ── */
+var _origSwitch = switchMainTab;
+switchMainTab = function(name) {
+  if (name === 'jadwal' && !currentUser) {
+    showToast('Silakan masuk untuk melihat jadwal kelas.','error');
+    openLoginModal('jadwal');
+    return;
+  }
+  _origSwitch(name);
+  if (name === 'jadwal') setTimeout(renderJadwalGrid, 200);
+};
+
+(function() {
   // Sembunyikan semua page
   document.querySelectorAll('.page').forEach(function(p){ 
     p.classList.remove('active'); 
@@ -4102,7 +5425,15 @@ document.addEventListener('keydown', function(e) {
   login.style.display = 'none';
   initGuestMode();
   initPeminjaman();
+  // Init jadwal
+  loadJadwal();
+  refreshAllJadwal();
+  setInterval(function(){
+    updateJadwalClock();
+    if (new Date().getSeconds() === 0) refreshAllJadwal();
+  }, 1000);
 })();
+
 </script>
 <script src="google-oauth-additions.js"></script>
 <script>
